@@ -1,0 +1,15 @@
+//
+// Created by Adam Gonzalez on 11/25/21.
+//
+
+#ifndef SFML_KINGS_CORNER_SCENESENUM_H
+#define SFML_KINGS_CORNER_SCENESENUM_H
+
+enum ScenesENUM {
+    MAIN_MENU, GAME_PLAYING,
+
+
+    LAST_SCENES
+};
+
+#endif //SFML_KINGS_CORNER_SCENESENUM_H

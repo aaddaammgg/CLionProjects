@@ -1,0 +1,13 @@
+//
+// Created by Adam G. on 10/30/2021.
+//
+
+#ifndef CS3A_POKER_ANALYSIS_SUITSCOLORENUM_H
+#define CS3A_POKER_ANALYSIS_SUITSCOLORENUM_H
+
+enum SuitsColorENUM {
+    RED = 1, BLACK
+};
+
+
+#endif //CS3A_POKER_ANALYSIS_SUITSCOLORENUM_H

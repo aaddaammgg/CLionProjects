@@ -1,0 +1,12 @@
+//
+// Created by Adam G. on 11/20/2021.
+//
+
+#ifndef CS3A_KINGS_CORNER_SUITSENUM_H
+#define CS3A_KINGS_CORNER_SUITSENUM_H
+
+enum SuitsENUM {
+    SPADES = 1, HEARTS, CLUBS, DIAMONDS
+};
+
+#endif //CS3A_KINGS_CORNER_SUITSENUM_H

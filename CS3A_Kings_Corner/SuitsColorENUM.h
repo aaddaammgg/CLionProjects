@@ -1,0 +1,13 @@
+//
+// Created by Adam G. on 11/20/2021.
+//
+
+#ifndef CS3A_KINGS_CORNER_SUITSCOLORENUM_H
+#define CS3A_KINGS_CORNER_SUITSCOLORENUM_H
+
+enum SuitsColorENUM {
+    RED = 1, BLACK
+};
+
+
+#endif //CS3A_KINGS_CORNER_SUITSCOLORENUM_H

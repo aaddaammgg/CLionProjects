@@ -1,0 +1,15 @@
+//
+// Created by Adam G. on 11/15/2021.
+//
+
+#ifndef CS3A_SFML_TIPS_STATESENUM_H
+#define CS3A_SFML_TIPS_STATESENUM_H
+
+enum StatesENUM {
+    HOVERED, HIDDEN, CLICKED,
+
+
+    LAST_STATES
+};
+
+#endif //CS3A_SFML_TIPS_STATESENUM_H

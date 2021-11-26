@@ -1,0 +1,4 @@
+> Run program
+> Type in number of students
+> The program will randomly fill the vector with student scores
+> The program will spit out each student score/grade/note and the average score for all students
