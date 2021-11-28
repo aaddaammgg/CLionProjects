@@ -10,13 +10,9 @@
 class SceneSwitcher {
 private:
     ScenesENUM currentScene;
-    bool sceneChanged = false;
     void setCurrentScene(ScenesENUM scene);
 public:
     SceneSwitcher();
-
-    void setSceneChanged();
-    bool getSceneChanged() const;
 
     void changeScene(ScenesENUM scene);
     ScenesENUM getCurrentScene() const;
