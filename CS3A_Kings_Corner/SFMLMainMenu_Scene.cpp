@@ -42,18 +42,14 @@ SFMLMainMenu_Scene::SFMLMainMenu_Scene() {
 }
 
 void SFMLMainMenu_Scene::eventHandler(sf::RenderWindow &window, sf::Event event, ScenesENUM &scene) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        sf::Vector2f mPos = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
-
-        if (playButton.getGlobalBounds().contains(mPos)) {
-            scene = GAME_PLAYING;
-        } else if (quitButton.getGlobalBounds().contains(mPos)) {
-            window.close();
-        }
-    }
-
     playButton.eventHandler(window, event);
     quitButton.eventHandler(window, event);
+
+    if (playButton.isClicked()) {
+        scene = GAME_PLAYING;
+    } else if (quitButton.isClicked()) {
+        window.close();
+    }
 }
 
 void SFMLMainMenu_Scene::draw(sf::RenderTarget &window, sf::RenderStates states) const {

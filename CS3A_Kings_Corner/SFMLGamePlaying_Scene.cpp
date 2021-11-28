@@ -26,26 +26,22 @@ SFMLGamePlaying_Scene::SFMLGamePlaying_Scene() {
 }
 
 void SFMLGamePlaying_Scene::eventHandler(sf::RenderWindow &window, sf::Event event, ScenesENUM &scene) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        sf::Vector2f mPos = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
-
-        if (exitButton.getGlobalBounds().contains(mPos)) {
-            scene = MAIN_MENU;
-        } else if (refreshButton.getGlobalBounds().contains(mPos)) {
-            deck = Deck();
-            deck.shuffle();
-            chTest = CardHand();
-            for (int k = 0; k < 5; k++) {
-                chTest.addCard(deck.dealCard());
-            }
-
-            sfmlCardHand = SFMLCardHand(chTest);
-            sfmlCardHand.setPosition(100, WINDOW_HEIGHT / 2 + 70);
-        }
-    }
-
     exitButton.eventHandler(window, event);
     refreshButton.eventHandler(window, event);
+
+    if (exitButton.isClicked()) {
+        scene = MAIN_MENU;
+    } else if (refreshButton.isClicked()) {
+        deck = Deck();
+        deck.shuffle();
+        chTest = CardHand();
+        for (int k = 0; k < 5; k++) {
+            chTest.addCard(deck.dealCard());
+        }
+
+        sfmlCardHand = SFMLCardHand(chTest);
+        sfmlCardHand.setPosition(100, WINDOW_HEIGHT / 2 + 70);
+    }
 }
 
 void SFMLGamePlaying_Scene::draw(sf::RenderTarget &window, sf::RenderStates states) const {
