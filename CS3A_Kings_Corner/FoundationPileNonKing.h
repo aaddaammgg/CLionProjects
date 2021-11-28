@@ -1,0 +1,14 @@
+//
+// Created by Adam G. on 11/27/2021.
+//
+
+#ifndef CS3A_KINGS_CORNER_FOUNDATIONPILENONKING_H
+#define CS3A_KINGS_CORNER_FOUNDATIONPILENONKING_H
+
+
+class FoundationPileNonKing {
+
+};
+
+
+#endif //CS3A_KINGS_CORNER_FOUNDATIONPILENONKING_H

@@ -1,0 +1,16 @@
+//
+// Created by Adam G. on 11/27/2021.
+//
+
+#ifndef CS3A_KINGS_CORNER_SFMLFOUNDATIONPILENONKING_H
+#define CS3A_KINGS_CORNER_SFMLFOUNDATIONPILENONKING_H
+
+#include "DEFINITIONS.h"
+#include <SFML/Graphics.hpp>
+
+class SFMLFoundationPileNonKing {
+
+};
+
+
+#endif //CS3A_KINGS_CORNER_SFMLFOUNDATIONPILENONKING_H
