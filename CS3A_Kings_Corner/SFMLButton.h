@@ -16,6 +16,7 @@ class SFMLButton : public sf::Drawable, public States {
 private:
     sf::RoundedRectangleShape background;
     sf::Text text;
+    int lastClickedTime = 0;
     //sf::Music music;
 public:
     SFMLButton();
@@ -29,6 +30,7 @@ public:
     void setPosition(float x, float y);
 
     void updateBounds();
+    bool isClicked() const;
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
     void eventHandler(sf::RenderWindow& window, sf::Event event);

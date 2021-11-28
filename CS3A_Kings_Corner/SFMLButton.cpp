@@ -55,8 +55,15 @@ void SFMLButton::draw(sf::RenderTarget &window, sf::RenderStates states) const {
 
 void SFMLButton::eventHandler(sf::RenderWindow &window, sf::Event event) {
     sf::Vector2f mPos = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
+    bool btnContainsMouse = background.getGlobalBounds().contains(mPos);
 
-    if (background.getGlobalBounds().contains(mPos)) {
+    disableState(CLICKED);
+
+    if (btnContainsMouse) {
+        if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left && (lastClickedTime + 1 <= time(nullptr))) {
+            lastClickedTime = time(nullptr);
+            enableState(CLICKED);
+        }
         if (!isEnabled(HOVERED)) {
             sf::Cursor cursor;
             if (cursor.loadFromSystem(sf::Cursor::Hand))
@@ -71,6 +78,10 @@ void SFMLButton::eventHandler(sf::RenderWindow &window, sf::Event event) {
         }
         disableState(HOVERED);
     }
+}
+
+bool SFMLButton::isClicked() const {
+    return isEnabled(CLICKED);
 }
 
 void SFMLButton::update() {
