@@ -1,5 +1,5 @@
 //
-// Created by Adam G. on 11/20/2021.
+// Created by NAMEHERE on 11/20/2021.
 //
 
 #ifndef CS3A_KINGS_CORNER_SFMLRANK_H
@@ -16,6 +16,7 @@ private:
     BaseRank baseRank;
     sf::Text faceValueSF;
     SuitsColorENUM suitColor;
+    sf::FloatRect bounds;
 public:
     SFMLRank();
     SFMLRank(BaseRank baseRank);
@@ -23,6 +24,7 @@ public:
 
     SuitsColorENUM getColor();
 
+    sf::FloatRect getBounds();
     BaseRank getRank() const;
     sf::Text getFaceValueSF();
 

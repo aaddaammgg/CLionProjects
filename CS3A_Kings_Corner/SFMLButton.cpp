@@ -1,5 +1,5 @@
 //
-// Created by Adam G. on 11/20/2021.
+// Created by NAMEHERE on 11/20/2021.
 //
 
 #include "SFMLButton.h"
@@ -22,11 +22,9 @@ SFMLButton::SFMLButton(std::string text, sf::Color color, sf::Color textColor, u
     background.setCornersRadius(10);
     background.setCornerPointCount(9);
     background.setOutlineColor(sf::Color::Black);
-    background.setOutlineThickness(4);
+    background.setOutlineThickness(3);
 
     updateBounds();
-
-    //music.openFromFile("brap_sound.ogg");
 }
 
 void SFMLButton::updateBounds() {
@@ -54,41 +52,30 @@ void SFMLButton::draw(sf::RenderTarget &window, sf::RenderStates states) const {
 }
 
 void SFMLButton::eventHandler(sf::RenderWindow &window, sf::Event event) {
-    sf::Vector2f mPos = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
-    bool btnContainsMouse = background.getGlobalBounds().contains(mPos);
+    MouseEvents::eventHandler(window, event, background);
 
-    disableState(CLICKED);
-
-    if (btnContainsMouse) {
-        if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left && (lastClickedTime + 1 <= time(nullptr))) {
-            lastClickedTime = time(nullptr);
-            enableState(CLICKED);
-        }
-        if (!isEnabled(HOVERED)) {
-            sf::Cursor cursor;
-            if (cursor.loadFromSystem(sf::Cursor::Hand))
-                window.setMouseCursor(cursor);
-        }
-        enableState(HOVERED);
-    } else {
-        if (isEnabled(HOVERED)) {
-            sf::Cursor cursor;
-            if (cursor.loadFromSystem(sf::Cursor::Arrow))
-                window.setMouseCursor(cursor);
-        }
-        disableState(HOVERED);
+    if (MouseEvents::mouseButtonReleased(false)) {
+        sound.setBuffer(ResourceHolder::getSoundBuffer("resources/sounds/mixkit-arcade-game-jump-coin-216.wav"));
+        sound.setVolume(25);
+        sound.play();
+//        if (music.getStatus() != sf::SoundSource::Status::Playing) {
+//            std::cout << "music" << std::endl;
+//            music.play();
+////            music.setLoop(true);
+//        }
     }
 }
 
 bool SFMLButton::isClicked() const {
-    return isEnabled(CLICKED);
+    return MouseEvents::mouseButtonReleased(true);
 }
 
 void SFMLButton::update() {
-    if (isEnabled(HOVERED)) {
 
+    if (MouseEvents::isHovering()) {
+        background.setOutlineThickness(4);
     } else {
-
+        background.setOutlineThickness(3);
     }
 }
 

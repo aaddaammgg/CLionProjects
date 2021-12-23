@@ -1,5 +1,5 @@
 //
-// Created by Adam Gonzalez on 11/25/21.
+// Created by NAMEHERE on 11/25/21.
 //
 
 #include "SFMLSceneSwitcher.h"
@@ -32,6 +32,7 @@ void SFMLSceneSwitcher::eventHandler(sf::RenderWindow &window, sf::Event event) 
 }
 
 void SFMLSceneSwitcher::draw(sf::RenderTarget &window, sf::RenderStates states) const {
+    window.draw(snowFalling);
     switch (getCurrentScene()) {
         case MAIN_MENU:
         default:
@@ -43,14 +44,15 @@ void SFMLSceneSwitcher::draw(sf::RenderTarget &window, sf::RenderStates states) 
     }
 }
 
-void SFMLSceneSwitcher::update() {
+void SFMLSceneSwitcher::update(sf::RenderWindow& window) {
+    snowFalling.update(window);
     switch (getCurrentScene()) {
         case MAIN_MENU:
         default:
             mainMenuScene.update();
             break;
         case GAME_PLAYING:
-            gamePlayingScene.update();
+            gamePlayingScene.update(window);
             break;
     }
 }

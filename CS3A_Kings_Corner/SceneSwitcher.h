@@ -1,11 +1,12 @@
 //
-// Created by Adam Gonzalez on 11/25/21.
+// Created by NAMEHERE on 11/25/21.
 //
 
 #ifndef SFML_KINGS_CORNER_SCENESWITCHER_H
 #define SFML_KINGS_CORNER_SCENESWITCHER_H
 
 #include "ScenesENUM.h"
+#include <windows.h>
 
 class SceneSwitcher {
 private:

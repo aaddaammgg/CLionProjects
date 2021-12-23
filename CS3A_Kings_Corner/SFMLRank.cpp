@@ -1,5 +1,5 @@
 //
-// Created by Adam G. on 11/20/2021.
+// Created by NAMEHERE on 11/20/2021.
 //
 
 #include "SFMLRank.h"
@@ -18,9 +18,12 @@ SFMLRank::SFMLRank(BaseRank baseRank) {
 
 void SFMLRank::setRank(RanksENUM rank) {
    // faceValueSF.setFont(fontSF);
-    faceValueSF.setFont(ResourceHolder::getFont("card_font.ttf"));
+    faceValueSF.setFont(ResourceHolder::getFont("resources/fonts/card_font.ttf"));
     faceValueSF.setString(getRank().toShortString());
     faceValueSF.setCharacterSize(28);
+
+    bounds.width = faceValueSF.getGlobalBounds().width;
+    bounds.height = faceValueSF.getGlobalBounds().height;
 
 //    faceValueSF.setStyle(sf::Text::Bold);
     //faceValueSF.setPosition({20, 5});
@@ -35,9 +38,13 @@ SuitsColorENUM SFMLRank::getColor() {
 }
 
 void SFMLRank::setColor(SuitsColorENUM color) {
-    sf::Color col = ((color == RED) ? sf::Color::Red : sf::Color::Black);
+    sf::Color col = ((color == RED) ? sf::Color(0xa33334FF) : sf::Color::Black);
     faceValueSF.setFillColor(col);
     this->suitColor = color;
+}
+
+sf::FloatRect SFMLRank::getBounds() {
+    return bounds;
 }
 
 sf::Text SFMLRank::getFaceValueSF() {
@@ -45,6 +52,6 @@ sf::Text SFMLRank::getFaceValueSF() {
 }
 
 void SFMLRank::draw(sf::RenderTarget &window, sf::RenderStates states) const {
-    states = getTransform();
+    states.transform *= getTransform();
     window.draw(faceValueSF, states);
 }

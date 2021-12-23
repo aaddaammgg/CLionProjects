@@ -1,5 +1,5 @@
 //
-// Created by Adam G. on 11/20/2021.
+// Created by NAMEHERE on 11/20/2021.
 //
 
 #ifndef CS3A_KINGS_CORNER_CARDHAND_H
@@ -18,8 +18,9 @@ public:
 
     void addCard(BaseCard card);
     void sort();
+    void emptyCards();
 
-    std::vector<BaseCard> getAllCards();
+    std::vector<BaseCard> getAllCards() const;
 
     friend std::ostream& operator<<(std::ostream& os, const CardHand& hand);
 };

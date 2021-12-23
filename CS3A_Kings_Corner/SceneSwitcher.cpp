@@ -1,5 +1,5 @@
 //
-// Created by Adam Gonzalez on 11/25/21.
+// Created by NAMEHERE on 11/25/21.
 //
 
 #include "SceneSwitcher.h"
@@ -13,6 +13,7 @@ void SceneSwitcher::setCurrentScene(ScenesENUM scene) {
 }
 
 void SceneSwitcher::changeScene(ScenesENUM scene) {
+//    Sleep(10);
     setCurrentScene(scene);
 }
 

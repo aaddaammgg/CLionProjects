@@ -1,5 +1,5 @@
 //
-// Created by Adam G. on 11/20/2021.
+// Created by NAMEHERE on 11/20/2021.
 //
 
 #ifndef CS3A_KINGS_CORNER_SFMLSUIT_H
@@ -12,14 +12,15 @@
 class SFMLSuit : public sf::Drawable, public sf::Transformable {
 private:
     BaseSuit baseSuit;
-    //sf::Texture texture;
     sf::Sprite sprite;
+    sf::FloatRect bounds;
 public:
     SFMLSuit();
     SFMLSuit(BaseSuit baseSuit);
     SFMLSuit(SuitsENUM suit);
 
-    sf::Sprite getSprite();
+    sf::Sprite& getSprite();
+    sf::FloatRect getBounds();
 
     BaseSuit getSuit() const;
     void setSuit(SuitsENUM suit);

@@ -1,5 +1,5 @@
 //
-// Created by Adam G. on 11/20/2021.
+// Created by NAMEHERE on 11/20/2021.
 //
 
 #include "Deck.h"
@@ -7,6 +7,7 @@
 #include <random>
 
 Deck::Deck() : cardIndex(0) {
+    std::cout << "new deck" << std::endl;
     int tempIndex = 0;
     for (int i = 1; i < 5; i++) {
         for (int j = 1; j < 14; j++) {
@@ -25,9 +26,16 @@ void Deck::shuffle() {
     //unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     //std::shuffle(std::begin(deck), std::end(deck), std::default_random_engine(seed));
     std::random_shuffle(std::begin(deck), std::end(deck));
+    cardIndex = 0;
+    std::cout << "deck shuffle" << std::endl;
 }
 
 BaseCard Deck::dealCard() {
+
+    if (empty()) {
+        return deck[0];
+    }
+
     BaseCard temp = deck[cardIndex];
     cardIndex++;
     return temp;

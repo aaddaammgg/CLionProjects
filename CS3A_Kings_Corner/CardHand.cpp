@@ -1,5 +1,5 @@
 //
-// Created by Adam G. on 11/20/2021.
+// Created by NAMEHERE on 11/20/2021.
 //
 
 #include "CardHand.h"
@@ -10,18 +10,22 @@ CardHand::CardHand() {
 
 void CardHand::addCard(BaseCard card) {
     allCards.push_back(card);
-
 }
 
 void CardHand::sort() {
-    std::sort(allCards.begin(), allCards.end());
+    std::sort(allCards.rbegin(), allCards.rend());
 }
 
-std::vector<BaseCard> CardHand::getAllCards() {
+void CardHand::emptyCards() {
+    allCards.clear();
+}
+
+std::vector<BaseCard> CardHand::getAllCards() const {
     return allCards;
 }
 
 std::ostream &operator<<(std::ostream &os, const CardHand &hand) {
+
     int i = 0;
     for (auto card : hand.allCards) {
         os << i << ": " << card << " RANK: " << card.getRank().toInt() << " SUIT: " << card.getSuit().toInt() << std::endl;

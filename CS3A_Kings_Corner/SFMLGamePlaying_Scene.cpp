@@ -1,5 +1,5 @@
 //
-// Created by Adam Gonzalez on 11/25/21.
+// Created by NAMEHERE on 11/25/21.
 //
 
 #include "SFMLGamePlaying_Scene.h"
@@ -18,40 +18,85 @@ SFMLGamePlaying_Scene::SFMLGamePlaying_Scene() {
     exitButton.setCharSize(BUTTON_TEXT_SIZE);
     exitButton.setPosition(15, 15);
 
-    refreshButton.setText("REFRESH");
-    refreshButton.setFillColor(sf::Color(BUTTON_BACKGROUND_COLOR));
-    refreshButton.setTextColor(sf::Color(BUTTON_TEXT_COLOR));
-    refreshButton.setCharSize(BUTTON_TEXT_SIZE);
-    refreshButton.setPosition(100, WINDOW_HEIGHT / 2);
+    newGameButton.setText("RESTART");
+    newGameButton.setFillColor(sf::Color(BUTTON_BACKGROUND_COLOR));
+    newGameButton.setTextColor(sf::Color(BUTTON_TEXT_COLOR));
+    newGameButton.setCharSize(BUTTON_TEXT_SIZE);
+
+    sf::FloatRect newGameBounds = newGameButton.getGlobalBounds();
+
+//    std::cout << "width : " << newGameBounds.width << std::endl;
+
+    newGameButton.setPosition(WINDOW_WIDTH - 252 - 15, 15);
+
+    compass = SFMLCompass();
+    compass.init();
+    compass.setPosition({WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2});
+
+//    turnOrder = SFMLGameTurnOrder();
+//    turnOrder.setPosition({WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2});
+//    turnOrder.addPlayer(compass.getCompassCardPiles().getDeck());
 }
 
 void SFMLGamePlaying_Scene::eventHandler(sf::RenderWindow &window, sf::Event event, ScenesENUM &scene) {
     exitButton.eventHandler(window, event);
-    refreshButton.eventHandler(window, event);
+    newGameButton.eventHandler(window, event);
+    compass.eventHandler(window, event);
+//    turnOrder.eventHandler(window, event);
+//    sfmlCardPile.eventHandler(window, event);
+
 
     if (exitButton.isClicked()) {
         scene = MAIN_MENU;
-    } else if (refreshButton.isClicked()) {
-        deck = Deck();
-        deck.shuffle();
-        chTest = CardHand();
-        for (int k = 0; k < 5; k++) {
-            chTest.addCard(deck.dealCard());
-        }
+    } else if (newGameButton.isClicked()) {
+        compass = SFMLCompass();
+        compass.init();
+        compass.setPosition({WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2});
 
-        sfmlCardHand = SFMLCardHand(chTest);
-        sfmlCardHand.setPosition(100, WINDOW_HEIGHT / 2 + 70);
+//        turnOrder = SFMLGameTurnOrder();
+//        turnOrder.setPosition({WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2});
+//        turnOrder.addPlayer(compass.getCompassCardPiles().getDeck());
+
+//        compass.getCompassCardPiles().get
+
+//        deck = Deck();
+//        deck.shuffle();
+//        cpTest = CardPile();
+//
+//        for (int k = 0; k < 5; k++) {
+//            cpTest.addCard(deck.dealCard());
+//        }
+//
+//        cpTest.sort();
+//
+//        std::cout << cpTest << std::endl;
+//
+//        sfmlCardPile = SFMLCardPile(cpTest);
+//        sfmlCardPile.setOrigin({sfmlCardPile.getBounds().width / 2, sfmlCardPile.getBounds().height / 2});
+//
+//        sfmlCardPile.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+//        sfmlCardPile.setRotation(45.f);
     }
+//    else if (sfmlCardPile.mouseButtonReleased(false)) {
+//        std::cout << "test" << std::endl;
+////        sfmlCardPile.rotate(45.f);
+//    }
 }
 
 void SFMLGamePlaying_Scene::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     window.draw(title);
     window.draw(exitButton);
-    window.draw(refreshButton);
-    window.draw(sfmlCardHand);
+    window.draw(newGameButton);
+    window.draw(compass);
+//    window.draw(turnOrder);
+//    window.draw(sfmlCardPile);
 }
 
-void SFMLGamePlaying_Scene::update() {
+void SFMLGamePlaying_Scene::update(sf::RenderWindow& window) {
     exitButton.update();
-    refreshButton.update();
+    newGameButton.update();
+    compass.update(window);
+//    turnOrder.update(window);
+//    compass.rotate(0.5);
+//    sfmlCardPile.update(window);
 }
