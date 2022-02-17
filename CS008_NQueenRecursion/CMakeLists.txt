@@ -3,4 +3,4 @@ project(CS008_NQueenRecursion)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(CS008_NQueenRecursion main.cpp)
+add_executable(CS008_NQueenRecursion main.cpp NQueen.cpp NQueen.h Timer.cpp Timer.h)

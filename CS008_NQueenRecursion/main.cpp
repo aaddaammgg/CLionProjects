@@ -1,6 +1,15 @@
 #include <iostream>
+#include "NQueen.h"
+#include "Timer.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Timer t;
+    t.start();
+
+    NQueen a(5);
+
+    t.end();
+
+    std::cout << "It took " << t.getDuration() << " seconds" << std::endl;
     return 0;
 }
