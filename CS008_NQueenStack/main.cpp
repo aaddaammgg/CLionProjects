@@ -9,5 +9,7 @@ int main() {
     n.print();
     n.solve(5);
     n.print();
+    n.solve(16);
+    n.print();
     return 0;
 }

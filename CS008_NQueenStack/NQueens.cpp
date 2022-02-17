@@ -47,18 +47,25 @@ void NQueens::solve(int n) {
     initArray();
 
     while (!success && !queens.empty()) {
-
         if (isConflict()) {
-            if (!isOutOfBounds()) {
-                queens.top().second++;
-            } else {
-                while (!queens.empty() && isOutOfBounds()) {
-                    queens.pop();
-                    if (!queens.empty()) {
-                        queens.top().second++;
-                    }
-                }
+            while (!queens.empty() && queens.top().second == (n - 1)) {
+                queens.pop();
             }
+
+            if (!queens.empty()) {
+                queens.top().second++;
+            }
+
+//            if (!isOutOfBounds()) {
+//                queens.top().second++;
+//            } else {
+//                while (!queens.empty() && isOutOfBounds()) {
+//                    queens.pop();
+//                    if (!queens.empty()) {
+//                        queens.top().second++;
+//                    }
+//                }
+//            }
         } else if (queens.size() == n) {
             success = true;
         } else {
