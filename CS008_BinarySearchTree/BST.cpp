@@ -42,6 +42,21 @@ void BST<T>::insert(const T &item) {
 }
 
 template<class T>
+void BST<T>::remove(TreeNode<T> *&node, const T &item) {
+
+}
+
+template<class T>
+void BST<T>::remove(const T &item) {
+    remove(root, item);
+}
+
+template<class T>
+void BST<T>::remove_max(TreeNode<T> *&node, T &item) {
+
+}
+
+template<class T>
 void BST<T>::inorder(TreeNode<T> *node, void f(T &)) {
     if (node != nullptr) {
         inorder(node->left, f);
