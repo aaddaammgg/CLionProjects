@@ -15,8 +15,9 @@ private:
     TreeNode<T>* root = nullptr;
 
     void insert(TreeNode<T>*& node, const T& item);
-    void addFirstNode(T item);
+    static void output(T& item);
     TreeNode<T>* createNode(T item);
+    void DestructBST(TreeNode<T>* node);
 
     void inorder(TreeNode<T>* node, void f(T&));
     void preorder(TreeNode<T>* node, void f(T&));
@@ -27,10 +28,8 @@ public:
 //    BST();
     void insert(const T& item);
     void traverse(Traversal traverse, void f(T&));
-
+    void output(Traversal trav);
     bool isEmpty();
-
-    void output();
 };
 
 #include "BST.cpp"

@@ -1,10 +1,9 @@
 #include <iostream>
-#include "A.h"
+#include <vector>
 #include "BST.h"
 
-void aFunction(int& i);
-void anotherFunction(int& i);
-
+void fill(BST<int>& tree, int amt);
+void doubleData(int& i);
 void output(int& i);
 
 int main() {
@@ -16,25 +15,27 @@ int main() {
 
     BST<int> bst;
 
-    bst.insert(1);
-    bst.insert(10);
-    bst.insert(3);
-    bst.insert(90);
-    bst.insert(100);
-
-    bst.traverse(INORDER, output);
+    fill(bst, 10);
+    bst.output(INORDER);
+    bst.traverse(INORDER, doubleData);
+    bst.output(INORDER);
 
     return 0;
 }
 
-void output(int& i) {
-    std::cout << i << " ";
+void fill(BST<int>& tree, int amt) {
+    for (int i = 0; i < amt; ++i) {
+        int r = rand() % 100;
+        output(r);
+        tree.insert(r);
+    }
+    std::cout << std::endl;
 }
 
-void aFunction(int& i) {
-    std::cout << "A Function: " << i << std::endl;
-}
-void anotherFunction(int& i) {
+void doubleData(int& i) {
     i *= 2;
-    std::cout << "Another Function: " << i << std::endl;
+}
+
+void output(int& i) {
+    std::cout << i << " ";
 }

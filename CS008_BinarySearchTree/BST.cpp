@@ -1,7 +1,6 @@
 //
 // Created by Adam G. on 2/23/22.
 //
-
 #ifndef CS008_BINARYSEARCHTREE_BST_CPP
 #define CS008_BINARYSEARCHTREE_BST_CPP
 
@@ -14,26 +13,32 @@ BST<T>::BST() {
 
 template<class T>
 BST<T>::~BST() {
+    DestructBST(root);
+}
 
+template<class T>
+void BST<T>::DestructBST(TreeNode<T> *node) {
+    if (node) {
+        DestructBST(node->left);
+        DestructBST(node->right);
+        delete node;
+    }
 }
 
 template<class T>
 void BST<T>::insert(TreeNode<T> *&node, const T &item) {
-    if (isEmpty()) {
-        addFirstNode(item);
-    } else if (item >= node->data) {
-        if (node->right == nullptr) {
-            node->right = createNode(item);
-        } else {
-            insert(node->right, item);
-        }
+    if (node == nullptr) {
+        node = createNode(item);
     } else if (item < node->data) {
-        if (node->left == nullptr) {
-            node->left = createNode(item);
-        } else {
-            insert(node->left, item);
-        }
+        insert(node->left, item);
+    } else {
+        insert(node->right, item);
     }
+}
+
+template<class T>
+void BST<T>::insert(const T &item) {
+    insert(root, item);
 }
 
 template<class T>
@@ -64,18 +69,13 @@ void BST<T>::postorder(TreeNode<T> *node, void f(T &)) {
 }
 
 template<class T>
-void BST<T>::insert(const T &item) {
-    insert(root, item);
-}
-
-template<class T>
 void BST<T>::traverse(Traversal traverse, void f(T &)) {
     switch (traverse) {
-        case PREORDER:
-            preorder(root, f);
-            return;
         case INORDER:
             inorder(root, f);
+            return;
+        case PREORDER:
+            preorder(root, f);
             return;
         case POSTORDER:
             postorder(root, f);
@@ -92,18 +92,19 @@ TreeNode<T> *BST<T>::createNode(T item) {
 }
 
 template<class T>
-void BST<T>::addFirstNode(T item) {
-    root = createNode(item);
-}
-
-template<class T>
 bool BST<T>::isEmpty() {
     return root == nullptr;
 }
 
 template<class T>
-void BST<T>::output() {
+void BST<T>::output(Traversal trav) {
+    traverse(trav, output);
+    std::cout << std::endl;
+}
 
+template<class T>
+void BST<T>::output(T& item) {
+    std::cout << item << " ";
 }
 
 #endif //CS008_BINARYSEARCHTREE_BST_CPP
