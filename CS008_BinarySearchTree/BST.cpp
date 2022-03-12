@@ -22,38 +22,75 @@ void BST<T>::DestructBST(TreeNode<T> *node) {
         DestructBST(node->left);
         DestructBST(node->right);
         delete node;
+        root = nullptr;
     }
 }
 
 template<class T>
-void BST<T>::insert(TreeNode<T> *&node, const T &item) {
+void BST<T>::insert(TreeNode<T> *&node, const T &data) {
     if (node == nullptr) {
-        node = createNode(item);
-    } else if (item < node->data) {
-        insert(node->left, item);
+        node = createNode(data);
+    } else if (data <= node->data) {
+        insert(node->left, data);
     } else {
-        insert(node->right, item);
+        insert(node->right, data);
     }
 }
 
 template<class T>
-void BST<T>::insert(const T &item) {
-    insert(root, item);
+void BST<T>::insert(const T &data) {
+    insert(root, data);
 }
 
 template<class T>
-void BST<T>::remove(TreeNode<T> *&node, const T &item) {
-
+void BST<T>::remove(TreeNode<T> *&node, const T &target) {
+    if (node != nullptr) {
+        if (target > node->data) {
+            remove(node->right, target);
+        } else if (target < node->data) {
+            remove(node->left, target);
+        } else {
+            if (node->left == nullptr) {
+                TreeNode<T>* temp = node; // reserve
+                node = node->right;
+                delete temp;
+            } else {
+                remove_max(node->left, node->data);
+            }
+        }
+    }
 }
 
 template<class T>
-void BST<T>::remove(const T &item) {
-    remove(root, item);
+void BST<T>::remove(const T &target) {
+    remove(root, target);
 }
 
 template<class T>
-void BST<T>::remove_max(TreeNode<T> *&node, T &item) {
+void BST<T>::remove_max(TreeNode<T> *&node, T &target) {
+    if (node != nullptr) {
+        if (node->right == nullptr) {
+            target = node->data;
+            TreeNode<T>* temp = node; // reserve
+            node = node->left;
+            delete temp;
+        } else {
+            remove_max(node->right, target);
+        }
+    }
+}
 
+template<class T>
+TreeNode<T> *BST<T>::search(TreeNode<T> *node, const T &data) {
+    if (node->data == data) {
+        return node;
+    } else if (node->data < data) {
+        search(node->left, data);
+    } else if (node->data > data) {
+        search(node->right, data);
+    } else {
+        return nullptr;
+    }
 }
 
 template<class T>
@@ -99,9 +136,9 @@ void BST<T>::traverse(Traversal traverse, void f(T &)) {
 }
 
 template<class T>
-TreeNode<T> *BST<T>::createNode(T item) {
+TreeNode<T> *BST<T>::createNode(T data) {
     TreeNode<T>* n = new TreeNode<T>;
-    n->data = item;
+    n->data = data;
 
     return n;
 }
@@ -118,8 +155,8 @@ void BST<T>::output(Traversal trav) {
 }
 
 template<class T>
-void BST<T>::output(T& item) {
-    std::cout << item << " ";
+void BST<T>::output(T& data) {
+    std::cout << data << " ";
 }
 
 #endif //CS008_BINARYSEARCHTREE_BST_CPP

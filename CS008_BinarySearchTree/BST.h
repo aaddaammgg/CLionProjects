@@ -14,11 +14,12 @@ class BST {
 private:
     TreeNode<T>* root = nullptr;
 
-    void insert(TreeNode<T>*& node, const T& item);
-    void remove(TreeNode<T>*& node, const T& item);
-    void remove_max(TreeNode<T>*& node, T& item);
-    static void output(T& item);
-    TreeNode<T>* createNode(T item);
+    void insert(TreeNode<T>*& node, const T& data);
+    void remove(TreeNode<T>*& node, const T& target);
+    void remove_max(TreeNode<T>*& node, T& target);
+    TreeNode<T>* search(TreeNode<T> *node, const T& data);
+    static void output(T& data);
+    TreeNode<T>* createNode(T data);
     void DestructBST(TreeNode<T>* node);
 
     void inorder(TreeNode<T>* node, void f(T&));
@@ -29,8 +30,8 @@ public:
     ~BST();
 //    BST();
 
-    void insert(const T& item);
-    void remove(const T& item);
+    void insert(const T& data);
+    void remove(const T& target);
     void traverse(Traversal traverse, void f(T&));
     void output(Traversal trav);
     bool isEmpty();
