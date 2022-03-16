@@ -43,6 +43,11 @@ void BST<T>::insert(const T &data) {
 }
 
 template<class T>
+void BST<T>::add(const T &data) {
+    insert(root, data);
+}
+
+template<class T>
 void BST<T>::remove(TreeNode<T> *&node, const T &target) {
     if (node != nullptr) {
         if (target > node->data) {
@@ -157,6 +162,12 @@ void BST<T>::output(Traversal trav) {
 template<class T>
 void BST<T>::output(T& data) {
     std::cout << data << " ";
+}
+
+template<class T>
+BST<T> &BST<T>::operator+=(const T &rhs) {
+    add(rhs);
+    return *this;
 }
 
 #endif //CS008_BINARYSEARCHTREE_BST_CPP

@@ -31,10 +31,13 @@ public:
 //    BST();
 
     void insert(const T& data);
+    void add(const T& data);
     void remove(const T& target);
     void traverse(Traversal traverse, void f(T&));
     void output(Traversal trav);
     bool isEmpty();
+
+    BST<T>& operator+=(const T& rhs);
 };
 
 #include "BST.cpp"
