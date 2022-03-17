@@ -3,4 +3,4 @@ project(CS008_BinarySearchTree)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(CS008_BinarySearchTree main.cpp TreeNode.h BST.cpp BST.h Traversal.h)
+add_executable(CS008_BinarySearchTree main.cpp TreeNode.h BST.cpp BST.h Traversal.h ExpressionTree.cpp ExpressionTree.h)

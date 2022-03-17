@@ -11,8 +11,9 @@
 
 template <class T>
 class BST {
-private:
+protected:
     TreeNode<T>* root = nullptr;
+private:
 
     void insert(TreeNode<T>*& node, const T& data);
     void remove(TreeNode<T>*& node, const T& target);
