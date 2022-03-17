@@ -3,6 +3,7 @@
 
 int main() {
     std::cout << RPN::infixToPostFix("5+(3*2)+4-5") << "  --> " << RPN::solvePostFix("532*+4+5-") << std::endl << std::endl;
+    std::cout << RPN::infixToPostFix("1-(3+5)*(9+4)") << "  --> " << RPN::solvePostFix("135+94+*-") << std::endl << std::endl;
 
     std::cout << "234*+      --> " << RPN::solvePostFix("234*+") << std::endl;
     std::cout << "23*73/+    --> " << RPN::solvePostFix("23*73/+") << std::endl;

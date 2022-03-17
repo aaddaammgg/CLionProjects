@@ -19,15 +19,16 @@ std::string RPN::infixToPostFix(std::string expression) {
         } else if (isOperator(*it)) {
 //            operation.push(*it);
             do {
-                if (!operation.empty() && operation.top() != '(') {
+                if (!operation.empty() && operation.top() != '(' && !lessPrecedence(operation.top(), *it)) {
                     output += operation.top();
                     operation.pop();
                 }
             } while (
                     !operation.empty() &&
                     operation.top() != '(' &&
-                    !lessPrecedence(operation.top(), *it) // added !
+                    !lessPrecedence(operation.top(), *it)
                     );
+
             // this may need to be swapped
             operation.push(*it);
 //            ++it;
