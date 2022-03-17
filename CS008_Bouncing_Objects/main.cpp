@@ -8,8 +8,8 @@ int main() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    sf::RenderWindow window(sf::VideoMode(800*2, 600*2), "Bouncing Object", sf::Style::Close, settings);
-    window.setFramerateLimit(60);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Bouncing Object", sf::Style::Close, settings);
+    window.setFramerateLimit(30);
 
 //    BouncingObject<sf::CircleShape> ball;
     BouncingObject<sf::RectangleShape> ball;
@@ -24,8 +24,7 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        ball.bounce(window);
-
+        ball.update(window);
         window.clear(sf::Color::Black);
         window.draw(ball);
         window.display();

@@ -1,0 +1,15 @@
+//
+// Created by Adam G. on 11/20/2021.
+//
+
+#ifndef CS3A_KINGS_CORNER_STATESENUM_H
+#define CS3A_KINGS_CORNER_STATESENUM_H
+
+enum StatesENUM {
+    HOVERED, HIDDEN, CLICKED, HIT,
+
+
+    LAST_STATES
+};
+
+#endif //CS3A_KINGS_CORNER_STATESENUM_H

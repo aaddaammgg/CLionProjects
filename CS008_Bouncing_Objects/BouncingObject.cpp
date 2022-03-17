@@ -1,5 +1,5 @@
 //
-// Created by Adam Gonzalez on 1/29/22.
+// Created by Adam G. on 1/29/22.
 //
 
 #ifndef CS008_BOUNCING_OBJECTS_BOUNCINGBALL_CPP
@@ -18,6 +18,7 @@ T& BouncingObject<T>::shape() {
 
 template<class T>
 void BouncingObject<T>::bounce(sf::RenderWindow& window) {
+    disableState(HIT);
     const float& _x = (_shape.getPosition().x) + (x);
     const float& _y = (_shape.getPosition().y) + (y);
 
@@ -26,12 +27,12 @@ void BouncingObject<T>::bounce(sf::RenderWindow& window) {
 
     if (_x > (windowSize.x - gb.width) || _x < 0) {
         x = -x;
-        randomFillColor();
+        randomFillColor(); // will enable hit
     }
 
     if (_y > (windowSize.y - gb.height) || _y < 0) {
         y = -y;
-        randomFillColor();
+        randomFillColor(); // will enable hit
     }
 
     _shape.move(x, y);
@@ -40,6 +41,7 @@ void BouncingObject<T>::bounce(sf::RenderWindow& window) {
 template<class T>
 void BouncingObject<T>::randomFillColor() {
     _shape.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
+    enableState(HIT);
 }
 
 template<class T>
@@ -53,8 +55,9 @@ void BouncingObject<T>::eventHandler(sf::RenderWindow &window, sf::Event event) 
 }
 
 template<class T>
-void BouncingObject<T>::update() {
-
+void BouncingObject<T>::update(sf::RenderWindow& window) {
+    std::cout << isEnabled(HIT) << std::endl;
+    bounce(window);
 }
 
 #endif //CS008_BOUNCING_OBJECTS_BOUNCINGBALL_CPP
