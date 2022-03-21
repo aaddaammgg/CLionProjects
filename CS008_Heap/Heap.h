@@ -25,7 +25,10 @@ public:
     void push(const T& item);
     int size();
     bool empty();
+
+    Heap<T>& operator+=(const T& rhs);
 };
 
+#include "Heap.cpp"
 
 #endif //CS008_HEAP_HEAP_H
