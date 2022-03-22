@@ -8,10 +8,12 @@
 #include <SFML/Graphics.hpp>
 #include "GUIComponent.h"
 #include "Typing.h"
+#include "CursorBlink.h"
 
 class TextInput : public GUIComponent {
 private:
     sf::RectangleShape box;
+    CursorBlink cursorBlink;
     Typing typing;
 public:
     TextInput();

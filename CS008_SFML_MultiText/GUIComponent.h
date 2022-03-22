@@ -10,12 +10,13 @@
 
 class GUIComponent : public sf::Drawable, public sf::Transformable, public States {
 private:
-    sf::Vector2f size;
+    sf::Vector2f size = {10, 10};
 public:
     GUIComponent();
 
     sf::Vector2f getSize();
-    void setSize(sf::Vector2f size);
+
+    virtual void setSize(sf::Vector2f size);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const = 0;
     virtual void addEventHandler(sf::RenderWindow& window, sf::Event event) = 0;

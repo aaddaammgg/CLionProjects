@@ -14,7 +14,7 @@ PosBounds MultiText::getLastPos() {
 
 void MultiText::updatePosition(Letter &l) {
     PosBounds pb = getLastPos();
-    pb.pos.x += pb.bounds.width + pb.bounds.left + 1;
+    pb.pos.x += pb.bounds.width + pb.bounds.left + 2;
     l.setPosition(pb.pos);
 }
 
@@ -43,6 +43,14 @@ void MultiText::addChar(const sf::Text &text) {
     push(l);
 }
 
+int MultiText::getSize() {
+    return letters.size();
+}
+
+bool MultiText::isEmpty() {
+    return letters.empty();
+}
+
 void MultiText::removeChar() {
     if (!letters.empty()) {
         letters.pop_back();
@@ -59,11 +67,38 @@ void MultiText::update() {
 
 }
 
-const std::list<Letter>::iterator &MultiText::begin() {
+Letter &MultiText::index(int i) {
+    int count = 0;
+
+    for (auto & letter : letters) {
+        if (count == i) {
+            return letter;
+        }
+        count++;
+    }
+
+
+    auto *t = new Letter;
+    return *t;
+}
+
+//Letter &MultiText::cIndex(int i) const {
+//    return index(i);
+//}
+
+Letter &MultiText::front() {
+    return letters.front();
+}
+
+Letter &MultiText::back() {
+    return letters.back();
+}
+
+std::_List_iterator<Letter> MultiText::begin() {
     return letters.begin();
 }
 
-const std::list<Letter>::iterator &MultiText::end() {
+std::_List_iterator<Letter> MultiText::end() {
     return letters.end();
 }
 
@@ -91,4 +126,12 @@ MultiText MultiText::operator--(int) {
     MultiText tmp(*this);
     operator--();
     return tmp;
+}
+
+//Letter MultiText::operator[](int i) const {
+//    return index(i);
+//}
+
+Letter &MultiText::operator[](int i) {
+    return index(i);
 }

@@ -4,7 +4,7 @@
 
 int main() {
     srand(time(nullptr));
-//    sf::err().rdbuf(nullptr);
+    sf::err().rdbuf(nullptr);
 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -17,7 +17,7 @@ int main() {
 
     typing.setPosition(100,50);
     typing.setSize({200, 30});
-    typing.setScale({3, 1.5});
+    typing.setScale({1.5, 1.5});
 
     while (window.isOpen()) {
         sf::Event event{};

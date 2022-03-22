@@ -22,6 +22,8 @@ private:
     void updatePosition(Letter& l);
     void push(Letter& l);
     static sf::Color randomColor();
+    Letter& index(int i);
+//    Letter& cIndex(int i) const;
 public:
     MultiText();
 
@@ -29,19 +31,27 @@ public:
     void addChar(const std::string& str);
     void addChar(const sf::Text& text);
 
+    int getSize();
+    bool isEmpty();
+
     void removeChar();
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
     void update();
 
-    const std::list<Letter>::iterator& begin();
-    const std::list<Letter>::iterator& end();
+    Letter& front();
+    Letter& back();
+
+    std::_List_iterator<Letter> begin();
+    std::_List_iterator<Letter> end();
 
     MultiText& operator+=(const char& rhs);
     MultiText& operator+=(const std::string& rhs);
     MultiText& operator+=(const sf::Text& rhs);
     MultiText& operator--();
     MultiText operator--(int);
+//    Letter operator[](int i) const;
+    Letter& operator[](int i);
 };
 
 

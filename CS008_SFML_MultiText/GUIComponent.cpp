@@ -5,7 +5,7 @@
 #include "GUIComponent.h"
 
 GUIComponent::GUIComponent() {
-    setSize({10, 10});
+
 }
 
 sf::Vector2f GUIComponent::getSize() {
