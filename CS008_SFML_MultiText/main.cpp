@@ -1,6 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Typing.h"
+#include "TextInput.h"
 
 int main() {
     srand(time(nullptr));
@@ -13,7 +13,11 @@ int main() {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(false);
 
-    Typing typing;
+    TextInput typing;
+
+    typing.setPosition(100,50);
+    typing.setSize({200, 30});
+    typing.setScale({3, 1.5});
 
     while (window.isOpen()) {
         sf::Event event{};
@@ -24,7 +28,7 @@ int main() {
             typing.addEventHandler(window, event);
         }
         typing.update();
-        window.clear(sf::Color(sf::Color::Black));
+        window.clear(sf::Color(sf::Color::White));
         window.draw(typing);
         window.display();
     }

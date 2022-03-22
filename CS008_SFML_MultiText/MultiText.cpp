@@ -51,7 +51,7 @@ void MultiText::removeChar() {
 
 void MultiText::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     for (auto const& letter : letters) {
-        window.draw(letter);
+        window.draw(letter, states);
     }
 }
 

@@ -9,7 +9,7 @@ Typing::Typing() {
 }
 
 void Typing::draw(sf::RenderTarget &window, sf::RenderStates states) const {
-    window.draw(mt);
+    window.draw(mt, states);
 }
 
 void Typing::addEventHandler(sf::RenderWindow &window, sf::Event event) {
