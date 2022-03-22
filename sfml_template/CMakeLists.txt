@@ -9,7 +9,7 @@ project(${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h)
+set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.h StatesENUM.h)
 
 if (WIN32)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
