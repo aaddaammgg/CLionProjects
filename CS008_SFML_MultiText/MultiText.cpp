@@ -67,25 +67,6 @@ void MultiText::update() {
 
 }
 
-Letter &MultiText::index(int i) {
-    int count = 0;
-
-    for (auto & letter : letters) {
-        if (count == i) {
-            return letter;
-        }
-        count++;
-    }
-
-
-    auto *t = new Letter;
-    return *t;
-}
-
-//Letter &MultiText::cIndex(int i) const {
-//    return index(i);
-//}
-
 Letter &MultiText::front() {
     return letters.front();
 }
@@ -94,13 +75,13 @@ Letter &MultiText::back() {
     return letters.back();
 }
 
-std::_List_iterator<Letter> MultiText::begin() {
-    return letters.begin();
-}
-
-std::_List_iterator<Letter> MultiText::end() {
-    return letters.end();
-}
+//std::list<Letter>::iterator MultiText::begin() {
+//    return letters.begin();
+//}
+//
+//std::list<Letter>::iterator MultiText::end() {
+//    return letters.end();
+//}
 
 MultiText &MultiText::operator+=(const char &rhs) {
     this->addChar(rhs);
@@ -132,6 +113,6 @@ MultiText MultiText::operator--(int) {
 //    return index(i);
 //}
 
-Letter &MultiText::operator[](int i) {
-    return index(i);
-}
+//Letter &MultiText::operator[](int i) {
+//    return index(i);
+//}

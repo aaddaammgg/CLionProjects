@@ -19,17 +19,26 @@ int main() {
     typing.setSize({200, 30});
     typing.setScale({1.5, 1.5});
 
+    std::vector<GUIComponent*> components;
+    components.push_back(&typing);
+
     while (window.isOpen()) {
         sf::Event event{};
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-            typing.addEventHandler(window, event);
+            for (auto & component : components) {
+                component->addEventHandler(window, event);
+            }
         }
-        typing.update();
+        for (auto & component : components) {
+            component->update();
+        }
         window.clear(sf::Color(sf::Color::White));
-        window.draw(typing);
+        for (auto & component : components) {
+            window.draw(*component);
+        }
         window.display();
     }
 

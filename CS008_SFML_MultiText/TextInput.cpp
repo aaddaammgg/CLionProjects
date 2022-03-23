@@ -10,10 +10,10 @@ TextInput::TextInput() {
     box.setOutlineThickness(5);
 
     cursorBlink.setPosition(1, 1);
+    typing.setPosition(0, -2);
 
     enableState(SELECTED);
     cursorBlink.enableState(SELECTED);
-
 }
 
 void TextInput::setSize(sf::Vector2f size) {

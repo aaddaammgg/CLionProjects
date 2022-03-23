@@ -6,10 +6,11 @@
 #define CS008_SFML_TYPING_TYPING_H
 
 #include <SFML/Graphics.hpp>
+#include "GUIComponent.h"
 #include "ResourceHolder.h"
 #include "MultiText.h"
 
-class Typing : public sf::Drawable {
+class Typing : public GUIComponent {
 private:
     MultiText mt;
 public:

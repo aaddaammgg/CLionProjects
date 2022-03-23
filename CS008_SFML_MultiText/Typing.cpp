@@ -13,8 +13,8 @@ MultiText &Typing::getMultiText() {
 }
 
 void Typing::draw(sf::RenderTarget &window, sf::RenderStates states) const {
+    states.transform *= getTransform();
     window.draw(mt, states);
-
 }
 
 void Typing::addEventHandler(sf::RenderWindow &window, sf::Event event) {
