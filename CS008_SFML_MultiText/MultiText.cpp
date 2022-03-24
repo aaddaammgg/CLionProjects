@@ -20,7 +20,10 @@ void MultiText::updatePosition(Letter &l) {
 
 void MultiText::push(Letter &l) {
     l.setFillColor(randomColor());
-    updatePosition(l);
+    if (!letters.empty()) {
+        updatePosition(l);
+
+    }
     letters.push_back(l);
 }
 
@@ -44,7 +47,7 @@ void MultiText::addChar(const sf::Text &text) {
 }
 
 int MultiText::getSize() {
-    return letters.size();
+    return static_cast<int>(letters.size());
 }
 
 bool MultiText::isEmpty() {
@@ -75,13 +78,13 @@ Letter &MultiText::back() {
     return letters.back();
 }
 
-//std::list<Letter>::iterator MultiText::begin() {
-//    return letters.begin();
-//}
-//
-//std::list<Letter>::iterator MultiText::end() {
-//    return letters.end();
-//}
+auto MultiText::begin() {
+    return letters.begin();
+}
+
+auto MultiText::end() {
+    return letters.end();
+}
 
 MultiText &MultiText::operator+=(const char &rhs) {
     this->addChar(rhs);
@@ -103,7 +106,7 @@ MultiText &MultiText::operator--() {
     return *this;
 }
 
-MultiText MultiText::operator--(int) {
+MultiText MultiText::operator--(int) & {
     MultiText tmp(*this);
     operator--();
     return tmp;

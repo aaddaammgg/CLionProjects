@@ -15,6 +15,7 @@ struct PosBounds {
     sf::FloatRect bounds;
 };
 
+
 class MultiText : public sf::Drawable {
 private:
     std::list<Letter> letters;
@@ -22,13 +23,15 @@ private:
     void updatePosition(Letter& l);
     void push(Letter& l);
     static sf::Color randomColor();
+
+    unsigned int characterSize = 30;
+
 public:
     MultiText();
 
     void addChar(char c);
     void addChar(const std::string& str);
     void addChar(const sf::Text& text);
-
 
     int getSize();
     bool isEmpty();
@@ -41,14 +44,14 @@ public:
     Letter& front();
     Letter& back();
 
-//    typedef typename std::list<Letter>::iterator begin();
-//    typedef typename std::list<Letter>::iterator end();
+    auto begin(); // begin iterator
+    auto end(); // end iterator
 
     MultiText& operator+=(const char& rhs);
     MultiText& operator+=(const std::string& rhs);
     MultiText& operator+=(const sf::Text& rhs);
     MultiText& operator--();
-    MultiText operator--(int);
+    MultiText operator--(int)&;
 };
 
 
