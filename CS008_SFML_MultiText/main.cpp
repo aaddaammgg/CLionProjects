@@ -16,8 +16,8 @@ int main() {
     TextInput typing;
 
     typing.setPosition(100,50);
-    typing.setSize({200, 30});
-    typing.setScale({1.5, 1.5});
+    typing.setSize({200, 50});
+//    typing.setScale({1.5, 1.5});
 
     std::vector<GUIComponent*> components;
     components.push_back(&typing);

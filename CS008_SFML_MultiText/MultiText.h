@@ -33,6 +33,11 @@ public:
     void addChar(const std::string& str);
     void addChar(const sf::Text& text);
 
+    std::string getString();
+
+    unsigned int getCharacterSize() const;
+    void setCharacterSize(unsigned int size);
+
     int getSize();
     bool isEmpty();
 

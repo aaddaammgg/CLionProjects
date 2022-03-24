@@ -20,9 +20,9 @@ void MultiText::updatePosition(Letter &l) {
 
 void MultiText::push(Letter &l) {
     l.setFillColor(randomColor());
+    l.setCharacterSize(characterSize);
     if (!letters.empty()) {
         updatePosition(l);
-
     }
     letters.push_back(l);
 }
@@ -44,6 +44,26 @@ void MultiText::addChar(const std::string& str) {
 void MultiText::addChar(const sf::Text &text) {
     Letter l = (Letter &&) text;
     push(l);
+}
+
+std::string MultiText::getString() {
+    std::string temp;
+    for (auto & letter : letters) {
+        temp += letter.getString();
+    }
+
+    return temp;
+}
+
+unsigned int MultiText::getCharacterSize() const {
+    return characterSize;
+}
+
+void MultiText::setCharacterSize(unsigned int size) {
+    characterSize = size;
+    for (auto & letter : letters) {
+        letter.setCharacterSize(size);
+    }
 }
 
 int MultiText::getSize() {

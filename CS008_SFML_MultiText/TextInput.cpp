@@ -20,6 +20,7 @@ void TextInput::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
     box.setSize(size);
     cursorBlink.setSize({2, size.y - 2});
+    typing.getMultiText().setCharacterSize(static_cast<unsigned int>(size.y));
 }
 
 void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
