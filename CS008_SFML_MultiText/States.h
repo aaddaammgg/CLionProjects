@@ -12,6 +12,7 @@ class States {
 private:
     std::map<StatesENUM, bool> states;
 public:
+    virtual void onStateChange(StatesENUM state);
     bool isEnabled(StatesENUM state) const;
     void enableState(StatesENUM state);
     void disableState(StatesENUM state);

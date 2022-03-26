@@ -23,44 +23,49 @@ void TextInput::setSize(sf::Vector2f size) {
     typing.getMultiText().setCharacterSize(static_cast<unsigned int>(size.y));
 }
 
+void TextInput::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
+    if (button != sf::Mouse::Left) return;
+
+    sf::FloatRect boxPos = getTransform().transformRect(box.getGlobalBounds());
+
+    std::cout << "Mouse: " << pos.x << " " << pos.y << std::endl;
+    std::cout << "Box: " << boxPos.left << " " << boxPos.top << std::endl;
+
+    if (boxPos.contains(pos)) {
+        box.setOutlineColor(sf::Color::Green);
+        enableState(SELECTED);
+        cursorBlink.enableState(SELECTED);
+    } else {
+        box.setOutlineColor(sf::Color::Red);
+        disableState(SELECTED);
+        cursorBlink.disableState(SELECTED);
+    }
+}
+
+void TextInput::onTextEntered(sf::Uint32 unicode) {
+    if (typing.getMultiText().isEmpty()) {
+        cursorBlink.setPosition({1, 1});
+    } else {
+        sf::Vector2f curPos = typing.getMultiText().back().getPosition();
+        sf::FloatRect backBounds = typing.getMultiText().back().getLocalBounds();
+
+        curPos += {1, 1};
+        curPos += {backBounds.width + backBounds.left + 1, 0};
+
+        cursorBlink.setPosition(curPos);
+    }
+}
+
 void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
     if (isEnabled(SELECTED)) {
         typing.addEventHandler(window, event);
-
-        if (event.type == sf::Event::TextEntered) {
-            if (typing.getMultiText().isEmpty()) {
-                cursorBlink.setPosition({1, 1});
-            } else {
-                sf::Vector2f curPos = typing.getMultiText().back().getPosition();
-                sf::FloatRect backBounds = typing.getMultiText().back().getLocalBounds();
-
-                curPos += {1, 1};
-                curPos += {backBounds.width + backBounds.left + 1, 0};
-
-                cursorBlink.setPosition(curPos);
-            }
-        }
     }
-
-    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-    sf::FloatRect boxPos = getTransform().transformRect(box.getGlobalBounds());
-
-    if (event.type == sf::Event::MouseButtonReleased) {
-        if (boxPos.contains(mousePos)) {
-            box.setOutlineColor(sf::Color::Green);
-            enableState(SELECTED);
-            cursorBlink.enableState(SELECTED);
-        } else {
-            box.setOutlineColor(sf::Color::Red);
-            disableState(SELECTED);
-            cursorBlink.disableState(SELECTED);
-        }
-    }
-
+    // Moved after typing's event handler due to typing class needing the highest priority
+    GUIComponent::addEventHandler(window, event);
 }
 
 void TextInput::draw(sf::RenderTarget &window, sf::RenderStates states) const {
-    states = getTransform();
+    states.transform = getTransform();
     window.draw(box, states);
     window.draw(typing, states);
     window.draw(cursorBlink, states);

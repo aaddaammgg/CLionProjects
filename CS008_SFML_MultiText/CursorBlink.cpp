@@ -28,11 +28,6 @@ void CursorBlink::draw(sf::RenderTarget &window, sf::RenderStates states) const 
         states.transform *= getTransform();
         window.draw(line, states);
     }
-
-}
-
-void CursorBlink::addEventHandler(sf::RenderWindow &window, sf::Event event) {
-
 }
 
 void CursorBlink::update() {

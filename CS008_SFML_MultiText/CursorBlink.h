@@ -22,7 +22,7 @@ public:
     void setSize(sf::Vector2f size);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
-    void addEventHandler(sf::RenderWindow& window, sf::Event event);
+    void addEventHandler(sf::RenderWindow& window, sf::Event event) {};
     void update();
 };
 

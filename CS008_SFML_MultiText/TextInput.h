@@ -20,7 +20,10 @@ public:
 
     void setSize(sf::Vector2f size);
 
-    void addEventHandler(sf::RenderWindow& window, sf::Event event);
+    virtual void onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos);
+    virtual void onTextEntered(sf::Uint32 unicode);
+
+    void addEventHandler(sf::RenderWindow& window, sf::Event event) override;
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
     void update();
 };

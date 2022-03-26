@@ -15,3 +15,7 @@ sf::Vector2f GUIComponent::getSize() {
 void GUIComponent::setSize(sf::Vector2f size) {
     this->size = size;
 }
+
+void GUIComponent::addEventHandler(sf::RenderWindow &window, sf::Event event) {
+    EventHandlerCallbacks::addEventHandler(window, event);
+}
