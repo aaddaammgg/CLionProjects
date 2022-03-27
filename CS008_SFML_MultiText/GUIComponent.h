@@ -8,8 +8,10 @@
 #include <SFML/Graphics.hpp>
 #include "States.h"
 #include "EventHandlerCallbacks.h"
+#include "KBShortcuts.h"
+#include "SnapshotInterface.h"
 
-class GUIComponent : public sf::Drawable, public sf::Transformable, public EventHandlerCallbacks, public States {
+class GUIComponent : public sf::Drawable, public sf::Transformable, public States, public EventHandlerCallbacks, public SnapshotInterface {
 private:
     sf::Vector2f size = {10, 10};
 public:

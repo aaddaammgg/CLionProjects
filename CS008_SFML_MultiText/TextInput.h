@@ -20,7 +20,11 @@ public:
 
     void setSize(sf::Vector2f size);
 
+    virtual Snapshot& getSnapshot();
+    virtual void applySnapshot(const Snapshot& snapshot);
+
     virtual void onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos);
+    virtual void onKeyPressed(const sf::Event::KeyEvent& key);
     virtual void onTextEntered(sf::Uint32 unicode);
 
     void addEventHandler(sf::RenderWindow& window, sf::Event event) override;

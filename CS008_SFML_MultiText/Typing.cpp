@@ -12,9 +12,12 @@ MultiText &Typing::getMultiText() {
     return mt;
 }
 
-void Typing::draw(sf::RenderTarget &window, sf::RenderStates states) const {
-    states.transform *= getTransform();
-    window.draw(mt, states);
+Snapshot &Typing::getSnapshot() {
+
+}
+
+void Typing::applySnapshot(const Snapshot &snapshot) {
+
 }
 
 void Typing::onTextEntered(sf::Uint32 unicode) {
@@ -28,6 +31,11 @@ void Typing::onTextEntered(sf::Uint32 unicode) {
         default:
             break;
     }
+}
+
+void Typing::draw(sf::RenderTarget &window, sf::RenderStates states) const {
+    states.transform *= getTransform();
+    window.draw(mt, states);
 }
 
 void Typing::addEventHandler(sf::RenderWindow &window, sf::Event event) {

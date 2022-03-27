@@ -21,6 +21,9 @@ public:
 
     void setSize(sf::Vector2f size);
 
+    virtual Snapshot& getSnapshot();
+    virtual void applySnapshot(const Snapshot& snapshot);
+
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
     void addEventHandler(sf::RenderWindow& window, sf::Event event) {};
     void update();

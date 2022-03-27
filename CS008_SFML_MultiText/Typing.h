@@ -18,6 +18,9 @@ public:
 
     MultiText& getMultiText();
 
+    virtual Snapshot& getSnapshot();
+    virtual void applySnapshot(const Snapshot& snapshot);
+
     virtual void onTextEntered(sf::Uint32 unicode);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;

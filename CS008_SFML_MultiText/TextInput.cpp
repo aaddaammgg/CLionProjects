@@ -23,13 +23,20 @@ void TextInput::setSize(sf::Vector2f size) {
     typing.getMultiText().setCharacterSize(static_cast<unsigned int>(size.y));
 }
 
+Snapshot &TextInput::getSnapshot() {
+
+}
+
+void TextInput::applySnapshot(const Snapshot &snapshot) {
+
+}
+
 void TextInput::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
     if (button != sf::Mouse::Left) return;
 
-    sf::FloatRect boxPos = getTransform().transformRect(box.getGlobalBounds());
 
-    std::cout << "Mouse: " << pos.x << " " << pos.y << std::endl;
-    std::cout << "Box: " << boxPos.left << " " << boxPos.top << std::endl;
+
+    sf::FloatRect boxPos = getTransform().transformRect(box.getGlobalBounds());
 
     if (boxPos.contains(pos)) {
         box.setOutlineColor(sf::Color::Green);
@@ -39,6 +46,16 @@ void TextInput::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
         box.setOutlineColor(sf::Color::Red);
         disableState(SELECTED);
         cursorBlink.disableState(SELECTED);
+    }
+}
+
+void TextInput::onKeyPressed(const sf::Event::KeyEvent &key) {
+    if (KBShortcuts::isUndo()) {
+        std::cout << "Control + Z" << std::endl;
+    }
+
+    if (KBShortcuts::isRedo()) {
+        std::cout << "Control + Y" << std::endl;
     }
 }
 
@@ -60,6 +77,7 @@ void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
     if (isEnabled(SELECTED)) {
         typing.addEventHandler(window, event);
     }
+
     // Moved after typing's event handler due to typing class needing the highest priority
     GUIComponent::addEventHandler(window, event);
 }

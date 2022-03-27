@@ -23,6 +23,14 @@ void CursorBlink::setSize(sf::Vector2f size) {
     line.setSize(size);
 }
 
+Snapshot &CursorBlink::getSnapshot() {
+
+}
+
+void CursorBlink::applySnapshot(const Snapshot &snapshot) {
+
+}
+
 void CursorBlink::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     if (!isEnabled(HIDDEN) && isEnabled(SELECTED)) {
         states.transform *= getTransform();
