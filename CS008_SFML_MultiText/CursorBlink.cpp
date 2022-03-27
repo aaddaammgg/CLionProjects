@@ -23,7 +23,7 @@ void CursorBlink::setSize(sf::Vector2f size) {
     line.setSize(size);
 }
 
-Snapshot &CursorBlink::getSnapshot() {
+Snapshot CursorBlink::getSnapshot() {
 
 }
 

@@ -6,15 +6,16 @@
 #define CS008_SFML_TYPING_SNAPSHOT_H
 
 #include <string>
+#include "MultiText.h"
 
 class Snapshot {
 private:
-    std::string data;
+    MultiText data;
 public:
     Snapshot();
 
-    std::string getData();
-    void setData(std::string str);
+    MultiText getData() const;
+    void setData(MultiText mt);
 };
 
 #endif //CS008_SFML_TYPING_SNAPSHOT_H

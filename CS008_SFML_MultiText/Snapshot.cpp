@@ -10,12 +10,12 @@ Snapshot::Snapshot() {
 
 }
 
-std::string Snapshot::getData() {
+MultiText Snapshot::getData() const {
     return data;
 }
 
-void Snapshot::setData(std::string str) {
-    this->data = str;
+void Snapshot::setData(MultiText mt) {
+    this->data = mt;
 }
 
 #endif //CS008_SFML_TYPING_SNAPSHOT_CPP

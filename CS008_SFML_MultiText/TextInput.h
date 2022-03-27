@@ -6,11 +6,11 @@
 #define CS008_SFML_TYPING_TEXTINPUT_H
 
 #include <SFML/Graphics.hpp>
-#include "GUIComponent.h"
+#include "GUIComponentAdapter.h"
 #include "Typing.h"
 #include "CursorBlink.h"
 
-class TextInput : public GUIComponent {
+class TextInput : public GUIComponentAdapter {
 private:
     sf::RectangleShape box;
     CursorBlink cursorBlink;
@@ -20,7 +20,7 @@ public:
 
     void setSize(sf::Vector2f size);
 
-    virtual Snapshot& getSnapshot();
+    virtual Snapshot getSnapshot();
     virtual void applySnapshot(const Snapshot& snapshot);
 
     virtual void onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos);

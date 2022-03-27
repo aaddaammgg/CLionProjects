@@ -23,18 +23,18 @@ void TextInput::setSize(sf::Vector2f size) {
     typing.getMultiText().setCharacterSize(static_cast<unsigned int>(size.y));
 }
 
-Snapshot &TextInput::getSnapshot() {
-
+Snapshot TextInput::getSnapshot() {
+    Snapshot s;
+    s.setData(typing.getMultiText());
+    return s;
 }
 
 void TextInput::applySnapshot(const Snapshot &snapshot) {
-
+    typing.getMultiText() = snapshot.getData();
 }
 
 void TextInput::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
     if (button != sf::Mouse::Left) return;
-
-
 
     sf::FloatRect boxPos = getTransform().transformRect(box.getGlobalBounds());
 
@@ -52,10 +52,37 @@ void TextInput::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
 void TextInput::onKeyPressed(const sf::Event::KeyEvent &key) {
     if (KBShortcuts::isUndo()) {
         std::cout << "Control + Z" << std::endl;
+
+//        if (getUndoSize() == 0) {
+//            typing.getMultiText()--;
+//            return;
+//        }
+        if (getUndoSize() == 0) {
+            return;
+        }
+
+
+        if (getUndoTop().snapshot.getData().getString() == typing.getMultiText().getString()) {
+            undoPop();
+        }
+
+        applySnapshot(getUndoTop().snapshot);
+        undoPop();
     }
 
     if (KBShortcuts::isRedo()) {
         std::cout << "Control + Y" << std::endl;
+
+        if (getRedoSize() == 0) {
+            return;
+        }
+
+        if (getRedoTop().snapshot.getData().getString() == typing.getMultiText().getString()) {
+            redoPop();
+        }
+
+        applySnapshot(getRedoTop().snapshot);
+        redoPop();
     }
 }
 
@@ -74,6 +101,13 @@ void TextInput::onTextEntered(sf::Uint32 unicode) {
 }
 
 void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
+    if (event.type == sf::Event::TextEntered && (!KBShortcuts::isUndo() && !KBShortcuts::isRedo())) {
+        HistoryNode hn;
+        hn.snapshot = getSnapshot();
+        hn.component = this;
+        undoPush(hn);
+    }
+
     if (isEnabled(SELECTED)) {
         typing.addEventHandler(window, event);
     }

@@ -11,7 +11,7 @@ class SnapshotInterface {
 private:
 public:
     SnapshotInterface();
-    virtual Snapshot& getSnapshot() = 0;
+    virtual Snapshot getSnapshot() = 0;
     virtual void applySnapshot(const Snapshot& snapshot) = 0;
 };
 

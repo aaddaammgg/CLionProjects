@@ -9,7 +9,7 @@ project(${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.h StatesENUM.h RichTextFormat.cpp RichTextFormat.h Typing.cpp Typing.h MultiText.cpp MultiText.h Letter.cpp Letter.h GUIComponent.cpp GUIComponent.h TextInput.cpp TextInput.h CursorBlink.cpp CursorBlink.h GUIComponentAdapter.cpp GUIComponentAdapter.h EventHandlerCallbacks.cpp EventHandlerCallbacks.h Snapshot.cpp Snapshot.h SnapshotInterface.cpp SnapshotInterface.h KBShortcuts.cpp KBShortcuts.h)
+set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.h StatesENUM.h RichTextFormat.cpp RichTextFormat.h Typing.cpp Typing.h MultiText.cpp MultiText.h Letter.cpp Letter.h GUIComponent.cpp GUIComponent.h TextInput.cpp TextInput.h CursorBlink.cpp CursorBlink.h GUIComponentAdapter.cpp GUIComponentAdapter.h EventHandlerCallbacks.cpp EventHandlerCallbacks.h Snapshot.cpp Snapshot.h SnapshotInterface.cpp SnapshotInterface.h KBShortcuts.cpp KBShortcuts.h History.cpp History.h HistoryNode.h)
 
 if (WIN32)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")

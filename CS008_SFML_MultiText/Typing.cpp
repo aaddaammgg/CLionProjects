@@ -12,7 +12,7 @@ MultiText &Typing::getMultiText() {
     return mt;
 }
 
-Snapshot &Typing::getSnapshot() {
+Snapshot Typing::getSnapshot() {
 
 }
 

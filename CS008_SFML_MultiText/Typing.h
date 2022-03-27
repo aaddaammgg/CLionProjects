@@ -6,11 +6,11 @@
 #define CS008_SFML_TYPING_TYPING_H
 
 #include <SFML/Graphics.hpp>
-#include "GUIComponent.h"
+#include "GUIComponentAdapter.h"
 #include "ResourceHolder.h"
 #include "MultiText.h"
 
-class Typing : public GUIComponent {
+class Typing : public GUIComponentAdapter {
 private:
     MultiText mt;
 public:
@@ -18,7 +18,7 @@ public:
 
     MultiText& getMultiText();
 
-    virtual Snapshot& getSnapshot();
+    virtual Snapshot getSnapshot();
     virtual void applySnapshot(const Snapshot& snapshot);
 
     virtual void onTextEntered(sf::Uint32 unicode);

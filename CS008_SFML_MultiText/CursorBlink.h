@@ -6,9 +6,9 @@
 #define CS008_SFML_TYPING_CURSORBLINK_H
 
 #include <SFML/Graphics.hpp>
-#include "GUIComponent.h"
+#include "GUIComponentAdapter.h"
 
-class CursorBlink : public GUIComponent {
+class CursorBlink : public GUIComponentAdapter {
 private:
     sf::RectangleShape line;
     sf::Clock blinkFrequency;
@@ -21,7 +21,7 @@ public:
 
     void setSize(sf::Vector2f size);
 
-    virtual Snapshot& getSnapshot();
+    virtual Snapshot getSnapshot();
     virtual void applySnapshot(const Snapshot& snapshot);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
