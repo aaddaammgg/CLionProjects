@@ -12,10 +12,9 @@ void EventHandlerCallbacks::addEventHandler(sf::RenderWindow &window, sf::Event 
         case sf::Event::MouseMoved:
             onMouseMoved(getMousePos(window));
             break;
-        case sf::Event::MouseButtonPressed: {
+        case sf::Event::MouseButtonPressed:
             onMousePressed(event.mouseButton.button, getMousePos(window));
             break;
-        }
         case sf::Event::MouseButtonReleased: {
             countClicks();
             onMouseReleased(event.mouseButton.button, getMousePos(window));

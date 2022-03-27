@@ -10,13 +10,20 @@
 #include <iostream>
 #include "Letter.h"
 
-struct PosBounds {
-    sf::Vector2f pos;
-    sf::FloatRect bounds;
-};
-
-
 class MultiText : public sf::Drawable {
+public:
+    typedef struct PosBounds {
+        sf::Vector2f pos;
+        sf::FloatRect bounds;
+    } PosBounds;
+
+    typedef std::list<Letter>::iterator iterator;
+
+    typedef struct iteratorsBE {
+        MultiText::iterator begin;
+        MultiText::iterator end;
+    } iteratorsBE;
+
 private:
     std::list<Letter> letters;
     PosBounds getLastPos();
@@ -34,6 +41,12 @@ public:
     void addChar(const sf::Text& text);
 
     std::string getString();
+    std::string getString(MultiText::iterator begin, MultiText::iterator end);
+
+    std::list<iteratorsBE> split(char c);
+    iteratorsBE find(std::string str, MultiText::iterator startPos, bool& found);
+
+//    MultiText::iteratorsBE getBeginEnd;
 
     unsigned int getCharacterSize() const;
     void setCharacterSize(unsigned int size);
@@ -49,8 +62,8 @@ public:
     Letter& front();
     Letter& back();
 
-    auto begin(); // begin iterator
-    auto end(); // end iterator
+    MultiText::iterator begin(); // begin iterator
+    MultiText::iterator end(); // end iterator
 
     MultiText& operator+=(const char& rhs);
     MultiText& operator+=(const std::string& rhs);

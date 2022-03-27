@@ -9,6 +9,7 @@
 #include "GUIComponentAdapter.h"
 #include "ResourceHolder.h"
 #include "MultiText.h"
+#include "SyntaxHighlighter.h"
 
 class Typing : public GUIComponentAdapter {
 private:

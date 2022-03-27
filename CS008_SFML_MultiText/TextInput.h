@@ -9,16 +9,24 @@
 #include "GUIComponentAdapter.h"
 #include "Typing.h"
 #include "CursorBlink.h"
+#include "Label.h"
 
 class TextInput : public GUIComponentAdapter {
 private:
     sf::RectangleShape box;
     CursorBlink cursorBlink;
     Typing typing;
+    Label label;
+
+    void updatePos();
+    void updateCursor();
 public:
     TextInput();
 
     void setSize(sf::Vector2f size);
+
+    void setLabel(const std::string& str);
+    void setLabelSize(const int& size);
 
     virtual Snapshot getSnapshot();
     virtual void applySnapshot(const Snapshot& snapshot);

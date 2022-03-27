@@ -12,7 +12,7 @@ private:
 public:
     static bool isUndo();
     static bool isRedo();
-
+    static bool isControl();
 };
 
 

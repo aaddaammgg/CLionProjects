@@ -4,10 +4,14 @@
 
 #include "KBShortcuts.h"
 
+bool KBShortcuts::isControl() {
+    return sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
+}
+
 bool KBShortcuts::isUndo() {
-    return sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
+    return isControl() && sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
 }
 
 bool KBShortcuts::isRedo() {
-    return sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::Y);
+    return isControl() && sf::Keyboard::isKeyPressed(sf::Keyboard::Y);
 }

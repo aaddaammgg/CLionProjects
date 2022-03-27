@@ -4,11 +4,17 @@
 
 #include "History.h"
 
-std::stack<HistoryNode> History::undoStack;
-std::stack<HistoryNode> History::redoStack;
+bool History::getInit() {
+    return init;
+}
+
+void History::setInit(bool b) {
+    init = b;
+}
 
 void History::undoPush(const HistoryNode &snapshot) {
     undoStack.push(snapshot);
+    std::cout << "pushh" << std::endl;
 }
 
 HistoryNode &History::getUndoTop() {
@@ -20,7 +26,7 @@ int History::getUndoSize() {
 }
 
 void History::undoPop() {
-    redoStack.push(getUndoTop());
+    redoPush(getUndoTop());
     undoStack.pop();
 }
 
@@ -37,7 +43,7 @@ int History::getRedoSize() {
 }
 
 void History::redoPop() {
-    undoStack.push(redoStack.top());
+    undoPush(getRedoTop());
     redoStack.pop();
 }
 

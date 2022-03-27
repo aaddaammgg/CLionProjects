@@ -6,14 +6,12 @@
 
 TextInput::TextInput() {
     box.setSize(getSize());
-    box.setOutlineColor(sf::Color::Green);
+    box.setOutlineColor(sf::Color::Red);
     box.setOutlineThickness(5);
 
     cursorBlink.setPosition(1, 1);
+    label.setPosition(1, -2);
     typing.setPosition(0, -2);
-
-    enableState(SELECTED);
-    cursorBlink.enableState(SELECTED);
 }
 
 void TextInput::setSize(sf::Vector2f size) {
@@ -21,6 +19,26 @@ void TextInput::setSize(sf::Vector2f size) {
     box.setSize(size);
     cursorBlink.setSize({2, size.y - 2});
     typing.getMultiText().setCharacterSize(static_cast<unsigned int>(size.y));
+}
+
+void TextInput::updatePos() {
+    sf::FloatRect labelGB = label.getGlobalBounds();
+
+    float padding = 10;
+
+    cursorBlink.setPosition(1 + labelGB.width + labelGB.left + padding, 1);
+    typing.setPosition(0 + labelGB.width + labelGB.left + padding, -2);
+    box.setPosition(labelGB.width + labelGB.left + padding, 0);
+}
+
+void TextInput::setLabel(const std::string &str) {
+    label.setLabel(str);
+    updatePos();
+}
+
+void TextInput::setLabelSize(const int &size) {
+    label.setLabelSize(size);
+    updatePos();
 }
 
 Snapshot TextInput::getSnapshot() {
@@ -50,17 +68,14 @@ void TextInput::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
 }
 
 void TextInput::onKeyPressed(const sf::Event::KeyEvent &key) {
+    if (!isEnabled(SELECTED)) return;
+
     if (KBShortcuts::isUndo()) {
         std::cout << "Control + Z" << std::endl;
 
-//        if (getUndoSize() == 0) {
-//            typing.getMultiText()--;
-//            return;
-//        }
         if (getUndoSize() == 0) {
             return;
         }
-
 
         if (getUndoTop().snapshot.getData().getString() == typing.getMultiText().getString()) {
             undoPop();
@@ -86,30 +101,54 @@ void TextInput::onKeyPressed(const sf::Event::KeyEvent &key) {
     }
 }
 
+void TextInput::updateCursor() {
+    sf::FloatRect labelGB = label.getGlobalBounds();
+
+    float padding = 10;
+
+    cursorBlink.setPosition(1 + labelGB.width + labelGB.left + padding, 1);
+}
+
 void TextInput::onTextEntered(sf::Uint32 unicode) {
+    if (!isEnabled(SELECTED)) return;
+
     if (typing.getMultiText().isEmpty()) {
-        cursorBlink.setPosition({1, 1});
+        updateCursor();
     } else {
+        sf::FloatRect labelGB = label.getGlobalBounds();
+        float padding = (label.getLabelString().empty()) ? 0 : 10;
+
         sf::Vector2f curPos = typing.getMultiText().back().getPosition();
         sf::FloatRect backBounds = typing.getMultiText().back().getLocalBounds();
 
         curPos += {1, 1};
         curPos += {backBounds.width + backBounds.left + 1, 0};
+        curPos += {labelGB.width + labelGB.left + padding, 0};
 
         cursorBlink.setPosition(curPos);
     }
 }
 
 void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
-    if (event.type == sf::Event::TextEntered && (!KBShortcuts::isUndo() && !KBShortcuts::isRedo())) {
-        HistoryNode hn;
-        hn.snapshot = getSnapshot();
-        hn.component = this;
-        undoPush(hn);
-    }
-
     if (isEnabled(SELECTED)) {
+        if (!getInit()) {
+            HistoryNode hn;
+            hn.snapshot = getSnapshot();
+            hn.component = this;
+            undoPush(hn);
+            setInit(true);
+        }
+
         typing.addEventHandler(window, event);
+
+        if (event.type == sf::Event::TextEntered && !KBShortcuts::isControl()) {
+            std::cout << static_cast<char>(event.text.unicode) << std::endl;
+
+            HistoryNode hn;
+            hn.snapshot = getSnapshot();
+            hn.component = this;
+            undoPush(hn);
+        }
     }
 
     // Moved after typing's event handler due to typing class needing the highest priority
@@ -121,6 +160,7 @@ void TextInput::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     window.draw(box, states);
     window.draw(typing, states);
     window.draw(cursorBlink, states);
+    window.draw(label, states);
 }
 
 void TextInput::update() {

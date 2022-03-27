@@ -8,7 +8,7 @@ MultiText::MultiText() {
 
 }
 
-PosBounds MultiText::getLastPos() {
+MultiText::PosBounds MultiText::getLastPos() {
     return {letters.back().getPosition(), letters.back().getLocalBounds() };
 }
 
@@ -51,6 +51,78 @@ std::string MultiText::getString() {
     for (auto & letter : letters) {
         temp += letter.getString();
     }
+
+    return temp;
+}
+
+std::string MultiText::getString(MultiText::iterator begin, MultiText::iterator end) {
+    std::string temp;
+
+    MultiText::iterator it;
+
+    for (it = begin; it != end; it++) {
+        temp += it->getString();
+    }
+
+    return temp;
+}
+
+MultiText::iteratorsBE MultiText::find(std::string str, MultiText::iterator startPos, bool& found) {
+    iteratorsBE temp;
+
+    auto t = end();
+    t--;
+    temp.begin = t;
+    temp.end = t;
+
+    MultiText::iterator it;
+    MultiText::iterator it2;
+    for (it = startPos; it != end(); it++) {
+        if (it->getString() == str[0]) {
+            std::string tempStr; // = std::string(1, str[0]);
+            for (it2 = it; it2 != end(); it2++) {
+                tempStr += it2->getString();
+                if (tempStr == str) {
+                    temp.begin = it;
+                    temp.end = it2;
+                    found = true;
+                    return temp;
+                }
+            }
+        }
+    }
+
+    return temp;
+}
+
+std::list<MultiText::iteratorsBE> MultiText::split(char c) {
+    std::list<iteratorsBE> temp;
+
+    MultiText::iterator it;
+    auto another = begin();
+
+    for (it = begin(); it != end(); it++) {
+        bool found = false;
+        iteratorsBE t = find(std::string(1, c), another, found);
+
+        if (!found) {
+            break;
+        }
+
+        iteratorsBE main;
+        main.begin = another;
+        main.end = t.begin;
+        another = t.end;
+        another++;
+
+        temp.push_back(main);
+    }
+
+    iteratorsBE t;
+    t.begin = another;
+    t.end = end();
+
+    temp.push_back(t);
 
     return temp;
 }
@@ -98,11 +170,11 @@ Letter &MultiText::back() {
     return letters.back();
 }
 
-auto MultiText::begin() {
+MultiText::iterator MultiText::begin() {
     return letters.begin();
 }
 
-auto MultiText::end() {
+MultiText::iterator MultiText::end() {
     return letters.end();
 }
 

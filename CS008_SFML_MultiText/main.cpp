@@ -14,13 +14,20 @@ int main() {
     window.setVerticalSyncEnabled(false);
 
     TextInput typing;
+    TextInput typing2;
 
-    typing.setPosition(100,50);
-    typing.setSize({200, 50});
+    typing.setPosition(50,50);
+    typing.setSize({250, 50});
+    typing.setLabel("User:");
+    typing.setLabelSize(50);
+
+    typing2.setPosition(50,120);
+    typing2.setSize({400, 50});
 //    typing.setScale({1.5, 1.5});
 
     std::vector<GUIComponent*> components;
     components.push_back(&typing);
+    components.push_back(&typing2);
 
     while (window.isOpen()) {
         sf::Event event{};

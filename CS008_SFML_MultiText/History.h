@@ -12,20 +12,24 @@
 
 class History {
 private:
-    static std::stack<HistoryNode> undoStack;
-    static std::stack<HistoryNode> redoStack;
+    std::stack<HistoryNode> undoStack;
+    std::stack<HistoryNode> redoStack;
+    bool init = false;
 public:
-    static void undoPush(const HistoryNode& snapshot);
-    static HistoryNode& getUndoTop();
-    static int getUndoSize();
-    static void undoPop();
+    bool getInit();
+    void setInit(bool b);
 
-    static void redoPush(const HistoryNode& snapshot);
-    static HistoryNode& getRedoTop();
-    static int getRedoSize();
-    static void redoPop();
+    void undoPush(const HistoryNode& snapshot);
+    HistoryNode& getUndoTop();
+    int getUndoSize();
+    void undoPop();
 
-    static void addEventHandler(sf::RenderWindow& window, sf::Event event);
+    void redoPush(const HistoryNode& snapshot);
+    HistoryNode& getRedoTop();
+    int getRedoSize();
+    void redoPop();
+
+    void addEventHandler(sf::RenderWindow& window, sf::Event event);
 };
 
 
