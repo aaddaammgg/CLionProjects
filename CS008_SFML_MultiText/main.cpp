@@ -23,7 +23,7 @@ int main() {
 
     typing2.setPosition(50,120);
     typing2.setSize({400, 50});
-//    typing.setScale({1.5, 1.5});
+//    typing2.setScale({.7, .7});
 
     std::vector<GUIComponent*> components;
     components.push_back(&typing);

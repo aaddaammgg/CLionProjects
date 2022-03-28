@@ -14,7 +14,6 @@ void History::setInit(bool b) {
 
 void History::undoPush(const HistoryNode &snapshot) {
     undoStack.push(snapshot);
-    std::cout << "pushh" << std::endl;
 }
 
 HistoryNode &History::getUndoTop() {

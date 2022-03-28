@@ -104,7 +104,7 @@ void TextInput::onKeyPressed(const sf::Event::KeyEvent &key) {
 void TextInput::updateCursor() {
     sf::FloatRect labelGB = label.getGlobalBounds();
 
-    float padding = 10;
+    float padding = (label.getLabelString().empty()) ? 0 : 10;
 
     cursorBlink.setPosition(1 + labelGB.width + labelGB.left + padding, 1);
 }
@@ -142,8 +142,6 @@ void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
         typing.addEventHandler(window, event);
 
         if (event.type == sf::Event::TextEntered && !KBShortcuts::isControl()) {
-            std::cout << static_cast<char>(event.text.unicode) << std::endl;
-
             HistoryNode hn;
             hn.snapshot = getSnapshot();
             hn.component = this;

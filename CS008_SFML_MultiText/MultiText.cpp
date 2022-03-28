@@ -95,6 +95,18 @@ MultiText::iteratorsBE MultiText::find(std::string str, MultiText::iterator star
     return temp;
 }
 
+//                                                ┌── split by space
+//                                                │
+// split list of letters by a character --> "Hello hi" would turn into a list of 2 begin and end iterators
+//                                           ^   ^ ^^
+//                                           │   │ ││
+//                                  begin <──┘   │ ││
+//                                        end <──┘ ││
+//                                                 ││
+//                                        begin <──┘└──> end
+//
+//                               list output ──>
+
 std::list<MultiText::iteratorsBE> MultiText::split(char c) {
     std::list<iteratorsBE> temp;
 
