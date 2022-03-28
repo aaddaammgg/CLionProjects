@@ -7,7 +7,6 @@
 CursorBlink::CursorBlink() {
     line.setFillColor(sf::Color::Black);
     line.setSize({2,8});
-    enableState(HIDDEN);
 }
 
 int CursorBlink::getIndex() const {
