@@ -102,18 +102,12 @@ void TextInput::onKeyPressed(const sf::Event::KeyEvent &key) {
 }
 
 void TextInput::updateCursor() {
-    sf::FloatRect labelGB = label.getGlobalBounds();
-
-    float padding = (label.getLabelString().empty()) ? 0 : 10;
-
-    cursorBlink.setPosition(1 + labelGB.width + labelGB.left + padding, 1);
-}
-
-void TextInput::onTextEntered(sf::Uint32 unicode) {
-    if (!isEnabled(SELECTED)) return;
-
     if (typing.getMultiText().isEmpty()) {
-        updateCursor();
+        sf::FloatRect labelGB = label.getGlobalBounds();
+
+        float padding = (label.getLabelString().empty()) ? 0 : 10;
+
+        cursorBlink.setPosition(1 + labelGB.width + labelGB.left + padding, 1);
     } else {
         sf::FloatRect labelGB = label.getGlobalBounds();
         float padding = (label.getLabelString().empty()) ? 0 : 10;
@@ -127,10 +121,19 @@ void TextInput::onTextEntered(sf::Uint32 unicode) {
 
         cursorBlink.setPosition(curPos);
     }
+
+}
+
+void TextInput::onTextEntered(sf::Uint32 unicode) {
+    if (!isEnabled(SELECTED)) return;
+
+    updateCursor();
 }
 
 void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
     if (isEnabled(SELECTED)) {
+
+
         if (!getInit()) {
             HistoryNode hn;
             hn.snapshot = getSnapshot();
@@ -147,10 +150,16 @@ void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
             hn.component = this;
             undoPush(hn);
         }
+
+
     }
 
     // Moved after typing's event handler due to typing class needing the highest priority
     GUIComponent::addEventHandler(window, event);
+
+    if (isEnabled(SELECTED) && (KBShortcuts::isUndo() || KBShortcuts::isRedo())) {
+        updateCursor();
+    }
 }
 
 void TextInput::draw(sf::RenderTarget &window, sf::RenderStates states) const {
