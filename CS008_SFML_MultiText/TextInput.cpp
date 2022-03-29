@@ -73,7 +73,7 @@ void TextInput::onKeyPressed(const sf::Event::KeyEvent &key) {
     if (KBShortcuts::isUndo()) {
         std::cout << "Control + Z" << std::endl;
 
-        if (getUndoSize() == 0) {
+        if (getUndoSize() == 0 || typing.getMultiText().getSize() == 0) {
             return;
         }
 
@@ -132,8 +132,6 @@ void TextInput::onTextEntered(sf::Uint32 unicode) {
 
 void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
     if (isEnabled(SELECTED)) {
-
-
         if (!getInit()) {
             HistoryNode hn;
             hn.snapshot = getSnapshot();
@@ -150,8 +148,6 @@ void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
             hn.component = this;
             undoPush(hn);
         }
-
-
     }
 
     // Moved after typing's event handler due to typing class needing the highest priority
