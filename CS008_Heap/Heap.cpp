@@ -23,17 +23,17 @@ void Heap<T>::reheapifyUp(int childIndex) {
 
 template<class T>
 void Heap<T>::reheapifyDown(int parentIndex) {
-    int left = getLeftChild(parentIndex);
-    int right = getRightChild(parentIndex);
+    int leftChildIndex = getLeftChild(parentIndex);
+    int rightChildIndex = getRightChild(parentIndex);
 
     int largest = parentIndex;
 
-    if (left < size() && data[left] > data[parentIndex]) {
-        largest = left;
+    if (leftChildIndex < size() && data[leftChildIndex] > data[parentIndex]) {
+        largest = leftChildIndex;
     }
 
-    if (right < size() && data[right] > data[largest]) {
-        largest = right;
+    if (rightChildIndex < size() && data[rightChildIndex] > data[largest]) {
+        largest = rightChildIndex;
     }
 
     if (largest != parentIndex) {
@@ -59,7 +59,9 @@ int Heap<T>::getRightChild(int parentIndex) {
 
 template<class T>
 T Heap<T>::top() {
-    return data.front();
+    if (!empty()) {
+        return data.front();
+    }
 }
 
 template<class T>

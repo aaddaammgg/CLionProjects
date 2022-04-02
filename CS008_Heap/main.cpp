@@ -18,7 +18,5 @@ int main() {
 
     std::cout << h.top() << std::endl;
 
-
-
     return 0;
 }
