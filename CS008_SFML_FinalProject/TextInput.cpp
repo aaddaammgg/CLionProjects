@@ -115,14 +115,14 @@ void TextInput::updateCursor() {
             break;
         }
         case MultiText::ALIGN::RIGHT: {
-            typing.getMultiText().setPosition({getSize().x, 0});
+            typing.getMultiText().setPosition({getSize().x - 4, 0});
             break;
         }
     }
 
     sf::Vector2f curPos = typing.getMultiText().getTransform().transformPoint(0, 0);
 
-    curPos += {1, 1};
+    curPos += {3, 1};
     curPos += {typing.getMultiText().getSize().width, 0};
     curPos += {labelGB.width + labelGB.left + padding, 0};
 
