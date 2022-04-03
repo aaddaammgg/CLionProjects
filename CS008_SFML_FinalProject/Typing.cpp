@@ -38,15 +38,27 @@ void Typing::onTextEntered(sf::Uint32 unicode) {
                 std::list<MultiText::iteratorsBE> temp = mt.split(' ');
 
                 for (auto i : temp) {
-                    sf::Color tempColor = SyntaxHighlighter::getColor(mt.getString(i.begin, i.end));
-                    if (tempColor != sf::Color::Black) {
-                        MultiText::iterator it;
-                        for (it = i.begin; it != i.end; it++) {
-                            it->setFillColor(tempColor);
+                    if (mt.getString(i.begin, i.end) == "left") {
+                        mt.setAlignment(MultiText::ALIGN::LEFT);
+                        mt.setPosition({0, 0});
+                    } else if (mt.getString(i.begin, i.end) == "center") {
+                        mt.setAlignment(MultiText::ALIGN::CENTER);
+                        mt.setPosition({400 / 2, 0});
+                    } else if (mt.getString(i.begin, i.end) == "right") {
+                        mt.setAlignment(MultiText::ALIGN::RIGHT);
+                        mt.setPosition({400, 0});
+                    } else {
+                        sf::Color tempColor = SyntaxHighlighter::getColor(mt.getString(i.begin, i.end));
+                        if (tempColor != sf::Color::Black) {
+                            MultiText::iterator it;
+                            for (it = i.begin; it != i.end; it++) {
+                                it->setFillColor(tempColor);
+                            }
                         }
                     }
                 }
             }
+//            std::cout << mt.getSize().width << std::endl;
 
             break;
         }
@@ -57,6 +69,7 @@ void Typing::onTextEntered(sf::Uint32 unicode) {
 
 void Typing::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
+    mt.setCharacterSize(static_cast<unsigned int>(size.y));
 }
 
 void Typing::draw(sf::RenderTarget &window, sf::RenderStates states) const {
