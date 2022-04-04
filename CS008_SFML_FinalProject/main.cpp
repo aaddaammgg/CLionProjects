@@ -12,7 +12,7 @@ int main() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    sf::RenderWindow window({500, 500, 32}, "SFML Typing", sf::Style::Close, settings);
+    sf::RenderWindow window({700, 700, 32}, "SFML Typing", sf::Style::Close, settings);
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(false);
 
@@ -30,7 +30,7 @@ int main() {
     DropdownMenu dm;
     dm.setPosition(50, 180);
     dm.setSize({250, 50});
-    dm.setScale({.8, .8});
+    dm.setScale({1.5, 1.5});
 
     dm.addItem("Banana");
     dm.addItem("Apple");
