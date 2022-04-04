@@ -1,6 +1,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "TextInput.h"
+#include "DropdownMenu.h"
+
+void draw(std::vector<GUIComponent*>& components, sf::RenderWindow& window);
 
 int main() {
     srand(time(nullptr));
@@ -23,11 +26,24 @@ int main() {
 
     typing2.setPosition(50,120);
     typing2.setSize({400, 50});
-//    typing2.setScale({.7, .7});
+
+    DropdownMenu dm;
+    dm.setPosition(50, 180);
+    dm.setSize({250, 50});
+    dm.setScale({.8, .8});
+
+    dm.addItem("Banana");
+    dm.addItem("Apple");
+    dm.addItem("Orange");
+    dm.addItem("Lemon");
+
 
     std::vector<GUIComponent*> components;
     components.push_back(&typing);
     components.push_back(&typing2);
+    components.push_back(&dm);
+
+    bool isEvent = false;
 
     while (window.isOpen()) {
         sf::Event event{};
@@ -35,19 +51,29 @@ int main() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            isEvent = true;
             for (auto & component : components) {
                 component->addEventHandler(window, event);
             }
+            draw(components, window);
         }
-        for (auto & component : components) {
-            component->update();
+
+        if (!isEvent) {
+            draw(components, window);
         }
-        window.clear(sf::Color(sf::Color::White));
-        for (auto & component : components) {
-            window.draw(*component);
-        }
-        window.display();
+        isEvent = false;
     }
 
     return 0;
+}
+
+void draw(std::vector<GUIComponent*>& components, sf::RenderWindow& window) {
+    for (auto & component : components) {
+        component->update();
+    }
+    window.clear(sf::Color(sf::Color::White));
+    for (auto & component : components) {
+        window.draw(*component);
+    }
+    window.display();
 }

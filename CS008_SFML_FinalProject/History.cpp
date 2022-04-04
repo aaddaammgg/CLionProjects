@@ -25,8 +25,11 @@ int History::getUndoSize() {
 }
 
 void History::undoPop() {
-    redoPush(getUndoTop());
-    undoStack.pop();
+    std::cout << "undo size: " << undoStack.size() << std::endl;
+    if (!undoStack.empty()) {
+        redoPush(getUndoTop());
+        undoStack.pop();
+    }
 }
 
 void History::redoPush(const HistoryNode &snapshot) {
@@ -42,8 +45,10 @@ int History::getRedoSize() {
 }
 
 void History::redoPop() {
-    undoPush(getRedoTop());
-    redoStack.pop();
+    if (!redoStack.empty()) {
+        undoPush(getRedoTop());
+        redoStack.pop();
+    }
 }
 
 void History::addEventHandler(sf::RenderWindow &window, sf::Event event) {

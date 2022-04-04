@@ -18,7 +18,6 @@ public:
     GUIComponent();
 
     sf::Vector2f getSize();
-
     virtual void setSize(sf::Vector2f size);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const = 0;
