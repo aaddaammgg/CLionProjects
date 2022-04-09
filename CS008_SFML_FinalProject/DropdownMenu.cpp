@@ -4,6 +4,8 @@
 
 #include "DropdownMenu.h"
 
+#include <utility>
+
 DropdownMenu::DropdownMenu() {
     itemList.enableState(HIDDEN);
     disableState(OPEN);
@@ -41,6 +43,14 @@ void DropdownMenu::addItem(std::string str) {
     }
 
     itemList.addItem(item);
+}
+
+std::function<void(std::string)> DropdownMenu::getCallBack() {
+    return callBack;
+}
+
+void DropdownMenu::setCallBack(std::function<void(std::string)> cb) {
+    callBack = std::move(cb);
 }
 
 void DropdownMenu::onKeyPressed(const sf::Event::KeyEvent &key) {
@@ -144,10 +154,15 @@ void DropdownMenu::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
                     undoPush(hn);
 
                     enableState(SELECTED);
-                    std::cout << item.getString() << std::endl;
+
+                    if (callBack != nullptr) {
+                        callBack(item.getString());
+                    }
                 }
             }
         }
+
+
 
         disableState(OPEN);
         itemList.enableState(HIDDEN);
