@@ -6,6 +6,7 @@
 #define CS008_HASHTABLE_HASHTABLE_H
 
 #include <cstddef>
+#include <cassert>
 #include "Record.h"
 
 template <class T>
@@ -16,7 +17,7 @@ private:
     static const int PREVIOUSLY_USED = -2;
     int _size = 0;
     Record<T> data[CAPACITY];
-    void find_index(int key, bool& found, int& index) const;
+    void find_index(int key, bool& found, std::size_t& index) const;
     bool isVacant(int index) const;
     std::size_t nextIndex(int index) const;
     int hash(int key) const;

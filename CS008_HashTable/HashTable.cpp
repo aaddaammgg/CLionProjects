@@ -17,13 +17,13 @@ HashTable<T>::HashTable() {
 }
 
 template<class T>
-void HashTable<T>::find_index(int key, bool &found, int &index) const {
+void HashTable<T>::find_index(int key, bool &found, std::size_t &index) const {
     index = hash(key);
     int count = 0;
 
 
     // Might need to do !neverUsed(index) instead of neverUsed(index)
-    while (data[index].key != key && neverUsed(index) && count < CAPACITY) {
+    while (data[index].key != key && !neverUsed(index) && count < CAPACITY) {
         count++;
         index = nextIndex(index);
     }
@@ -58,11 +58,12 @@ bool HashTable<T>::neverUsed(int index) const {
 template<class T>
 void HashTable<T>::insert(int key, T value) {
     bool already_present = false;
-    std::size_t index;
+    std::size_t index = -1;
 
     find_index(key, already_present, index);
 
     if (!already_present) {
+        assert(_size < CAPACITY);
         index = hash(key);
         while (!isVacant(index)) {
             index = nextIndex(index);
@@ -72,7 +73,7 @@ void HashTable<T>::insert(int key, T value) {
     }
 
     data[index].key = key;
-    data[index].value = value;
+    data[index].data = value;
 }
 
 template<class T>
@@ -100,7 +101,7 @@ bool HashTable<T>::isPresent(int key) {
 template<class T>
 std::size_t HashTable<T>::find(int key) const {
     bool found = false;
-    int index;
+    int index = -1;
 
     find_index(key, found, index);
 
@@ -118,7 +119,7 @@ int HashTable<T>::size() {
 
 template<class T>
 T &HashTable<T>::operator[](unsigned int key) {
-    return data;
+    return data[find(key)].data;
 }
 
 #endif //CS008_HASHTABLE_HASHTABLE_CPP
