@@ -25,6 +25,10 @@ void Item::setSize(sf::Vector2f size) {
     mt.setPosition(size.x / 2,0);
 }
 
+void Item::setCallBack(std::function<void(std::string)> cb) {
+    callBack = std::move(cb);
+}
+
 std::string Item::getString() {
     return mt.getString();
 }

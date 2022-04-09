@@ -25,7 +25,7 @@ void DropdownMenu::applySnapshot(const Snapshot &snapshot) {
 void DropdownMenu::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
     inputBox.setSize(size);
-    
+
     for (auto& item : itemList.getItemList()) {
         item.setSize(size);
     }
@@ -33,7 +33,7 @@ void DropdownMenu::setSize(sf::Vector2f size) {
     itemList.setPosition(0, size.y + 1);
 }
 
-void DropdownMenu::addItem(std::string str) {
+void DropdownMenu::addItem(const std::string& str) {
     Item item;
     item.setString(str);
     item.setSize(getSize());
@@ -43,10 +43,6 @@ void DropdownMenu::addItem(std::string str) {
     }
 
     itemList.addItem(item);
-}
-
-std::function<void(std::string)> DropdownMenu::getCallBack() {
-    return callBack;
 }
 
 void DropdownMenu::setCallBack(std::function<void(std::string)> cb) {
@@ -161,9 +157,6 @@ void DropdownMenu::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
                 }
             }
         }
-
-
-
         disableState(OPEN);
         itemList.enableState(HIDDEN);
     }

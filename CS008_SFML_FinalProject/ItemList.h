@@ -17,6 +17,7 @@ public:
     ItemList();
 
     void addItem(Item& item);
+    void addItem(Item& item, std::function<void(std::string)> cb);
 
     std::vector<Item>& getItemList();
 

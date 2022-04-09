@@ -21,6 +21,9 @@ public:
 
     virtual void setSize(sf::Vector2f size);
 
+    std::function<void(std::string)> callBack;
+    void setCallBack(std::function<void(std::string)> cb);
+
     std::string getString();
 
     void setString(const std::string& str);

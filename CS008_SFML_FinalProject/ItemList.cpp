@@ -4,6 +4,8 @@
 
 #include "ItemList.h"
 
+#include <utility>
+
 ItemList::ItemList() {
 
 }
@@ -17,6 +19,11 @@ void ItemList::addItem(Item &item) {
     }
 
     itemList.push_back(item);
+}
+
+void ItemList::addItem(Item &item, std::function<void(std::string)> cb) {
+    addItem(item);
+    itemList.back().setCallBack(std::move(cb));
 }
 
 std::vector<Item> &ItemList::getItemList() {
