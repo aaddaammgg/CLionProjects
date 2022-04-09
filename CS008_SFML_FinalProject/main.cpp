@@ -32,10 +32,19 @@ int main() {
     dm.setSize({250, 50});
     dm.setScale({1.5, 1.5});
 
+    dm.setCallBack([&](const std::string& str) {
+        std::cout << str << std::endl;
+
+        if (str == "Exit") {
+            window.close();
+        }
+    });
+
     dm.addItem("Banana");
     dm.addItem("Apple");
     dm.addItem("Orange");
     dm.addItem("Lemon");
+    dm.addItem("Exit");
 
 
     std::vector<GUIComponent*> components;
