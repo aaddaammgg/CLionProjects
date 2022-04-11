@@ -6,6 +6,7 @@
 #define CS008_SFML_FINALPROJECT_ITEM_H
 
 #include <SFML/Graphics.hpp>
+#include <functional>
 #include "GUIComponentAdapter.h"
 #include "MultiText.h"
 
