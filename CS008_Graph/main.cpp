@@ -16,6 +16,7 @@ int main() {
     g.add_edge(4, 2);
     g.add_edge(2, 3);
 
-    g.breadth_first(0);
+    g.breadth_first();
+    g.depth_first();
     return 0;
 }

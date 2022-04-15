@@ -70,6 +70,7 @@ void Graph<T>::breadth_first() const {
 template<class T>
 void Graph<T>::breadth_first(std::size_t vertex) const {
     bool marked[many_vertices];
+    std::fill(marked, marked+many_vertices,false);
     // set marked to false
     std::queue<std::size_t> q;
     q.push(vertex);
@@ -87,6 +88,7 @@ void Graph<T>::breadth_first(std::size_t vertex) const {
         std::cout << q.front() << " ";
         q.pop();
     }
+    std::cout << std::endl;
     // while queue is not empty
     //  add all of queue's top unvisited neighbors to the queue
     //  mark front of queue as visited
@@ -100,14 +102,19 @@ void Graph<T>::depth_first() const {
 
 template<class T>
 void Graph<T>::depth_first(std::size_t vertex) const {
-    bool marked[many_vertices] = {false};
+    bool marked[many_vertices];
+    std::fill(marked, marked+many_vertices,false);
 
     depth_first(marked, vertex);
+    std::cout << std::endl;
 }
 
 template<class T>
 void Graph<T>::depth_first(bool *marked, std::size_t vertex) const {
     marked[vertex] = true;
+
+    std::cout << vertex << " ";
+
     for (auto i : neighbors(vertex)) {
         if (!marked[i]) {
             depth_first(marked, i);
