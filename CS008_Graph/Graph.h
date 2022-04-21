@@ -11,6 +11,7 @@
 #include <queue>
 #include <iostream>
 #include <map>
+#include <limits>
 
 template <class T>
 class Graph {
@@ -18,9 +19,10 @@ public:
     static const std::size_t MAX = 20;
 private:
     bool edges[MAX][MAX];
-    std::size_t weight[MAX][MAX];
+    std::size_t weights[MAX][MAX];
     std::map<T, std::size_t> labels;
     std::size_t many_vertices = 0;
+    int minimumDistance(int distance[], bool marked[], std::size_t target);
     void depth_first(bool marked[], std::size_t vertex) const;
     void remove_edge(const T& source, const T& target);
 public:
@@ -33,7 +35,7 @@ public:
 
     void add_edge(std::size_t source, std::size_t target, std::size_t weight); // add
     bool is_edge(std::size_t source, std::size_t target) const;
-    void shortest_path(std::size_t source);
+    void shortest_path(std::size_t source, std::size_t target);
     std::set<std::size_t> neighbors(std::size_t vertex) const;
 
     void breadth_first() const;

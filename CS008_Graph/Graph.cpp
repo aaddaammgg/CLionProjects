@@ -9,7 +9,11 @@
 
 template<class T>
 Graph<T>::Graph() {
-
+    for (auto & i : edges) {
+        for (bool & edge : i) {
+            edge = false;
+        }
+    }
 }
 
 template<class T>
@@ -34,7 +38,8 @@ void Graph<T>::add_edge(const T &source, const T &target) {
 
 template<class T>
 void Graph<T>::add_edge(std::size_t source, std::size_t target, std::size_t weight) {
-
+    add_edge(source, target);
+    weights[source][target] = weight;
 }
 
 template<class T>
@@ -58,8 +63,86 @@ bool Graph<T>::is_edge(std::size_t source, std::size_t target) const {
 }
 
 template<class T>
-void Graph<T>::shortest_path(std::size_t source) {
+int Graph<T>::minimumDistance(int distance[], bool marked[], std::size_t target) {
+    int minimum = std::numeric_limits<int>::max();
+    int index;
 
+    for (int i = 0; i < target; i++) {
+        if (!marked[i] && distance[i] <= minimum) {
+            minimum = distance[i];
+            index = i;
+        }
+    }
+
+    return index;
+
+}
+
+/*
+function dijkstra(G, S)
+    for each vertex V in G
+        dist[V] <- infinite
+        prev[V] <- NULL
+        If V != S, add V to Priority Queue Q
+    dist[S] <- 0
+
+    while Q IS NOT EMPTY
+        U <- Extract MIN from Q
+        for each unvisited neighbour V of U
+            temperoryDist <- dist[U] + edgeWeight(U, V)
+            if temperoryDist < dist[V]
+                dist[V] <- temperoryDist
+                prev[V] <- U
+    return dist[], prev[]
+ */
+
+template<class T>
+void Graph<T>::shortest_path(std::size_t source, std::size_t target) {
+    // inf = std::numeric_limits<int>::max()
+    int distance[many_vertices];
+    int marked[many_vertices];
+    std::queue<std::size_t> q;
+
+    q.push(source);
+
+    while (!q.empty()) {
+
+    }
+
+    for (int i = 0; i < target; i++) {
+        distance[i] = std::numeric_limits<int>::max();
+        marked[i] = false;
+    }
+
+    distance[source] = 0;
+    distance[source] = true;
+
+
+//    while (!q.empty()) {
+//
+//    }
+//
+//    for (allowedSize = 1; allowedSize < target; ++allowedSize) {
+//
+//    }
+
+//    int distance[target];
+////    int pred[MAX];
+//    bool marked[MAX];
+////    int count = 1;
+//
+//
+//
+//    for (int i = 0; i < target; i++) {
+//        distance[i] = std::numeric_limits<int>::max();
+//        marked[i] = false;
+//    }
+//
+//    distance[source] = 0;
+//
+//    for (std::size_t i = 0; i < many_vertices; i++) {
+//        int minDistance = minimumDistance(distance, marked, target);
+//    }
 }
 
 template<class T>
@@ -70,8 +153,11 @@ void Graph<T>::breadth_first() const {
 template<class T>
 void Graph<T>::breadth_first(std::size_t vertex) const {
     bool marked[many_vertices];
-    std::fill(marked, marked+many_vertices,false);
-    // set marked to false
+
+    for (int i = 0; i < many_vertices; i++) {
+        marked[i] = false;
+    }
+
     std::queue<std::size_t> q;
     q.push(vertex);
     // create a bool marked[verticesSize]
