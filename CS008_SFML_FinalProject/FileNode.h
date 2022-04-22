@@ -1,0 +1,14 @@
+//
+// Created by Adam G. on 4/21/2022.
+//
+
+#ifndef CS008_SFML_FINALPROJECT_FILENODE_H
+#define CS008_SFML_FINALPROJECT_FILENODE_H
+
+
+class FileNode {
+
+};
+
+
+#endif //CS008_SFML_FINALPROJECT_FILENODE_H
