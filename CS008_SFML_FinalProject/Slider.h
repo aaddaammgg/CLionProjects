@@ -11,20 +11,21 @@
 
 class Slider : public GUIComponent {
 private:
-    float value;
+    float value = 0;
     Label label;
     sf::RectangleShape box;
     sf::CircleShape dot;
 public:
     Slider();
 
-    float getValue();
+    float getValue() const;
     void setValue(float val);
 
     virtual void setSize(sf::Vector2f size);
     virtual void onMouseMoved(sf::Vector2f pos);
     virtual void onMousePressed(sf::Mouse::Button button, sf::Vector2f pos);
     virtual void onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos);
+    virtual void onKeyPressed(const sf::Event::KeyEvent& key);
 
     virtual Snapshot getSnapshot() {};
     virtual void applySnapshot(const Snapshot& snapshot) {};
