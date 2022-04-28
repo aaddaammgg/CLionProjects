@@ -4,6 +4,7 @@
 #include "DropdownMenu.h"
 #include "MenuItem.h"
 #include "MenuBar.h"
+#include "Slider.h"
 
 void draw(std::vector<GUIComponent*>& components, sf::RenderWindow& window);
 
@@ -72,6 +73,10 @@ int main() {
     menuBar.addItem(menuFile);
     menuBar.addItem(menuEdit);
 
+    Slider slider;
+    slider.setSize({200, 20});
+    slider.setPosition({100, 300});
+
 
 
     std::vector<GUIComponent*> components;
@@ -80,6 +85,7 @@ int main() {
 //    components.push_back(&dm);
 //    components.push_back(&menuFile);
     components.push_back(&menuBar);
+    components.push_back(&slider);
 
     bool isEvent = false;
 
