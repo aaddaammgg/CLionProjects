@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7)
-set(PROJECT_NAME sfml_template)
+set(PROJECT_NAME CS008_SFML_FileIO)
 
 project(${PROJECT_NAME})
 
