@@ -57,20 +57,23 @@ void Slider::onMouseMoved(sf::Vector2f pos) {
 }
 
 void Slider::onMousePressed(sf::Mouse::Button button, sf::Vector2f pos) {
-    sf::FloatRect dotBounds = box.getGlobalBounds();
+    sf::FloatRect dotBounds = dot.getGlobalBounds();
     sf::FloatRect dotPosTransform = getTransform().transformRect(dotBounds);
 
-    if (button == sf::Mouse::Left && !isEnabled(CLICKED) && dotPosTransform.contains(pos)) {
+    sf::FloatRect boxBounds = box.getGlobalBounds();
+    sf::FloatRect boxPosTransform = getTransform().transformRect(boxBounds);
+
+    if (button == sf::Mouse::Left && !isEnabled(CLICKED) && (dotPosTransform.contains(pos) || boxPosTransform.contains(pos))) {
         enableState(CLICKED);
         enableState(SELECTED);
     }
 }
 
 void Slider::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
-    sf::FloatRect dotBounds = box.getGlobalBounds();
-    sf::FloatRect dotPosTransform = getTransform().transformRect(dotBounds);
+    sf::FloatRect boxBounds = box.getGlobalBounds();
+    sf::FloatRect boxPosTransform = getTransform().transformRect(boxBounds);
 
-    if (!dotPosTransform.contains(pos) && !isEnabled(CLICKED)) {
+    if (!boxPosTransform.contains(pos) && !isEnabled(CLICKED)) {
         disableState(SELECTED);
     }
 

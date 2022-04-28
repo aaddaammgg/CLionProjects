@@ -77,6 +77,10 @@ int main() {
     slider.setSize({200, 20});
     slider.setPosition({100, 300});
 
+    Slider slider2;
+    slider2.setSize({200, 20});
+    slider2.setPosition({100, 340});
+
 
 
     std::vector<GUIComponent*> components;
@@ -86,6 +90,7 @@ int main() {
 //    components.push_back(&menuFile);
     components.push_back(&menuBar);
     components.push_back(&slider);
+    components.push_back(&slider2);
 
     bool isEvent = false;
 
