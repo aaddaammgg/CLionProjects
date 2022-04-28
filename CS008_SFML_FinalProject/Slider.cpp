@@ -4,7 +4,15 @@
 
 #include "Slider.h"
 
-Slider::Slider() {
+Slider::Slider() : Slider("", 0) {
+
+}
+
+Slider::Slider(std::string str, float initialValue) {
+    label.addChar(str);
+    label.setAlignment(MultiText::RIGHT);
+    label.setPosition({2, -2});
+
     box.setFillColor(sf::Color::Transparent);
     box.setOutlineColor(sf::Color::Black);
     box.setOutlineThickness(2);
@@ -13,8 +21,11 @@ Slider::Slider() {
     dot.setOutlineColor(sf::Color::Black);
     dot.setOutlineThickness(2);
     dot.setRadius(20);
-//    dot.setOrigin({0, 0});
     dot.setOrigin({20 / 2, 20 / 2});
+
+    progressBox.setFillColor(sf::Color::Green);
+
+    setValue(initialValue);
 
     disableState(HIDDEN);
     disableState(DISABLED);
@@ -37,14 +48,27 @@ void Slider::setValue(float val) {
 
     float max = getSize().x - dot.getRadius();
     float x = max * value / 100;
-
     dot.setPosition(x, 0);
+
+    max = getSize().x;
+    x = max * value / 100;
+    progressBox.setSize({x, getSize().y});
+
+    labelValue--;
+    labelValue += std::to_string(value);
 }
 
 void Slider::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
 
+    label.setCharacterSize(size.y);
+
+    labelValue.setCharacterSize(size.y);
+    labelValue.setPosition({size.x + 15, -2});
+
     box.setSize(size);
+
+    setValue(getValue());
 }
 
 void Slider::onMouseMoved(sf::Vector2f pos) {
@@ -103,6 +127,9 @@ void Slider::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     }
     states.transform *= getTransform();
     window.draw(box, states);
+    window.draw(progressBox, states);
+    window.draw(label, states);
+    window.draw(labelValue, states);
     window.draw(dot, states);
 }
 

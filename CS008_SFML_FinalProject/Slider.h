@@ -7,19 +7,24 @@
 
 #include <SFML/Graphics.hpp>
 #include "GUIComponent.h"
-#include "Label.h"
+#include "MultiText.h"
 
 class Slider : public GUIComponent {
 private:
     float value = 0;
-    Label label;
+    MultiText label;
+    MultiText labelValue;
     sf::RectangleShape box;
+    sf::RectangleShape progressBox;
     sf::CircleShape dot;
 public:
     Slider();
+    Slider(std::string str, float initialValue = 0);
 
     float getValue() const;
     void setValue(float val);
+
+    void setLabel(std::string str);
 
     virtual void setSize(sf::Vector2f size);
     virtual void onMouseMoved(sf::Vector2f pos);

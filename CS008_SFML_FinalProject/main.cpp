@@ -73,7 +73,7 @@ int main() {
     menuBar.addItem(menuFile);
     menuBar.addItem(menuEdit);
 
-    Slider slider;
+    Slider slider("Test:");
     slider.setSize({200, 20});
     slider.setPosition({100, 300});
 
