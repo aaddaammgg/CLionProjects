@@ -20,8 +20,8 @@ void EventHandlerCallbacks::addEventHandler(sf::RenderWindow &window, sf::Event 
             onMouseReleased(event.mouseButton.button, getMousePos(window));
             break;
         }
-        case sf::Event::MouseWheelMoved:
-            onMouseWheelMoved(event.mouseWheel.delta);
+        case sf::Event::MouseWheelScrolled:
+            onMouseWheelScrolled(event.mouseWheelScroll.wheel, event.mouseWheelScroll.delta, getMousePos(window));
             break;
         case sf::Event::KeyPressed:
             onKeyPressed(event.key);

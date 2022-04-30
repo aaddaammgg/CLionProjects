@@ -28,6 +28,7 @@ public:
 
     virtual void setSize(sf::Vector2f size);
     virtual void onMouseMoved(sf::Vector2f pos);
+    virtual void onMouseWheelScrolled(sf::Mouse::Wheel wheel, float delta, sf::Vector2f pos);
     virtual void onMousePressed(sf::Mouse::Button button, sf::Vector2f pos);
     virtual void onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos);
     virtual void onKeyPressed(const sf::Event::KeyEvent& key);

@@ -24,7 +24,7 @@ public:
     virtual void onMouseMoved(sf::Vector2f pos) {};
     virtual void onMousePressed(sf::Mouse::Button button, sf::Vector2f pos) {};
     virtual void onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {};
-    virtual void onMouseWheelMoved(int delta) {};
+    virtual void onMouseWheelScrolled(sf::Mouse::Wheel wheel, float delta, sf::Vector2f pos) {};
     virtual void onKeyPressed(const sf::Event::KeyEvent& key) {};
     virtual void onKeyReleased(const sf::Event::KeyEvent& key) {};
     virtual void onTextEntered(sf::Uint32 unicode) {};

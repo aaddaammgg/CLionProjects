@@ -21,7 +21,7 @@ Slider::Slider(std::string str, float initialValue) {
     dot.setOutlineColor(sf::Color::Black);
     dot.setOutlineThickness(2);
     dot.setRadius(20);
-    dot.setOrigin({20 / 2, 20 / 2});
+    dot.setOrigin({20, 20 / 2});
 
     progressBox.setFillColor(sf::Color::Green);
 
@@ -46,12 +46,12 @@ void Slider::setValue(float val) {
         value = 100;
     }
 
-    float max = getSize().x - dot.getRadius();
+    float max = getSize().x;
     float x = max * value / 100;
     dot.setPosition(x, 0);
 
-    max = getSize().x;
-    x = max * value / 100;
+//    max = getSize().x;
+//    x = max * value / 100;
     progressBox.setSize({x, getSize().y});
 
     labelValue--;
@@ -78,6 +78,15 @@ void Slider::onMouseMoved(sf::Vector2f pos) {
 
     sf::Vector2f point = getTransform().getInverse().transformPoint(pos);
     setValue(100 * point.x / getSize().x);
+}
+
+void Slider::onMouseWheelScrolled(sf::Mouse::Wheel wheel, float delta, sf::Vector2f pos) {
+    if (!isEnabled(SELECTED) || delta == 0) {
+        return;
+    }
+
+    float amt = (delta > 0) ? 5 : -5;
+    setValue(value + amt);
 }
 
 void Slider::onMousePressed(sf::Mouse::Button button, sf::Vector2f pos) {
