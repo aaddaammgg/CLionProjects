@@ -37,6 +37,14 @@ Slider::Slider(std::string str, float initialValue) {
     disableState(CLICKED);
 }
 
+void Slider::updatePos() {
+    sf::FloatRect labelSize = label.getSize();
+
+    float padding = 15 + labelSize.width;
+
+    box.setSize({getSize().x - padding, getSize().y});
+}
+
 sf::Vector2f Slider::getMinMax() const {
     return {min, max};
 }
@@ -66,6 +74,7 @@ void Slider::setMax(float x) {
 
 void Slider::setLabel(std::string str) {
     label = str;
+    updatePos();
 }
 
 int Slider::getPrecision() const {
@@ -89,7 +98,7 @@ void Slider::setValue(float val) {
         value = max;
     }
 
-    float width = getSize().x;
+    float width = box.getSize().x;
     float x = (value - min) * width / (max - min);
 
     knob.setPosition(x, 0);
@@ -120,14 +129,14 @@ void Slider::setSize(sf::Vector2f size) {
     label.setPosition({-15, -3});
     label.setAlignment(MultiText::RIGHT);
 
-    std::cout << origPos.x << " " << label.getSize().width << std::endl;
+//    std::cout << origPos.x << " " << label.getSize().width << std::endl;
 
     setPosition({origPos.x + label.getSize().width + 15, origPos.y});
 
-    labelValue.setCharacterSize(size.y * 1.5);
-    labelValue.setPosition({size.x + 15, -3});
+    updatePos();
 
-    box.setSize(size);
+    labelValue.setCharacterSize(size.y * 1.5);
+    labelValue.setPosition({box.getSize().x + 15, -3});
 
     knob.setSize({size.y / 2,static_cast<float>(size.y * 1)});
     knob.setOrigin({(size.y / 2) / 2, 0});
@@ -148,7 +157,7 @@ void Slider::onMouseMoved(sf::Vector2f pos) {
 
     sf::Vector2f point = getTransform().getInverse().transformPoint(pos);
 
-    float ratio = (point.x) / (getSize().x);
+    float ratio = (point.x) / (box.getSize().x);
 
     setValue((max - min) * ratio + min);
 }
@@ -172,6 +181,7 @@ void Slider::onMousePressed(sf::Mouse::Button button, sf::Vector2f pos) {
     if (button == sf::Mouse::Left && !isEnabled(CLICKED) && (dotPosTransform.contains(pos) || boxPosTransform.contains(pos))) {
         enableState(CLICKED);
         enableState(SELECTED);
+        focusedComponent = this;
     }
 }
 
@@ -181,6 +191,7 @@ void Slider::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
 
     if (!boxPosTransform.contains(pos) && !isEnabled(CLICKED)) {
         disableState(SELECTED);
+        focusedComponent = nullptr;
     }
 
     disableState(CLICKED);
@@ -219,7 +230,7 @@ void Slider::addEventHandler(sf::RenderWindow &window, sf::Event event) {
     if (isEnabled(HIDDEN) || isEnabled(DISABLED)) {
         return;
     }
-    GUIComponent::addEventHandler(window, event);
+    GUIComponentAdapter::addEventHandler(window, event);
 }
 
 void Slider::update() {

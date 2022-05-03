@@ -28,7 +28,7 @@ void MenuBar::draw(sf::RenderTarget &window, sf::RenderStates states) const {
 }
 
 void MenuBar::addEventHandler(sf::RenderWindow &window, sf::Event event) {
-    GUIComponent::addEventHandler(window, event);
+    GUIComponentAdapter::addEventHandler(window, event);
     for (auto &item: menuItemList) {
         item.addEventHandler(window, event);
     }

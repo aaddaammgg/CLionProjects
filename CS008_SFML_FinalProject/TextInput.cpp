@@ -17,19 +17,23 @@ TextInput::TextInput() {
 
 void TextInput::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
-    box.setSize(size);
+//    box.setSize(size);
     cursorBlink.setSize({2, size.y - 2});
-    typing.setSize(size);
+//    typing.setSize(size);
+    updatePos();
 }
 
 void TextInput::updatePos() {
     sf::FloatRect labelGB = label.getGlobalBounds();
 
-    float padding = 10;
+    float padding = 10 + labelGB.width + labelGB.left;
 
-    cursorBlink.setPosition(1 + labelGB.width + labelGB.left + padding, 1);
-    typing.setPosition(0 + labelGB.width + labelGB.left + padding, -2);
-    box.setPosition(labelGB.width + labelGB.left + padding, 0);
+    cursorBlink.setPosition(1 + padding, 1);
+    typing.setPosition(0 + padding, -2);
+    box.setPosition(padding, 0);
+
+    box.setSize({getSize().x - padding, getSize().y});
+    typing.setSize({getSize().x - padding, getSize().y});
 }
 
 void TextInput::setLabel(const std::string &str) {
@@ -134,7 +138,7 @@ void TextInput::updateCursor() {
     cursorBlink.setPosition(curPos);
 }
 
-void TextInput::setCallBack(std::function<void(std::string)> cb) {
+void TextInput::setCallBack(std::function<void(const std::string&, const bool&)> cb) {
     callBack = std::move(cb);
 }
 
@@ -162,12 +166,12 @@ void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
             hn.component = this;
             undoPush(hn);
 
-            callBack(typing.getMultiText().getString());
+            callBack(typing.getMultiText().getString(), event.text.unicode == 8);
         }
     }
 
     // Moved after typing's event handler due to typing class needing the highest priority
-    GUIComponent::addEventHandler(window, event);
+    GUIComponentAdapter::addEventHandler(window, event);
 
     if (isEnabled(SELECTED) && (KBShortcuts::isUndo() || KBShortcuts::isRedo())) {
         updateCursor();

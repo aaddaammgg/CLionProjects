@@ -6,10 +6,10 @@
 #define CS008_SFML_FINALPROJECT_FILENODE_H
 
 #include <SFML/Graphics.hpp>
-#include "GUIComponent.h"
+#include "GUIComponentAdapter.h"
 #include "FileItem.h"
 
-class FileNode : public GUIComponent {
+class FileNode : public GUIComponentAdapter {
 private:
     FileItem data;
 

@@ -169,7 +169,7 @@ void DropdownMenu::draw(sf::RenderTarget &window, sf::RenderStates states) const
 }
 
 void DropdownMenu::addEventHandler(sf::RenderWindow &window, sf::Event event) {
-    GUIComponent::addEventHandler(window, event);
+    GUIComponentAdapter::addEventHandler(window, event);
 }
 
 void DropdownMenu::update() {

@@ -6,9 +6,9 @@
 #define CS008_SFML_FINALPROJECT_DISPLAYLOGO_H
 
 #include <SFML/Graphics.hpp>
-#include "GUIComponent.h"
+#include "GUIComponentAdapter.h"
 
-class DisplayLogo : public GUIComponent {
+class DisplayLogo : public GUIComponentAdapter {
 private:
     sf::RectangleShape box;
     MultiText logo;

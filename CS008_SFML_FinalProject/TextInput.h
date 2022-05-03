@@ -30,8 +30,8 @@ public:
     void setLabelSize(const int& size);
     void setLabelColor(const sf::Color& color);
 
-    std::function<void(std::string)> callBack;
-    void setCallBack(std::function<void(std::string)> cb);
+    std::function<void(const std::string&, const bool&)> callBack;
+    void setCallBack(std::function<void(const std::string&, const bool&)> cb);
 
     virtual Snapshot getSnapshot();
     virtual void applySnapshot(const Snapshot& snapshot);

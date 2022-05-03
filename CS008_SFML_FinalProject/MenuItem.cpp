@@ -120,7 +120,7 @@ void MenuItem::draw(sf::RenderTarget &window, sf::RenderStates states) const {
 }
 
 void MenuItem::addEventHandler(sf::RenderWindow &window, sf::Event event) {
-    GUIComponent::addEventHandler(window, event);
+    GUIComponentAdapter::addEventHandler(window, event);
 }
 
 void MenuItem::update() {

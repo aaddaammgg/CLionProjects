@@ -6,6 +6,7 @@
 #define CS008_SFML_TYPING_EVENTHANDLERCALLBACKS_H
 
 #include <SFML/Graphics.hpp>
+#include "GUIComponent.h"
 #include <iostream>
 
 class EventHandlerCallbacks {
@@ -15,6 +16,7 @@ private:
     static int clicks;
     static void countClicks();
 public:
+    static GUIComponent* focusedComponent;
 
     virtual void addEventHandler(sf::RenderWindow& window, sf::Event event);
 

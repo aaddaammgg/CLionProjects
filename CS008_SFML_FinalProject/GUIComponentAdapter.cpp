@@ -9,7 +9,7 @@ void GUIComponentAdapter::draw(sf::RenderTarget &window, sf::RenderStates states
 }
 
 void GUIComponentAdapter::addEventHandler(sf::RenderWindow &window, sf::Event event) {
-
+    EventHandlerCallbacks::addEventHandler(window, event);
 }
 
 void GUIComponentAdapter::update() {

@@ -8,10 +8,10 @@
 #include <SFML/Graphics.hpp>
 #include <iomanip>
 #include <sstream>
-#include "GUIComponent.h"
+#include "GUIComponentAdapter.h"
 #include "MultiText.h"
 
-class Slider : public GUIComponent {
+class Slider : public GUIComponentAdapter {
 private:
     float value = 0;
     float step = 1;
@@ -28,6 +28,8 @@ private:
     sf::RectangleShape box;
     sf::RectangleShape progressBox;
     sf::RectangleShape knob;
+
+    void updatePos();
 public:
     Slider();
     Slider(std::string str, float initialValue = 0);

@@ -78,7 +78,7 @@ void Typing::draw(sf::RenderTarget &window, sf::RenderStates states) const {
 }
 
 void Typing::addEventHandler(sf::RenderWindow &window, sf::Event event) {
-    GUIComponent::addEventHandler(window, event);
+    GUIComponentAdapter::addEventHandler(window, event);
 }
 
 void Typing::update() {

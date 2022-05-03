@@ -15,6 +15,7 @@
 class LogoMaker {
 private:
     sf::RenderWindow renderWindow;
+    std::vector<GUIComponent*> components;
 
     MenuBar menuBar;
     DisplayLogo displayLogo;
@@ -25,7 +26,12 @@ private:
     Slider textYAxis;
     Slider textFontSize;
 
-    void draw(std::vector<GUIComponent*>& components, sf::RenderWindow& window);
+    Slider shadowOpacity;
+    Slider shadowXAxis;
+    Slider shadowYAxis;
+    Slider shadowSkew;
+
+    static void draw(std::vector<GUIComponent*>& components, sf::RenderWindow& window);
 public:
     void run();
 };

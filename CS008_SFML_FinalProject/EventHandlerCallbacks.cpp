@@ -6,6 +6,7 @@
 
 sf::Clock EventHandlerCallbacks::clock;
 int EventHandlerCallbacks::clicks = 0;
+GUIComponent* EventHandlerCallbacks::focusedComponent = nullptr;
 
 void EventHandlerCallbacks::addEventHandler(sf::RenderWindow &window, sf::Event event) {
     switch (event.type) {
