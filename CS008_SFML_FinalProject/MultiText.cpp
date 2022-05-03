@@ -9,7 +9,7 @@ MultiText::MultiText() {
 }
 
 MultiText::PosBounds MultiText::getLastPos() {
-    return {letters.back().getPosition(), letters.back().getLocalBounds() };
+    return {letters.back().getPosition(), letters.back().getLocalBounds()};
 }
 
 void MultiText::updateAlignment() {
@@ -36,17 +36,25 @@ void MultiText::updatePosition(Letter &l) {
 }
 
 void MultiText::push(Letter &l) {
-    l.setFillColor(randomColor());
+    if (isEnabled(RANDOM_COLOR)) {
+        l.setFillColor(randomColor());
+    } else if (l.getFillColor() == sf::Color::Black) {
+        l.setFillColor(sf::Color::White);
+    }
+
     l.setCharacterSize(characterSize);
+
     if (!letters.empty()) {
         updatePosition(l);
     }
+
     letters.push_back(l);
     updateAlignment();
 }
 
 sf::Color MultiText::randomColor() {
-    return {static_cast<sf::Uint8>((rand() % 255)), static_cast<sf::Uint8>((rand() % 255)), static_cast<sf::Uint8>((rand() % 255))};
+    return {static_cast<sf::Uint8>((rand() % 255)), static_cast<sf::Uint8>((rand() % 255)),
+            static_cast<sf::Uint8>((rand() % 255))};
 }
 
 void MultiText::addChar(char c) {
@@ -54,7 +62,7 @@ void MultiText::addChar(char c) {
     push(l);
 }
 
-void MultiText::addChar(const std::string& str) {
+void MultiText::addChar(const std::string &str) {
     Letter l(str);
     push(l);
 }
@@ -66,7 +74,7 @@ void MultiText::addChar(const sf::Text &text) {
 
 std::string MultiText::getString() {
     std::string temp;
-    for (auto & letter : letters) {
+    for (auto &letter: letters) {
         temp += letter.getString();
     }
 
@@ -85,7 +93,7 @@ std::string MultiText::getString(MultiText::iterator begin, MultiText::iterator 
     return temp;
 }
 
-MultiText::iteratorsBE MultiText::find(std::string str, MultiText::iterator startPos, bool& found) {
+MultiText::iteratorsBE MultiText::find(std::string str, MultiText::iterator startPos, bool &found) {
     iteratorsBE temp;
 
     auto t = end();
@@ -176,7 +184,7 @@ unsigned int MultiText::getCharacterSize() const {
 
 void MultiText::setCharacterSize(unsigned int size) {
     characterSize = size;
-    for (auto & letter : letters) {
+    for (auto &letter: letters) {
         letter.setCharacterSize(size);
     }
 }
@@ -207,7 +215,7 @@ void MultiText::removeChar() {
 
 void MultiText::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     states.transform *= getTransform();
-    for (auto const& letter : letters) {
+    for (auto const &letter: letters) {
         window.draw(letter, states);
     }
 }
@@ -232,6 +240,12 @@ MultiText::iterator MultiText::end() {
     return letters.end();
 }
 
+MultiText &MultiText::operator=(const std::string &rhs) {
+    this->letters.clear();
+    this->addChar(rhs);
+    return *this;
+}
+
 MultiText &MultiText::operator+=(const char &rhs) {
     this->addChar(rhs);
     return *this;
@@ -252,7 +266,7 @@ MultiText &MultiText::operator--() {
     return *this;
 }
 
-MultiText MultiText::operator--(int) & {
+MultiText MultiText::operator--(int) &{
     MultiText tmp(*this);
     operator--();
     return tmp;

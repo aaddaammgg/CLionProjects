@@ -26,6 +26,10 @@ void Label::setLabelSize(const int &size) {
     label.setCharacterSize(size);
 }
 
+void Label::setLabelColor(const sf::Color &color) {
+    label.setFillColor(color);
+}
+
 sf::FloatRect Label::getGlobalBounds() {
     return label.getGlobalBounds();
 }

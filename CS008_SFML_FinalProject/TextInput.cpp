@@ -6,6 +6,7 @@
 
 TextInput::TextInput() {
     box.setSize(getSize());
+    box.setFillColor(sf::Color::Black);
     box.setOutlineColor(sf::Color::Red);
     box.setOutlineThickness(5);
 
@@ -39,6 +40,10 @@ void TextInput::setLabel(const std::string &str) {
 void TextInput::setLabelSize(const int &size) {
     label.setLabelSize(size);
     updatePos();
+}
+
+void TextInput::setLabelColor(const sf::Color &color) {
+    label.setLabelColor(color);
 }
 
 Snapshot TextInput::getSnapshot() {
@@ -129,6 +134,10 @@ void TextInput::updateCursor() {
     cursorBlink.setPosition(curPos);
 }
 
+void TextInput::setCallBack(std::function<void(std::string)> cb) {
+    callBack = std::move(cb);
+}
+
 void TextInput::onTextEntered(sf::Uint32 unicode) {
     if (!isEnabled(SELECTED)) return;
 
@@ -152,6 +161,8 @@ void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
             hn.snapshot = getSnapshot();
             hn.component = this;
             undoPush(hn);
+
+            callBack(typing.getMultiText().getString());
         }
     }
 

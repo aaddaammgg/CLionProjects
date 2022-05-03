@@ -108,7 +108,7 @@ void MenuItem::onMouseMoved(sf::Vector2f pos) {
         if (itemPosTransform.contains(pos)) {
             item.getBox().setFillColor(sf::Color::Red);
         } else {
-            item.getBox().setFillColor(sf::Color::White);
+            item.getBox().setFillColor(sf::Color::Black);
         }
     }
 }

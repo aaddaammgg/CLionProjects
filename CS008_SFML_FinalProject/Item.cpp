@@ -6,7 +6,8 @@
 
 Item::Item() {
 //    enableState(HIDDEN);
-    box.setOutlineColor(sf::Color::Black);
+    box.setFillColor(sf::Color::Black);
+    box.setOutlineColor(sf::Color::White);
     box.setOutlineThickness(2);
     mt.setAlignment(MultiText::ALIGN::CENTER);
 }

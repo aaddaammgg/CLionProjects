@@ -6,6 +6,7 @@
 #define CS008_SFML_TYPING_TEXTINPUT_H
 
 #include <SFML/Graphics.hpp>
+#include <functional>
 #include "GUIComponentAdapter.h"
 #include "Typing.h"
 #include "CursorBlink.h"
@@ -27,6 +28,10 @@ public:
 
     void setLabel(const std::string& str);
     void setLabelSize(const int& size);
+    void setLabelColor(const sf::Color& color);
+
+    std::function<void(std::string)> callBack;
+    void setCallBack(std::function<void(std::string)> cb);
 
     virtual Snapshot getSnapshot();
     virtual void applySnapshot(const Snapshot& snapshot);
@@ -35,9 +40,9 @@ public:
     virtual void onKeyPressed(const sf::Event::KeyEvent& key);
     virtual void onTextEntered(sf::Uint32 unicode);
 
-    void addEventHandler(sf::RenderWindow& window, sf::Event event) override;
+    virtual void addEventHandler(sf::RenderWindow& window, sf::Event event) override;
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
-    void update();
+    virtual void update();
 };
 
 

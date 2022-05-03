@@ -9,8 +9,9 @@
 #include <list>
 #include <iostream>
 #include "Letter.h"
+#include "States.h"
 
-class MultiText : public sf::Drawable, public sf::Transformable {
+class MultiText : public sf::Drawable, public sf::Transformable, public States {
 public:
     typedef struct {
         sf::Vector2f pos;
@@ -77,6 +78,8 @@ public:
     MultiText::iterator begin(); // begin iterator
     MultiText::iterator end(); // end iterator
 
+
+    MultiText& operator=(const std::string& rhs);
     MultiText& operator+=(const char& rhs);
     MultiText& operator+=(const std::string& rhs);
     MultiText& operator+=(const sf::Text& rhs);

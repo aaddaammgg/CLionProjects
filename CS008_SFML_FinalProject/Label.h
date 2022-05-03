@@ -19,6 +19,7 @@ public:
 
     void setLabel(const std::string& str);
     void setLabelSize(const int& size);
+    void setLabelColor(const sf::Color& color);
 
     sf::FloatRect getGlobalBounds();
 

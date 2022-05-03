@@ -5,7 +5,7 @@
 #include "CursorBlink.h"
 
 CursorBlink::CursorBlink() {
-    line.setFillColor(sf::Color::Black);
+    line.setFillColor(sf::Color::White);
     line.setSize({2,8});
 }
 

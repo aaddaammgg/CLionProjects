@@ -7,15 +7,23 @@
 
 #include <SFML/Graphics.hpp>
 #include "GUIComponent.h"
-#include "MenuItem.h"
 #include "MenuBar.h"
+#include "DisplayLogo.h"
 #include "TextInput.h"
+#include "Slider.h"
 
 class LogoMaker {
 private:
     sf::RenderWindow renderWindow;
+
     MenuBar menuBar;
+    DisplayLogo displayLogo;
     TextInput logoText;
+
+    Slider textOpacity;
+    Slider textXAxis;
+    Slider textYAxis;
+    Slider textFontSize;
 
     void draw(std::vector<GUIComponent*>& components, sf::RenderWindow& window);
 public:

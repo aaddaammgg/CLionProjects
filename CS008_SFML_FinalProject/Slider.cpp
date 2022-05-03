@@ -9,19 +9,23 @@ Slider::Slider() : Slider("", 0) {
 }
 
 Slider::Slider(std::string str, float initialValue) {
-    label.addChar(str);
-    label.setAlignment(MultiText::RIGHT);
-    label.setPosition({2, -2});
+    label = str;
 
     box.setFillColor(sf::Color::Transparent);
-    box.setOutlineColor(sf::Color::Black);
+    box.setOutlineColor(sf::Color::White);
     box.setOutlineThickness(2);
 
-    dot.setFillColor(sf::Color::Transparent);
-    dot.setOutlineColor(sf::Color::Black);
-    dot.setOutlineThickness(2);
-    dot.setRadius(20);
-    dot.setOrigin({20, 20 / 2});
+
+    knob.setFillColor(sf::Color::White);
+    knob.setOutlineColor(sf::Color::White);
+    knob.setOutlineThickness(2);
+
+
+//    dot.setFillColor(sf::Color::Transparent);
+//    dot.setOutlineColor(sf::Color::White);
+//    dot.setOutlineThickness(2);
+//    dot.setRadius(20);
+//    dot.setOrigin({20, 20 / 2});
 
     progressBox.setFillColor(sf::Color::Green);
 
@@ -33,6 +37,45 @@ Slider::Slider(std::string str, float initialValue) {
     disableState(CLICKED);
 }
 
+sf::Vector2f Slider::getMinMax() const {
+    return {min, max};
+}
+
+float Slider::getMin() const {
+    return min;
+}
+
+float Slider::getMax() const {
+    return max;
+}
+
+void Slider::setMinMax(sf::Vector2f minMax) {
+    setMin(minMax.x);
+    setMax(minMax.y);
+}
+
+void Slider::setMin(float x) {
+    min = x;
+    setValue(value);
+}
+
+void Slider::setMax(float x) {
+    max = x;
+    setValue(value);
+}
+
+void Slider::setLabel(std::string str) {
+    label = str;
+}
+
+int Slider::getPrecision() const {
+    return precision;
+}
+
+void Slider::setPrecision(int x) {
+    precision = x;
+}
+
 float Slider::getValue() const {
     return value;
 }
@@ -40,35 +83,62 @@ float Slider::getValue() const {
 void Slider::setValue(float val) {
     value = val;
 
-    if (value < 0) {
-        value = 0;
-    } else if (value > 100) {
-        value = 100;
+    if (value < min) {
+        value = min;
+    } else if (value > max) {
+        value = max;
     }
 
-    float max = getSize().x;
-    float x = max * value / 100;
-    dot.setPosition(x, 0);
+    float width = getSize().x;
+    float x = (value - min) * width / (max - min);
 
-//    max = getSize().x;
-//    x = max * value / 100;
+    knob.setPosition(x, 0);
+
     progressBox.setSize({x, getSize().y});
 
-    labelValue--;
-    labelValue += std::to_string(value);
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(getPrecision()) << value;
+
+    labelValue = stream.str();
+
+//    labelValue--;
+//    labelValue += std::to_string(value);
+}
+
+float Slider::getStep() const {
+    return step;
+}
+
+void Slider::setStep(float x) {
+    step = x;
 }
 
 void Slider::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
 
-    label.setCharacterSize(size.y);
+    label.setCharacterSize(size.y * 1.5);
+    label.setPosition({-15, -3});
+    label.setAlignment(MultiText::RIGHT);
 
-    labelValue.setCharacterSize(size.y);
-    labelValue.setPosition({size.x + 15, -2});
+    std::cout << origPos.x << " " << label.getSize().width << std::endl;
+
+    setPosition({origPos.x + label.getSize().width + 15, origPos.y});
+
+    labelValue.setCharacterSize(size.y * 1.5);
+    labelValue.setPosition({size.x + 15, -3});
 
     box.setSize(size);
 
+    knob.setSize({size.y / 2,static_cast<float>(size.y * 1)});
+    knob.setOrigin({(size.y / 2) / 2, 0});
+
     setValue(getValue());
+}
+
+void Slider::setPosition(sf::Vector2f pos) {
+    GUIComponent::setPosition(pos);
+
+    origPos = pos;
 }
 
 void Slider::onMouseMoved(sf::Vector2f pos) {
@@ -77,7 +147,10 @@ void Slider::onMouseMoved(sf::Vector2f pos) {
     }
 
     sf::Vector2f point = getTransform().getInverse().transformPoint(pos);
-    setValue(100 * point.x / getSize().x);
+
+    float ratio = (point.x) / (getSize().x);
+
+    setValue((max - min) * ratio + min);
 }
 
 void Slider::onMouseWheelScrolled(sf::Mouse::Wheel wheel, float delta, sf::Vector2f pos) {
@@ -85,12 +158,12 @@ void Slider::onMouseWheelScrolled(sf::Mouse::Wheel wheel, float delta, sf::Vecto
         return;
     }
 
-    float amt = (delta > 0) ? 5 : -5;
+    float amt = (delta > 0) ? step : -step;
     setValue(value + amt);
 }
 
 void Slider::onMousePressed(sf::Mouse::Button button, sf::Vector2f pos) {
-    sf::FloatRect dotBounds = dot.getGlobalBounds();
+    sf::FloatRect dotBounds = knob.getGlobalBounds();
     sf::FloatRect dotPosTransform = getTransform().transformRect(dotBounds);
 
     sf::FloatRect boxBounds = box.getGlobalBounds();
@@ -139,7 +212,7 @@ void Slider::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     window.draw(progressBox, states);
     window.draw(label, states);
     window.draw(labelValue, states);
-    window.draw(dot, states);
+    window.draw(knob, states);
 }
 
 void Slider::addEventHandler(sf::RenderWindow &window, sf::Event event) {
