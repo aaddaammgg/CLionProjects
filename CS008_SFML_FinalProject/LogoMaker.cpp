@@ -61,6 +61,7 @@ void LogoMaker::run() {
     logoText.setCallBack([&](const std::string& str, const bool& isDelete) {
         displayLogo.getLogo() = str;
         displayLogo.getShadow() = str;
+        updateMinMax();
     });
 
     lastPosition = logoText.getPosition();
