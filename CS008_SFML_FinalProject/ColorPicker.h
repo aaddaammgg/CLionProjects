@@ -29,8 +29,9 @@ private:
     MultiText label;
 
     COLOR selected = RED;
-    float boxSize = 32;
+    float boxSize = 28;
     static sf::Color getColor(COLOR c);
+    void updateSize();
 public:
     ColorPicker();
 

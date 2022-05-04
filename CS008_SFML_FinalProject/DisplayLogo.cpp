@@ -8,7 +8,7 @@ DisplayLogo::DisplayLogo() {
     box.setFillColor(sf::Color::Transparent);
     box.setOutlineThickness(2);
     box.setOutlineColor(sf::Color::White);
-    box.setPosition({3,0});
+    box.setPosition({3,3});
 
     shadow.setScale({1, -1});
     shadow.setOpacity(0);
@@ -30,6 +30,7 @@ void DisplayLogo::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
 
     size.x -= 6;
+    size.y -= 6;
     box.setSize(size);
 }
 

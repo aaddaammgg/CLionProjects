@@ -9,7 +9,7 @@ void LogoMaker::run() {
     settings.antialiasingLevel = 8;
 
     unsigned int WIDTH = 1280 * .8;
-    unsigned int HEIGHT = 800 * 1;
+    unsigned int HEIGHT = 800 * .8;
 
     renderWindow.create({WIDTH, HEIGHT, 32}, "Logo Maker", sf::Style::Default, settings);
     renderWindow.setFramerateLimit(60);
@@ -30,17 +30,29 @@ void LogoMaker::run() {
         renderWindow.close();
     });
 
+    MenuItem menuRender("Render");
+    menuRender.setSize({250, 50});
+    menuRender.addItem("Export", [&](const std::string& str) {
+        std::cout << str << std::endl;
+        sf::Image img = texture.getTexture().copyToImage();
+        img.saveToFile("Logo.png");
+    });
+
     menuBar.addItem(menuFile);
     menuBar.addItem(menuEdit);
+    menuBar.addItem(menuRender);
 
-    displayLogo.setPosition(0, 55);
+    displayLogo.setPosition(0, 0);
     displayLogo.setSize({static_cast<float>(WIDTH), 300});
+    texture.create(displayLogo.getSize().x, 300, 32);
+    sprite.setPosition(0, 55);
+    sprite.setTexture(texture.getTexture());
 
     logoText.setLabel("Text: ");
     logoText.setLabelSize(29);
     logoText.setLabelColor(sf::Color::White);
 
-    sf::Vector2f lastPosition = displayLogo.getPosition();
+    sf::Vector2f lastPosition = sprite.getPosition();
     sf::Vector2f lastSize = displayLogo.getSize();
 
     logoText.setSize({static_cast<float>(WIDTH) - 25, 30});
@@ -141,26 +153,9 @@ void LogoMaker::run() {
     lastPosition = textOpacity.getPosition();
     lastSize = textOpacity.getSize();
 
-    backgroundColor.setLabel("Background Color");
-    backgroundColor.setPosition({lastSize.x + 70, lastPosition.y - lastSize.y});
-    backgroundColor.setCallBack([&](const sf::Color& color) {
-        displayLogo.getBox().setFillColor(color);
-    });
-
-    lastPosition = backgroundColor.getPosition();
-    lastSize = backgroundColor.getSize();
-
-    textColor.setLabel("Text Color");
-    textColor.setPosition({lastPosition.x, lastPosition.y + lastSize.y + 15});
-    textColor.setCallBack([&](const sf::Color& color) {
-        displayLogo.getLogo().setColor(color);
-    });
-
-    lastPosition = textColor.getPosition();
-    lastSize = textColor.getSize();
-
     fontDropdown.setSize({static_cast<float>(WIDTH / 2.0) - 15, 40});
-    fontDropdown.setPosition({lastPosition.x, lastPosition.y + lastSize.y + 20});
+    fontDropdown.setPosition({lastSize.x + 70, lastPosition.y - lastSize.y + 15});
+//    fontDropdown.setPosition({lastPosition.x, lastPosition.y + lastSize.y + 20});
     fontDropdown.addItem("Roboto Regular");
     fontDropdown.addItem("Roboto Bold");
     fontDropdown.addItem("OpenSans Bold");
@@ -182,7 +177,24 @@ void LogoMaker::run() {
         displayLogo.getShadow().setFont(font);
     });
 
-    components.push_back(&fontDropdown);
+    lastPosition = fontDropdown.getPosition();
+    lastSize = fontDropdown.getSize();
+
+    backgroundColor.setLabel("Background Color");
+    backgroundColor.setPosition({lastSize.x + 20 + lastSize.x / 2 - backgroundColor.getSize().x / 2, lastPosition.y + lastSize.y + 5});
+    backgroundColor.setCallBack([&](const sf::Color& color) {
+        displayLogo.getBox().setFillColor(color);
+    });
+
+    lastPosition = backgroundColor.getPosition();
+    lastSize = backgroundColor.getSize();
+
+    textColor.setLabel("Text Color");
+    textColor.setPosition({lastPosition.x, lastPosition.y + lastSize.y + 10});
+    textColor.setCallBack([&](const sf::Color& color) {
+        displayLogo.getLogo().setColor(color);
+    });
+
 
     components.push_back(&shadowSkew);
     components.push_back(&shadowYAxis);
@@ -196,8 +208,9 @@ void LogoMaker::run() {
     components.push_back(&textOpacity);
 
     components.push_back(&backgroundColor);
+    components.push_back(&fontDropdown);
     components.push_back(&logoText);
-    components.push_back(&displayLogo);
+//    components.push_back(&displayLogo);
     components.push_back(&menuBar);
 
     bool isEvent = false;
@@ -231,11 +244,11 @@ void LogoMaker::run() {
             for (auto & component : components) {
                 component->addEventHandler(renderWindow, event);
             }
-            draw(components, renderWindow);
+            draw();
         }
 
         if (!isEvent) {
-            draw(components, renderWindow);
+            draw();
         }
         isEvent = false;
     }
@@ -256,15 +269,23 @@ void LogoMaker::updateMinMax() {
     shadowYAxis.setMax(displayLogo.getSize().y + shadowBounds.height);
 }
 
-void LogoMaker::draw(std::vector<GUIComponent *> &components, sf::RenderWindow &window) {
+void LogoMaker::draw() {
     for (auto & component : components) {
         component->update();
     }
 
-    window.clear(sf::Color(sf::Color::Black));
+    displayLogo.update();
+
+    texture.clear(sf::Color::Black);
+    texture.draw(displayLogo);
+    texture.display();
+
+    renderWindow.clear(sf::Color(sf::Color::Black));
+    renderWindow.draw(sprite);
 
     for (auto & component : components) {
-        window.draw(*component);
+        renderWindow.draw(*component);
     }
-    window.display();
+
+    renderWindow.display();
 }

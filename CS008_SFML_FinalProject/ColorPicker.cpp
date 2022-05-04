@@ -61,6 +61,13 @@ void ColorPicker::setLabelSize(unsigned int s) {
     setPosition(getPosition());
 }
 
+void ColorPicker::updateSize() {
+    float width = colors[LAST_COLORS - 1].getPosition().x + colors[LAST_COLORS - 1].getSize().x;
+    float height = boxSize + label.getCharacterSize();
+    std::cout << "w: " << width << " h: " << height << std::endl;
+    setSize({width, height});
+}
+
 void ColorPicker::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
 }
@@ -68,15 +75,13 @@ void ColorPicker::setSize(sf::Vector2f size) {
 void ColorPicker::setPosition(sf::Vector2f pos) {
     GUIComponent::setPosition(pos);
 
-    float width = colors[LAST_COLORS].getPosition().x + colors[LAST_COLORS].getSize().x;
-    float height = boxSize + label.getCharacterSize();
-    setSize({width, height});
-
     int i = 0;
     for (auto & box : colors) {
         box.setPosition({static_cast<float>(i * boxSize), static_cast<float>(label.getCharacterSize() + 10)});
         i++;
     }
+
+    updateSize();
 }
 
 void ColorPicker::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {

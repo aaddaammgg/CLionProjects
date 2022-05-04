@@ -19,6 +19,9 @@ private:
     sf::RenderWindow renderWindow;
     std::vector<GUIComponent*> components;
 
+    sf::RenderTexture texture;
+    sf::Sprite sprite;
+
     MenuBar menuBar;
     DisplayLogo displayLogo;
     TextInput logoText;
@@ -41,7 +44,7 @@ private:
     void updateMinMax();
     void updateLogo();
 
-    static void draw(std::vector<GUIComponent*>& components, sf::RenderWindow& window);
+    void draw();
 public:
     void run();
 };
