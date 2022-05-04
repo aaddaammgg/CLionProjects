@@ -15,6 +15,7 @@ public:
         RED,
         GREEN,
         BLUE,
+        CYAN,
         YELLOW,
         ORANGE,
         BROWN,

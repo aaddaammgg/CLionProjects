@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "GUIComponentAdapter.h"
+#include "MultiText.h";
 
 class DisplayLogo : public GUIComponentAdapter {
 private:

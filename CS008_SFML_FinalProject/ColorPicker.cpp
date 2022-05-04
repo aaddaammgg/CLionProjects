@@ -24,6 +24,8 @@ sf::Color ColorPicker::getColor(ColorPicker::COLOR c) {
             return sf::Color::Green;
         case BLUE:
             return sf::Color::Blue;
+        case CYAN:
+            return sf::Color::Cyan;
         case YELLOW:
             return sf::Color::Yellow;
         case ORANGE:

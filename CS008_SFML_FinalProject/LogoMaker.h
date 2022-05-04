@@ -16,6 +16,10 @@
 
 class LogoMaker {
 private:
+    unsigned int WIDTH = 1280 * .8;
+    unsigned int HEIGHT = 800 * .8;
+    std::string winTitle = "Logo Maker 3000 (ALPHA)";
+
     sf::RenderWindow renderWindow;
     std::vector<GUIComponent*> components;
 

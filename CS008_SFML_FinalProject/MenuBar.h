@@ -13,7 +13,7 @@
 
 class MenuBar : public GUIComponentAdapter {
 private:
-    std::vector<MenuItem> menuItemList;
+    std::vector<MenuItem*> menuItemList;
 public:
     MenuBar();
 

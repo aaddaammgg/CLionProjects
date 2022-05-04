@@ -8,10 +8,7 @@ void LogoMaker::run() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    unsigned int WIDTH = 1280 * .8;
-    unsigned int HEIGHT = 800 * .8;
-
-    renderWindow.create({WIDTH, HEIGHT, 32}, "Logo Maker", sf::Style::Default, settings);
+    renderWindow.create({WIDTH, HEIGHT, 32}, winTitle, sf::Style::Default, settings);
     renderWindow.setFramerateLimit(60);
     renderWindow.setVerticalSyncEnabled(false);
 
@@ -44,7 +41,7 @@ void LogoMaker::run() {
 
     displayLogo.setPosition(0, 0);
     displayLogo.setSize({static_cast<float>(WIDTH), 300});
-    texture.create(displayLogo.getSize().x, 300, 32);
+    texture.create(displayLogo.getSize().x, displayLogo.getSize().y);
     sprite.setPosition(0, 55);
     sprite.setTexture(texture.getTexture());
 
@@ -145,6 +142,7 @@ void LogoMaker::run() {
     shadowSkew.setPosition({10, lastPosition.y + lastSize.y + 15});
     shadowSkew.setSize({sliderWidth, sliderHeight});
     shadowSkew.setMinMax({-3, 3});
+    shadowSkew.setPrecision(2);
     shadowSkew.setCallBack([&](const float& value) {
         displayLogo.getShadow().setScale({1, value});
         updateMinMax();
