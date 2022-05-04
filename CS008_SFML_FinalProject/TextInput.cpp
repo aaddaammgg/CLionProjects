@@ -17,9 +17,9 @@ TextInput::TextInput() {
 
 void TextInput::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
-//    box.setSize(size);
+//    box.setSize(boxSize);
     cursorBlink.setSize({2, size.y - 2});
-//    typing.setSize(size);
+//    typing.setSize(boxSize);
     updatePos();
 }
 
@@ -166,7 +166,9 @@ void TextInput::addEventHandler(sf::RenderWindow &window, sf::Event event) {
             hn.component = this;
             undoPush(hn);
 
-            callBack(typing.getMultiText().getString(), event.text.unicode == 8);
+            if (callBack != nullptr) {
+                callBack(typing.getMultiText().getString(), event.text.unicode == 8);
+            }
         }
     }
 

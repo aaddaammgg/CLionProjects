@@ -12,10 +12,13 @@ class DisplayLogo : public GUIComponentAdapter {
 private:
     sf::RectangleShape box;
     MultiText logo;
+    MultiText shadow;
 public:
     DisplayLogo();
 
+    sf::RectangleShape& getBox();
     MultiText& getLogo();
+    MultiText& getShadow();
 
     virtual void setSize(sf::Vector2f size);
     virtual Snapshot getSnapshot() {};

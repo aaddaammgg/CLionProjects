@@ -42,6 +42,8 @@ void MultiText::push(Letter &l) {
         l.setFillColor(sf::Color::White);
     }
 
+    l.setFont(ResourceHolder::getFont(font));
+    l.setFillColor(color);
     l.setCharacterSize(characterSize);
 
     if (!letters.empty()) {
@@ -70,6 +72,36 @@ void MultiText::addChar(const std::string &str) {
 void MultiText::addChar(const sf::Text &text) {
     Letter l = (Letter &&) text;
     push(l);
+}
+
+void MultiText::setColor(sf::Color c) {
+    color = c;
+    color.a = opacity;
+    for (auto &letter: letters) {
+        c.a = opacity;
+        letter.setFillColor(c);
+    }
+}
+
+void MultiText::setFont(const std::string& f) {
+    font = f;
+    for (auto &letter: letters) {
+        letter.setFont(ResourceHolder::getFont(font));
+    }
+}
+
+sf::Uint8 MultiText::getOpacity() const {
+    return opacity;
+}
+
+void MultiText::setOpacity(sf::Uint8 a) {
+    opacity = a;
+    color.a = a;
+    for (auto &letter: letters) {
+        sf::Color newAlpha = letter.getFillColor();
+        newAlpha.a = a;
+        letter.setFillColor(newAlpha);
+    }
 }
 
 std::string MultiText::getString() {

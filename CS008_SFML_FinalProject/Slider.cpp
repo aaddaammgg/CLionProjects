@@ -108,6 +108,10 @@ void Slider::setValue(float val) {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(getPrecision()) << value;
 
+    if (callBack != nullptr) {
+        callBack(value);
+    }
+
     labelValue = stream.str();
 
 //    labelValue--;
@@ -120,6 +124,10 @@ float Slider::getStep() const {
 
 void Slider::setStep(float x) {
     step = x;
+}
+
+void Slider::setCallBack(std::function<void(const float &)> cb) {
+    callBack = std::move(cb);
 }
 
 void Slider::setSize(sf::Vector2f size) {

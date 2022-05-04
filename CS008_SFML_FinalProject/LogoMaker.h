@@ -11,6 +11,8 @@
 #include "DisplayLogo.h"
 #include "TextInput.h"
 #include "Slider.h"
+#include "ColorPicker.h"
+#include "DropdownMenu.h"
 
 class LogoMaker {
 private:
@@ -30,6 +32,14 @@ private:
     Slider shadowXAxis;
     Slider shadowYAxis;
     Slider shadowSkew;
+
+    ColorPicker backgroundColor;
+    ColorPicker textColor;
+
+    DropdownMenu fontDropdown;
+
+    void updateMinMax();
+    void updateLogo();
 
     static void draw(std::vector<GUIComponent*>& components, sf::RenderWindow& window);
 public:

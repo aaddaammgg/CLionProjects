@@ -34,6 +34,9 @@ public:
 private:
     std::list<Letter> letters;
     unsigned int characterSize = 30;
+    sf::Uint8 opacity = 255;
+    sf::Color color = sf::Color::White;
+    std::string font = "Roboto-Regular.ttf";
     MultiText::ALIGN align = MultiText::ALIGN::LEFT;
 
     void updateAlignment();
@@ -61,6 +64,13 @@ public:
     unsigned int getCharacterSize() const;
     void setCharacterSize(unsigned int size);
     int getCharCount();
+
+    void setColor(sf::Color c);
+
+    void setFont(const std::string& f);
+
+    sf::Uint8 getOpacity() const;
+    void setOpacity(sf::Uint8 a);
 
     MultiText::ALIGN getAlignment();
     void setAlignment(MultiText::ALIGN alignment);

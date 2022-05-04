@@ -53,6 +53,9 @@ public:
     void setMin(float x);
     void setMax(float x);
 
+    std::function<void(const float&)> callBack;
+    void setCallBack(std::function<void(const float&)> cb);
+
     virtual void setSize(sf::Vector2f size);
     virtual void setPosition(sf::Vector2f pos);
     virtual void onMouseMoved(sf::Vector2f pos);

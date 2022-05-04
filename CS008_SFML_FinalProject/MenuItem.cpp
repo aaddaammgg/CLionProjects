@@ -30,13 +30,13 @@ sf::FloatRect MenuItem::getLabelSize() {
 
 void MenuItem::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
-//    inputBox.setSize(size);
+//    inputBox.setSize(boxSize);
 
     for (auto& item : itemList.getItemList()) {
         item.setSize(size);
     }
 
-//    itemList.setPosition(0, size.y + 1);
+//    itemList.setPosition(0, boxSize.y + 1);
 }
 
 void MenuItem::addItem(const std::string& str) {

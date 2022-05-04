@@ -25,7 +25,7 @@ int History::getUndoSize() {
 }
 
 void History::undoPop() {
-    std::cout << "undo size: " << undoStack.size() << std::endl;
+    std::cout << "undo boxSize: " << undoStack.size() << std::endl;
     if (!undoStack.empty()) {
         redoPush(getUndoTop());
         undoStack.pop();
