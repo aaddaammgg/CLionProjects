@@ -193,6 +193,7 @@ void LogoMaker::run() {
     textColor.setPosition({lastPosition.x, lastPosition.y + lastSize.y + 10});
     textColor.setCallBack([&](const sf::Color& color) {
         displayLogo.getLogo().setColor(color);
+        displayLogo.getShadow().setColor(color);
     });
 
 

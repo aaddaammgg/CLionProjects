@@ -64,7 +64,6 @@ void ColorPicker::setLabelSize(unsigned int s) {
 void ColorPicker::updateSize() {
     float width = colors[LAST_COLORS - 1].getPosition().x + colors[LAST_COLORS - 1].getSize().x;
     float height = boxSize + label.getCharacterSize();
-    std::cout << "w: " << width << " h: " << height << std::endl;
     setSize({width, height});
 }
 
