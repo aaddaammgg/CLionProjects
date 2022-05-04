@@ -6,6 +6,7 @@
 #define CS008_SFML_FINALPROJECT_SLIDER_H
 
 #include <SFML/Graphics.hpp>
+#include <functional>
 #include <iomanip>
 #include <sstream>
 #include "GUIComponentAdapter.h"

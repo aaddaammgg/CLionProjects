@@ -6,6 +6,7 @@
 #define CS008_SFML_FINALPROJECT_COLORPICKER_H
 
 #include <SFML/Graphics.hpp>
+#include <functional>
 #include "GUIComponentAdapter.h"
 
 class ColorPicker : public GUIComponentAdapter {
