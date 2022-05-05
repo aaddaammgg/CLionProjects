@@ -138,6 +138,14 @@ void TextInput::updateCursor() {
     cursorBlink.setPosition(curPos);
 }
 
+std::string TextInput::getString() {
+    return typing.getMultiText().getString();
+}
+
+void TextInput::setString(std::string str) {
+    typing.getMultiText() = str;
+}
+
 void TextInput::setCallBack(std::function<void(const std::string&, const bool&)> cb) {
     callBack = std::move(cb);
 }

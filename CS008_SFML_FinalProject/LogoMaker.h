@@ -13,6 +13,7 @@
 #include "Slider.h"
 #include "ColorPicker.h"
 #include "DropdownMenu.h"
+#include <fstream>
 
 class LogoMaker {
 private:
@@ -49,6 +50,8 @@ private:
     void updateLogo();
 
     void draw();
+    void save();
+    void open();
 public:
     void run();
 };

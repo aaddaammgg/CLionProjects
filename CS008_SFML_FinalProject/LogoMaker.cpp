@@ -15,6 +15,14 @@ void LogoMaker::run() {
     MenuItem menuFile("File");
     menuFile.setSize({250, 50});
     menuFile.addItem("New");
+    menuFile.addItem("Open", [&](const std::string& str) {
+        std::cout << str << std::endl;
+        open();
+    });
+    menuFile.addItem("Save", [&](const std::string& str) {
+        std::cout << str << std::endl;
+        save();
+    });
     menuFile.addItem("Exit", [&](const std::string& str) {
         std::cout << str << std::endl;
         renderWindow.close();
@@ -267,6 +275,80 @@ void LogoMaker::updateMinMax() {
     textYAxis.setMax(displayLogo.getSize().y - logoBounds.height);
     shadowXAxis.setMax(displayLogo.getSize().x - shadowBounds.width);
     shadowYAxis.setMax(displayLogo.getSize().y + shadowBounds.height);
+}
+
+void LogoMaker::save() {
+    std::ofstream fout;
+
+    fout.open("settings.txt");
+
+    fout << (std::string) logoText.getString() << std::endl;
+
+    fout << textOpacity.getValue() << std::endl;
+    fout << textXAxis.getValue() << std::endl;
+    fout << textYAxis.getValue() << std::endl;
+    fout << textFontSize.getValue() << std::endl;
+
+    fout << shadowOpacity.getValue() << std::endl;
+    fout << shadowXAxis.getValue() << std::endl;
+    fout << shadowYAxis.getValue() << std::endl;
+    fout << shadowSkew.getValue() << std::endl;
+
+    std::cout << displayLogo.getBox().getFillColor().toInteger() << std::endl;
+    fout << displayLogo.getBox().getFillColor().toInteger() << std::endl;
+    fout << textColor.getColor().toInteger() << std::endl;
+
+    fout.close();
+}
+
+void LogoMaker::open() {
+    std::ifstream fin;
+
+    fin.open("settings.txt");
+    if (fin.fail()) {
+        exit(28);
+    }
+
+    std::string textStr;
+    sf::Vector2f pos;
+    float x;
+
+    fin >> textStr;
+    fin >> x;
+    fin >> pos.x;
+    fin >> pos.y;
+
+    logoText.setString(textStr);
+    displayLogo.getLogo() = textStr;
+    displayLogo.getShadow() = textStr;
+
+    textOpacity.setValue(x);
+    textXAxis.setValue(pos.x);
+    textYAxis.setValue(pos.y);
+
+    fin >> x;
+    textFontSize.setValue(x);
+
+    fin >> x;
+    fin >> pos.x;
+    fin >> pos.y;
+
+    shadowOpacity.setValue(x);
+    shadowXAxis.setValue(pos.x);
+    shadowYAxis.setValue(pos.y);
+
+    fin >> x;
+    shadowSkew.setValue(x);
+
+    sf::Uint32 color;
+
+    fin >> color;
+    displayLogo.getBox().setFillColor(sf::Color(color));
+    fin >> color;
+    displayLogo.getLogo().setColor(sf::Color(color));
+    displayLogo.getShadow().setColor(sf::Color(color));
+
+    fin.close();
 }
 
 void LogoMaker::draw() {

@@ -33,6 +33,9 @@ public:
     std::function<void(const std::string&, const bool&)> callBack;
     void setCallBack(std::function<void(const std::string&, const bool&)> cb);
 
+    std::string getString();
+    void setString(std::string str);
+
     virtual Snapshot getSnapshot();
     virtual void applySnapshot(const Snapshot& snapshot);
 
