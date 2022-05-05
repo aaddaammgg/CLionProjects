@@ -14,17 +14,17 @@ void LogoMaker::run() {
 
     MenuItem menuFile("File");
     menuFile.setSize({250, 50});
-    menuFile.addItem("New", [&](const std::string& str) {
+    menuFile.addItem("New Project", [&](const std::string& str) {
         std::cout << str << std::endl;
-        newFile();
+        loadProject("Projects/new.txt");
     });
-    menuFile.addItem("Open", [&](const std::string& str) {
+    menuFile.addItem("Load Project", [&](const std::string& str) {
         std::cout << str << std::endl;
-        open();
+        loadProject("Projects/settings.txt");
     });
-    menuFile.addItem("Save", [&](const std::string& str) {
+    menuFile.addItem("Save Project", [&](const std::string& str) {
         std::cout << str << std::endl;
-        save();
+        saveProject("Projects/settings.txt");
     });
     menuFile.addItem("Exit", [&](const std::string& str) {
         std::cout << str << std::endl;
@@ -35,7 +35,8 @@ void LogoMaker::run() {
     menuEdit.setSize({250, 50});
     menuEdit.addItem("Exit", [&](const std::string& str) {
         std::cout << str << std::endl;
-        renderWindow.close();
+        std::cout << sf::Color::Black.toInteger() << std::endl;
+//        renderWindow.close();
     });
 
     MenuItem menuRender("Render");
@@ -43,7 +44,7 @@ void LogoMaker::run() {
     menuRender.addItem("Export", [&](const std::string& str) {
         std::cout << str << std::endl;
         sf::Image img = texture.getTexture().copyToImage();
-        img.saveToFile("Logo.png");
+        img.saveToFile("Exports/Logo.png");
     });
 
     menuBar.addItem(menuFile);
@@ -106,6 +107,17 @@ void LogoMaker::run() {
     lastPosition = textYAxis.getPosition();
     lastSize = textYAxis.getSize();
 
+    textRotate.setLabel("Text Rotation");
+    textRotate.setPosition({10, lastPosition.y + lastSize.y + 15});
+    textRotate.setSize({sliderWidth, sliderHeight});
+    textRotate.setMinMax({0, 360});
+    textRotate.setCallBack([&](const float& value) {
+        displayLogo.getLogo().setRotation(value);
+    });
+
+    lastPosition = textRotate.getPosition();
+    lastSize = textRotate.getSize();
+
     textFontSize.setLabel("Text Font Size");
     textFontSize.setPosition({10, lastPosition.y + lastSize.y + 15});
     textFontSize.setSize({sliderWidth, sliderHeight});
@@ -149,11 +161,23 @@ void LogoMaker::run() {
     lastPosition = shadowYAxis.getPosition();
     lastSize = shadowYAxis.getSize();
 
+    shadowRotate.setLabel("Shadow Rotation");
+    shadowRotate.setPosition({10, lastPosition.y + lastSize.y + 15});
+    shadowRotate.setSize({sliderWidth, sliderHeight});
+    shadowRotate.setMinMax({0, 360});
+    shadowRotate.setCallBack([&](const float& value) {
+        displayLogo.getShadow().setRotation(value);
+    });
+
+    lastPosition = shadowRotate.getPosition();
+    lastSize = shadowRotate.getSize();
+
     shadowSkew.setLabel("Shadow Skew");
     shadowSkew.setPosition({10, lastPosition.y + lastSize.y + 15});
     shadowSkew.setSize({sliderWidth, sliderHeight});
     shadowSkew.setMinMax({-3, 3});
-    shadowSkew.setPrecision(2);
+    shadowSkew.setPrecision(3);
+    shadowSkew.setStep(.025);
     shadowSkew.setCallBack([&](const float& value) {
         displayLogo.getShadow().setScale({1, value});
         updateMinMax();
@@ -166,22 +190,13 @@ void LogoMaker::run() {
     fontDropdown.setSize({static_cast<float>(WIDTH / 2.0) - 15, 40});
     fontDropdown.setPosition({lastSize.x + 70, lastPosition.y - lastSize.y + 15});
 //    fontDropdown.setPosition({lastPosition.x, lastPosition.y + lastSize.y + 20});
-    fontDropdown.addItem("Roboto Regular");
-    fontDropdown.addItem("Roboto Bold");
-    fontDropdown.addItem("OpenSans Bold");
-    fontDropdown.addItem("Orange Juice");
-    fontDropdown.setCallBack([&](const std::string& item) {
-        std::string font;
 
-        if (item == "Roboto Regular") {
-            font = "Roboto-Regular.ttf";
-        } else if (item == "Roboto Bold") {
-            font = "Roboto-Bold.ttf";
-        } else if (item == "OpenSans Bold") {
-            font = "OpenSans-Bold.ttf";
-        } else if (item == "Orange Juice") {
-            font = "Orange-Juice.ttf";
-        }
+    for (int i = 0; i < LAST_FONT; i++) {
+        fontDropdown.addItem(getFontInfo(i).title);
+    }
+
+    fontDropdown.setCallBack([&](const int& index) {
+        std::string font = getFontInfo(index).file;
 
         displayLogo.getLogo().setFont(font);
         displayLogo.getShadow().setFont(font);
@@ -206,16 +221,17 @@ void LogoMaker::run() {
         displayLogo.getShadow().setColor(color);
     });
 
-
     components.push_back(&shadowSkew);
     components.push_back(&shadowYAxis);
     components.push_back(&shadowXAxis);
+    components.push_back(&shadowRotate);
     components.push_back(&shadowOpacity);
 
     components.push_back(&textColor);
     components.push_back(&textFontSize);
     components.push_back(&textYAxis);
     components.push_back(&textXAxis);
+    components.push_back(&textRotate);
     components.push_back(&textOpacity);
 
     components.push_back(&backgroundColor);
@@ -261,13 +277,9 @@ void LogoMaker::run() {
         if (!isEvent) {
             draw();
         }
+        
         isEvent = false;
     }
-}
-
-void LogoMaker::updateLogo() {
-    displayLogo.getLogo().setPosition({textXAxis.getValue(), textYAxis.getValue()});
-    displayLogo.getShadow().setPosition({shadowXAxis.getValue(), shadowYAxis.getValue()});
 }
 
 void LogoMaker::updateMinMax() {
@@ -280,36 +292,66 @@ void LogoMaker::updateMinMax() {
     shadowYAxis.setMax(displayLogo.getSize().y + shadowBounds.height);
 }
 
-void LogoMaker::save() {
+void LogoMaker::updateLogo() {
+    displayLogo.getLogo().setPosition({textXAxis.getValue(), textYAxis.getValue()});
+    displayLogo.getShadow().setPosition({shadowXAxis.getValue(), shadowYAxis.getValue()});
+}
+
+LogoMaker::FontInfo LogoMaker::getFontInfo(int i) {
+    switch ((FONTS) i) {
+        case ROBOTO_REGULAR:
+            return {"Roboto Regular", "Roboto-Regular.ttf"};
+        case ROBOTO_BOLD:
+            return {"Roboto Bold", "Roboto-Bold.ttf"};
+        case OPENSANS_BOLD:
+            return {"OpenSans Bold", "OpenSans-Bold.ttf"};
+        case ORANGE_JUICE:
+            return {"Orange Juice", "Orange-Juice.ttf"};
+        default:
+            return {"NULL", "NULL"};
+    }
+}
+
+void LogoMaker::saveProject(const std::string& file) {
     std::ofstream fout;
 
-    fout.open("settings.txt");
+    fout.open(file);
+
+    if (fout.fail()) {
+        std::cout << "Cannot save project: " << file << std::endl;
+        return;
+    }
 
     fout << (std::string) logoText.getString() << std::endl;
 
     fout << textOpacity.getValue() << std::endl;
     fout << textXAxis.getValue() << std::endl;
     fout << textYAxis.getValue() << std::endl;
+    fout << textRotate.getValue() << std::endl;
     fout << textFontSize.getValue() << std::endl;
 
     fout << shadowOpacity.getValue() << std::endl;
     fout << shadowXAxis.getValue() << std::endl;
     fout << shadowYAxis.getValue() << std::endl;
+    fout << shadowRotate.getValue() << std::endl;
     fout << shadowSkew.getValue() << std::endl;
 
-    std::cout << displayLogo.getBox().getFillColor().toInteger() << std::endl;
     fout << displayLogo.getBox().getFillColor().toInteger() << std::endl;
-    fout << textColor.getColor().toInteger() << std::endl;
+    fout << displayLogo.getLogo().getColor().toInteger() << std::endl;
+
+    fout << fontDropdown.getIndex() << std::endl;
 
     fout.close();
 }
 
-void LogoMaker::open() {
+void LogoMaker::loadProject(const std::string& file) {
     std::ifstream fin;
 
-    fin.open("settings.txt");
+    fin.open(file);
+
     if (fin.fail()) {
-        exit(28);
+        std::cout << "Cannot load project" << file << std::endl;
+        return;
     }
 
     std::string textStr;
@@ -330,54 +372,7 @@ void LogoMaker::open() {
     textYAxis.setValue(pos.y);
 
     fin >> x;
-    textFontSize.setValue(x);
-
-    fin >> x;
-    fin >> pos.x;
-    fin >> pos.y;
-
-    shadowOpacity.setValue(x);
-    shadowXAxis.setValue(pos.x);
-    shadowYAxis.setValue(pos.y);
-
-    fin >> x;
-    shadowSkew.setValue(x);
-
-    sf::Uint32 color;
-
-    fin >> color;
-    displayLogo.getBox().setFillColor(sf::Color(color));
-    fin >> color;
-    displayLogo.getLogo().setColor(sf::Color(color));
-    displayLogo.getShadow().setColor(sf::Color(color));
-
-    fin.close();
-}
-
-void LogoMaker::newFile() {
-    std::ifstream fin;
-
-    fin.open("new.txt");
-    if (fin.fail()) {
-        exit(28);
-    }
-
-    std::string textStr;
-    sf::Vector2f pos;
-    float x;
-
-    fin >> textStr;
-    fin >> x;
-    fin >> pos.x;
-    fin >> pos.y;
-
-    logoText.setString(textStr);
-    displayLogo.getLogo() = textStr;
-    displayLogo.getShadow() = textStr;
-
-    textOpacity.setValue(x);
-    textXAxis.setValue(pos.x);
-    textYAxis.setValue(pos.y);
+    textRotate.setValue(x);
 
     fin >> x;
     textFontSize.setValue(x);
@@ -391,7 +386,12 @@ void LogoMaker::newFile() {
     shadowYAxis.setValue(pos.y);
 
     fin >> x;
+    shadowRotate.setValue(x);
+
+    fin >> x;
     shadowSkew.setValue(x);
+
+    updateLogo();
 
     sf::Uint32 color;
 
@@ -400,6 +400,10 @@ void LogoMaker::newFile() {
     fin >> color;
     displayLogo.getLogo().setColor(sf::Color(color));
     displayLogo.getShadow().setColor(sf::Color(color));
+
+    fin >> x;
+    fontDropdown.setIndex((int)x);
+
 
     fin.close();
 }

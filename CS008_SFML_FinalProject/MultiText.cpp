@@ -74,6 +74,10 @@ void MultiText::addChar(const sf::Text &text) {
     push(l);
 }
 
+sf::Color MultiText::getColor() {
+    return color;
+}
+
 void MultiText::setColor(sf::Color c) {
     color = c;
     color.a = opacity;

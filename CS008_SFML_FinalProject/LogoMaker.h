@@ -18,7 +18,7 @@
 class LogoMaker {
 private:
     unsigned int WIDTH = 1280 * .8;
-    unsigned int HEIGHT = 800 * .8;
+    unsigned int HEIGHT = 800 * .83;
     std::string winTitle = "Logo Maker 3000 (ALPHA)";
 
     sf::RenderWindow renderWindow;
@@ -34,11 +34,13 @@ private:
     Slider textOpacity;
     Slider textXAxis;
     Slider textYAxis;
+    Slider textRotate;
     Slider textFontSize;
 
     Slider shadowOpacity;
     Slider shadowXAxis;
     Slider shadowYAxis;
+    Slider shadowRotate;
     Slider shadowSkew;
 
     ColorPicker backgroundColor;
@@ -49,10 +51,26 @@ private:
     void updateMinMax();
     void updateLogo();
 
+    typedef struct {
+        std::string title;
+        std::string file;
+    } FontInfo;
+
+    typedef enum {
+        ROBOTO_REGULAR,
+        ROBOTO_BOLD,
+        OPENSANS_BOLD,
+        ORANGE_JUICE,
+
+        LAST_FONT
+    } FONTS;
+
+    static FontInfo getFontInfo(int i);
+
+    void saveProject(const std::string& file);
+    void loadProject(const std::string& file);
+
     void draw();
-    void save();
-    void open();
-    void newFile();
 public:
     void run();
 };

@@ -65,6 +65,7 @@ public:
     void setCharacterSize(unsigned int size);
     int getCharCount();
 
+    sf::Color getColor();
     void setColor(sf::Color c);
 
     void setFont(const std::string& f);

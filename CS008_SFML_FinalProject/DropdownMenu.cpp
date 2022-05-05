@@ -45,7 +45,34 @@ void DropdownMenu::addItem(const std::string& str) {
     itemList.addItem(item);
 }
 
-void DropdownMenu::setCallBack(std::function<void(std::string)> cb) {
+std::string DropdownMenu::getString(int i) {
+    return itemList.getItemList()[i].getString();
+}
+
+std::string DropdownMenu::getSelected() {
+    return inputBox.getSelectedItem().getString();
+}
+
+int DropdownMenu::getIndex() const {
+    return index;
+}
+
+void DropdownMenu::setIndex(int i) {
+    if (i < 0) {
+        i = 0;
+    } else if (i > itemList.getItemList().size()) {
+        i = (int)itemList.getItemList().size();
+    }
+
+    index = i;
+
+    inputBox.setSelectedItem(itemList.getItemList()[index]);
+    if (callBack != nullptr) {
+        callBack(i);
+    }
+}
+
+void DropdownMenu::setCallBack(std::function<void(const int&)> cb) {
     callBack = std::move(cb);
 }
 
@@ -124,6 +151,7 @@ void DropdownMenu::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
     } else {
         disableState(SELECTED);
         if (isEnabled(OPEN)) {
+            int i = 0;
             for (auto& item : itemList.getItemList()) {
                 sf::FloatRect itemBounds = item.getBox().getGlobalBounds();
                 sf::Vector2f itemPos = item.getPosition();
@@ -143,6 +171,7 @@ void DropdownMenu::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
                     }
 
                     inputBox.setSelectedItem(item);
+                    index = i;
 
                     HistoryNode hn;
                     hn.snapshot = getSnapshot();
@@ -152,9 +181,11 @@ void DropdownMenu::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
                     enableState(SELECTED);
 
                     if (callBack != nullptr) {
-                        callBack(item.getString());
+                        callBack(i);
                     }
                 }
+
+                i++;
             }
         }
         disableState(OPEN);

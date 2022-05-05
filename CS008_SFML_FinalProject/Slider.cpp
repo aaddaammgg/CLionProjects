@@ -212,10 +212,10 @@ void Slider::onKeyPressed(const sf::Event::KeyEvent &key) {
 
     switch (key.code) {
         case sf::Keyboard::Left:
-            setValue(value - 10);
+            setValue(value - (step * 2));
             break;
         case sf::Keyboard::Right:
-            setValue(value + 10);
+            setValue(value + (step * 2));
             break;
         default:
             break;

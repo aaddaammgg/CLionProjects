@@ -16,7 +16,7 @@ class DropdownMenu : public GUIComponentAdapter {
 private:
     ItemList itemList;
     InputBox inputBox;
-
+    int index = 0;
 public:
     DropdownMenu();
 
@@ -27,8 +27,14 @@ public:
 
     void addItem(const std::string& str);
 
-    std::function<void(std::string)> callBack;
-    void setCallBack(std::function<void(std::string)> cb);
+    std::string getString(int i);
+    std::string getSelected();
+
+    int getIndex() const;
+    void setIndex(int i);
+
+    std::function<void(int)> callBack;
+    void setCallBack(std::function<void(const int&)> cb);
 
     virtual void onKeyPressed(const sf::Event::KeyEvent& key);
     virtual void onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos);
