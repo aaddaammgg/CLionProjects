@@ -52,6 +52,7 @@ private:
     void draw();
     void save();
     void open();
+    void newFile();
 public:
     void run();
 };

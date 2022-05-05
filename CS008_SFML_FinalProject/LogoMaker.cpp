@@ -14,7 +14,10 @@ void LogoMaker::run() {
 
     MenuItem menuFile("File");
     menuFile.setSize({250, 50});
-    menuFile.addItem("New");
+    menuFile.addItem("New", [&](const std::string& str) {
+        std::cout << str << std::endl;
+        newFile();
+    });
     menuFile.addItem("Open", [&](const std::string& str) {
         std::cout << str << std::endl;
         open();
@@ -305,6 +308,56 @@ void LogoMaker::open() {
     std::ifstream fin;
 
     fin.open("settings.txt");
+    if (fin.fail()) {
+        exit(28);
+    }
+
+    std::string textStr;
+    sf::Vector2f pos;
+    float x;
+
+    fin >> textStr;
+    fin >> x;
+    fin >> pos.x;
+    fin >> pos.y;
+
+    logoText.setString(textStr);
+    displayLogo.getLogo() = textStr;
+    displayLogo.getShadow() = textStr;
+
+    textOpacity.setValue(x);
+    textXAxis.setValue(pos.x);
+    textYAxis.setValue(pos.y);
+
+    fin >> x;
+    textFontSize.setValue(x);
+
+    fin >> x;
+    fin >> pos.x;
+    fin >> pos.y;
+
+    shadowOpacity.setValue(x);
+    shadowXAxis.setValue(pos.x);
+    shadowYAxis.setValue(pos.y);
+
+    fin >> x;
+    shadowSkew.setValue(x);
+
+    sf::Uint32 color;
+
+    fin >> color;
+    displayLogo.getBox().setFillColor(sf::Color(color));
+    fin >> color;
+    displayLogo.getLogo().setColor(sf::Color(color));
+    displayLogo.getShadow().setColor(sf::Color(color));
+
+    fin.close();
+}
+
+void LogoMaker::newFile() {
+    std::ifstream fin;
+
+    fin.open("new.txt");
     if (fin.fail()) {
         exit(28);
     }
