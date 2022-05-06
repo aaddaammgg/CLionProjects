@@ -142,8 +142,11 @@ std::string TextInput::getString() {
     return typing.getMultiText().getString();
 }
 
-void TextInput::setString(std::string str) {
-    typing.getMultiText() = str;
+void TextInput::setString(const std::string& str) {
+    for (auto s : str) {
+        typing.getMultiText().addChar(s);
+    }
+    updateCursor();
 }
 
 void TextInput::setCallBack(std::function<void(const std::string&, const bool&)> cb) {

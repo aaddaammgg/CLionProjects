@@ -10,23 +10,23 @@ ItemList::ItemList() {
 
 }
 
-void ItemList::addItem(Item &item) {
+void ItemList::addItem(Item *item) {
     if (!isEmpty()) {
-        sf::Vector2f backSize = itemList.back().getSize();
-        sf::Vector2f backPos = itemList.back().getPosition();
+        sf::Vector2f backSize = itemList.back()->getSize();
+        sf::Vector2f backPos = itemList.back()->getPosition();
 
-        item.setPosition({backPos.x, backPos.y + backSize.y});
+        item->setPosition({backPos.x, backPos.y + backSize.y});
     }
 
     itemList.push_back(item);
 }
 
 void ItemList::addItem(Item &item, std::function<void(std::string)> cb) {
-    addItem(item);
-    itemList.back().setCallBack(std::move(cb));
+    addItem(&item);
+    itemList.back()->setCallBack(std::move(cb));
 }
 
-std::vector<Item> &ItemList::getItemList() {
+std::vector<Item*> &ItemList::getItemList() {
     return itemList;
 }
 
@@ -39,7 +39,7 @@ void ItemList::draw(sf::RenderTarget &window, sf::RenderStates states) const {
         states.transform *= getTransform();
 
         for (const auto &item: itemList) {
-            window.draw(item, states);
+            window.draw(*item, states);
         }
     }
 }
@@ -53,7 +53,7 @@ void ItemList::update() {
         GUIComponentAdapter::update();
 
         for (auto &item: itemList) {
-            item.update();
+            item->update();
         }
     }
 }

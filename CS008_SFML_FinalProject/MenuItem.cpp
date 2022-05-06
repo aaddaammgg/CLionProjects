@@ -33,7 +33,7 @@ void MenuItem::setSize(sf::Vector2f size) {
 //    inputBox.setSize(boxSize);
 
     for (auto& item : itemList.getItemList()) {
-        item.setSize(size);
+        item->setSize(size);
     }
 
 //    itemList.setPosition(0, boxSize.y + 1);
@@ -44,10 +44,10 @@ void MenuItem::addItem(const std::string& str) {
 }
 
 void MenuItem::addItem(const std::string &str, std::function<void(std::string)> cb) {
-    Item item;
-    item.setString(str);
-    item.setSize(getSize());
-    item.setCallBack(std::move(cb));
+    Item *item = new Item();
+    item->setString(str);
+    item->setSize(getSize());
+    item->setCallBack(std::move(cb));
 
     itemList.addItem(item);
 }
@@ -70,11 +70,11 @@ void MenuItem::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
         disableState(SELECTED);
         if (isEnabled(OPEN)) {
             for (auto& item : itemList.getItemList()) {
-                sf::FloatRect itemBounds = item.getBox().getGlobalBounds();
-                sf::Vector2f itemPos = item.getPosition();
+                sf::FloatRect itemBounds = item->getBox().getGlobalBounds();
+                sf::Vector2f itemPos = item->getPosition();
 
                 itemBounds.top += itemPos.y;
-                itemBounds.top += item.getSize().y;
+                itemBounds.top += item->getSize().y;
 
                 sf::FloatRect itemPosTransform = getTransform().transformRect(itemBounds);
 
@@ -82,8 +82,8 @@ void MenuItem::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
 //                    inputBox.setSelectedItem(item);
                     enableState(SELECTED);
 
-                    if (item.callBack != nullptr) {
-                        item.callBack(item.getString());
+                    if (item->callBack != nullptr) {
+                        item->callBack(item->getString());
                     }
                 }
             }
@@ -94,21 +94,21 @@ void MenuItem::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
 }
 
 void MenuItem::onMouseMoved(sf::Vector2f pos) {
-    for (auto& item : itemList.getItemList()) {
-        sf::FloatRect itemBounds = item.getBox().getGlobalBounds();
-        sf::Vector2f itemPos = item.getPosition();
+    for (auto &item : itemList.getItemList()) {
+        sf::FloatRect itemBounds = item->getBox().getGlobalBounds();
+        sf::Vector2f itemPos = item->getPosition();
 
         itemBounds.top = itemPos.y;
-        itemBounds.top += item.getSize().y;
+        itemBounds.top += item->getSize().y;
 
-        itemBounds.height -= (item.getBox().getOutlineThickness() * 2);
+        itemBounds.height -= (item->getBox().getOutlineThickness() * 2);
 
         sf::FloatRect itemPosTransform = getTransform().transformRect(itemBounds);
 
         if (itemPosTransform.contains(pos)) {
-            item.getBox().setFillColor(sf::Color::Red);
+            item->getBox().setFillColor(sf::Color::Red);
         } else {
-            item.getBox().setFillColor(sf::Color::Black);
+            item->getBox().setFillColor(sf::Color::Black);
         }
     }
 }

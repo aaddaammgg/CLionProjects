@@ -12,14 +12,14 @@
 
 class ItemList : public GUIComponentAdapter {
 private:
-    std::vector<Item> itemList;
+    std::vector<Item*> itemList;
 public:
     ItemList();
 
-    void addItem(Item& item);
+    void addItem(Item* item);
     void addItem(Item& item, std::function<void(std::string)> cb);
 
-    std::vector<Item>& getItemList();
+    std::vector<Item*>& getItemList();
 
     bool isEmpty();
 

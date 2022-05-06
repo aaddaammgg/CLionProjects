@@ -189,7 +189,6 @@ void LogoMaker::run() {
 
     fontDropdown.setSize({static_cast<float>(WIDTH / 2.0) - 15, 40});
     fontDropdown.setPosition({lastSize.x + 70, lastPosition.y - lastSize.y + 15});
-//    fontDropdown.setPosition({lastPosition.x, lastPosition.y + lastSize.y + 20});
 
     for (int i = 0; i < LAST_FONT; i++) {
         fontDropdown.addItem(getFontInfo(i).title);
@@ -237,7 +236,7 @@ void LogoMaker::run() {
     components.push_back(&backgroundColor);
     components.push_back(&fontDropdown);
     components.push_back(&logoText);
-//    components.push_back(&displayLogo);
+
     components.push_back(&menuBar);
 
     bool isEvent = false;
@@ -350,7 +349,7 @@ void LogoMaker::loadProject(const std::string& file) {
     fin.open(file);
 
     if (fin.fail()) {
-        std::cout << "Cannot load project" << file << std::endl;
+        std::cout << "Cannot load project: " << file << std::endl;
         return;
     }
 

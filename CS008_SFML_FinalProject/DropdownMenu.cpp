@@ -11,6 +11,12 @@ DropdownMenu::DropdownMenu() {
     disableState(OPEN);
 }
 
+DropdownMenu::~DropdownMenu() {
+    for (auto& item : itemList.getItemList()) {
+        delete item;
+    }
+}
+
 Snapshot DropdownMenu::getSnapshot() {
     Snapshot s;
     s.setData(inputBox.getMultiText());
@@ -27,26 +33,26 @@ void DropdownMenu::setSize(sf::Vector2f size) {
     inputBox.setSize(size);
 
     for (auto& item : itemList.getItemList()) {
-        item.setSize(size);
+        item->setSize(size);
     }
     
     itemList.setPosition(0, size.y + 1);
 }
 
 void DropdownMenu::addItem(const std::string& str) {
-    Item item;
-    item.setString(str);
-    item.setSize(getSize());
+    Item* item = new Item();
+    item->setString(str);
+    item->setSize(getSize());
 
     if (itemList.isEmpty()) {
-        inputBox.setSelectedItem(item);
+        inputBox.setSelectedItem(*item);
     }
 
     itemList.addItem(item);
 }
 
 std::string DropdownMenu::getString(int i) {
-    return itemList.getItemList()[i].getString();
+    return itemList.getItemList()[i]->getString();
 }
 
 std::string DropdownMenu::getSelected() {
@@ -66,7 +72,7 @@ void DropdownMenu::setIndex(int i) {
 
     index = i;
 
-    inputBox.setSelectedItem(itemList.getItemList()[index]);
+    inputBox.setSelectedItem(*itemList.getItemList()[index]);
     if (callBack != nullptr) {
         callBack(i);
     }
@@ -116,20 +122,20 @@ void DropdownMenu::onKeyPressed(const sf::Event::KeyEvent &key) {
 
 void DropdownMenu::onMouseMoved(sf::Vector2f pos) {
     for (auto& item : itemList.getItemList()) {
-        sf::FloatRect itemBounds = item.getBox().getGlobalBounds();
-        sf::Vector2f itemPos = item.getPosition();
+        sf::FloatRect itemBounds = item->getBox().getGlobalBounds();
+        sf::Vector2f itemPos = item->getPosition();
 
         itemBounds.top = itemPos.y;
-        itemBounds.top += item.getSize().y;
+        itemBounds.top += item->getSize().y;
 
-        itemBounds.height -= (item.getBox().getOutlineThickness() * 2);
+        itemBounds.height -= (item->getBox().getOutlineThickness() * 2);
 
         sf::FloatRect itemPosTransform = getTransform().transformRect(itemBounds);
 
         if (itemPosTransform.contains(pos)) {
-            item.getBox().setFillColor(sf::Color::Red);
+            item->getBox().setFillColor(sf::Color::Red);
         } else {
-            item.getBox().setFillColor(sf::Color::Black);
+            item->getBox().setFillColor(sf::Color::Black);
         }
     }
 }
@@ -153,11 +159,11 @@ void DropdownMenu::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
         if (isEnabled(OPEN)) {
             int i = 0;
             for (auto& item : itemList.getItemList()) {
-                sf::FloatRect itemBounds = item.getBox().getGlobalBounds();
-                sf::Vector2f itemPos = item.getPosition();
+                sf::FloatRect itemBounds = item->getBox().getGlobalBounds();
+                sf::Vector2f itemPos = item->getPosition();
 
                 itemBounds.top += itemPos.y;
-                itemBounds.top += item.getSize().y;
+                itemBounds.top += item->getSize().y;
 
                 sf::FloatRect itemPosTransform = getTransform().transformRect(itemBounds);
 
@@ -170,7 +176,7 @@ void DropdownMenu::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
                         setInit(true);
                     }
 
-                    inputBox.setSelectedItem(item);
+                    inputBox.setSelectedItem(*item);
                     index = i;
 
                     HistoryNode hn;

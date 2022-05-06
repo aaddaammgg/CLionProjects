@@ -19,6 +19,7 @@ private:
     int index = 0;
 public:
     DropdownMenu();
+    ~DropdownMenu();
 
     virtual Snapshot getSnapshot();
     virtual void applySnapshot(const Snapshot& snapshot);
@@ -33,7 +34,7 @@ public:
     int getIndex() const;
     void setIndex(int i);
 
-    std::function<void(int)> callBack;
+    std::function<void(const int&)> callBack;
     void setCallBack(std::function<void(const int&)> cb);
 
     virtual void onKeyPressed(const sf::Event::KeyEvent& key);
