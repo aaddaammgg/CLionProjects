@@ -143,9 +143,11 @@ std::string TextInput::getString() {
 }
 
 void TextInput::setString(const std::string& str) {
-    for (auto s : str) {
+    typing.getMultiText() = "";
+    for (const auto& s : str) {
         typing.getMultiText().addChar(s);
     }
+
     updateCursor();
 }
 

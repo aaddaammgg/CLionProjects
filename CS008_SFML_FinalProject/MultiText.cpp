@@ -279,6 +279,7 @@ MultiText::iterator MultiText::end() {
 MultiText &MultiText::operator=(const std::string &rhs) {
     this->letters.clear();
     this->addChar(rhs);
+
     return *this;
 }
 
