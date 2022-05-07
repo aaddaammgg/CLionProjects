@@ -6,14 +6,14 @@
 #define CS008_SFML_FINALPROJECT_LOGOMAKER_H
 
 #include <SFML/Graphics.hpp>
+#include <fstream>
 #include "GUIComponent.h"
 #include "MenuBar.h"
 #include "DisplayLogo.h"
 #include "TextInput.h"
 #include "Slider.h"
-#include "ColorPicker.h"
 #include "DropdownMenu.h"
-#include <fstream>
+#include "ColorSelector.h"
 
 class LogoMaker {
 private:
@@ -43,8 +43,8 @@ private:
     Slider shadowRotate;
     Slider shadowSkew;
 
-    ColorPicker backgroundColor;
-    ColorPicker textColor;
+    ColorSelector backgroundColor;
+    ColorSelector textColor;
 
     DropdownMenu fontDropdown;
 

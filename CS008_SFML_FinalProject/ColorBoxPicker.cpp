@@ -2,9 +2,9 @@
 // Created by Adam G. on 5/3/22.
 //
 
-#include "ColorPicker.h"
+#include "ColorBoxPicker.h"
 
-ColorPicker::ColorPicker() {
+ColorBoxPicker::ColorBoxPicker() {
     int i = 0;
     for (auto & box : colors) {
         box.setSize({boxSize, boxSize});
@@ -14,9 +14,14 @@ ColorPicker::ColorPicker() {
         box.setOutlineColor(sf::Color::White);
         i++;
     }
+
+    enableState(HIDDEN);
+    disableState(DISABLED);
+    disableState(SELECTED);
+    disableState(CLICKED);
 }
 
-sf::Color ColorPicker::getColor(ColorPicker::COLOR c) {
+sf::Color ColorBoxPicker::getColor(ColorBoxPicker::COLOR c) {
     switch (c) {
         case RED:
             return sf::Color::Red;
@@ -30,62 +35,47 @@ sf::Color ColorPicker::getColor(ColorPicker::COLOR c) {
             return sf::Color::Yellow;
         case ORANGE:
             return {255, 165, 0};
-        case BROWN:
-            return {139,69,19};
-        case PURPLE:
-            return {128,0,128};
+        case MAGENTA:
+            return sf::Color::Magenta;
         case PINK:
             return {255,105,180};
-        case WHITE:
-            return sf::Color::White;
-        case BLACK:
-            return sf::Color::Black;
         default:
             return {0, 0, 0};
     }
 }
 
-sf::Color ColorPicker::getColor() {
+sf::Color ColorBoxPicker::getColor() {
     return getColor(selected);
 }
 
-void ColorPicker::setCallBack(std::function<void(const sf::Color &)> cb) {
+void ColorBoxPicker::setCallBack(std::function<void(const sf::Color &)> cb) {
     callBack = std::move(cb);
 }
 
-void ColorPicker::setLabel(const std::string &str) {
-    label = str;
-    setPosition(getPosition());
-}
-
-void ColorPicker::setLabelSize(unsigned int s) {
-    label.setCharacterSize(s);
-    setPosition(getPosition());
-}
-
-void ColorPicker::updateSize() {
+void ColorBoxPicker::updateSize() {
     float width = colors[LAST_COLORS - 1].getPosition().x + colors[LAST_COLORS - 1].getSize().x;
-    float height = boxSize + label.getCharacterSize();
-    setSize({width, height});
+    setSize({width, boxSize});
 }
 
-void ColorPicker::setSize(sf::Vector2f size) {
+void ColorBoxPicker::setSize(sf::Vector2f size) {
     GUIComponent::setSize(size);
 }
 
-void ColorPicker::setPosition(sf::Vector2f pos) {
+void ColorBoxPicker::setPosition(sf::Vector2f pos) {
     GUIComponent::setPosition(pos);
 
     int i = 0;
     for (auto & box : colors) {
-        box.setPosition({static_cast<float>(i * boxSize), static_cast<float>(label.getCharacterSize() + 10)});
+        box.setPosition({static_cast<float>(i * boxSize), 0});
         i++;
     }
 
     updateSize();
 }
 
-void ColorPicker::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
+void ColorBoxPicker::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
+    if (button != sf::Mouse::Left) return;
+
     int i = 0;
     for (auto & box : colors) {
         sf::FloatRect boxBounds = box.getGlobalBounds();
@@ -93,25 +83,35 @@ void ColorPicker::onMouseReleased(sf::Mouse::Button button, sf::Vector2f pos) {
 
         if (boxPosTransform.contains(pos)) {
             selected = static_cast<COLOR>(i);
-            callBack(getColor(selected));
+            if (callBack != nullptr) {
+                callBack(getColor(selected));
+            }
         }
 
         i++;
     }
 }
 
-void ColorPicker::addEventHandler(sf::RenderWindow &window, sf::Event event) {
+void ColorBoxPicker::addEventHandler(sf::RenderWindow &window, sf::Event event) {
+    if (isEnabled(HIDDEN) || isEnabled(DISABLED)) {
+        return;
+    }
+
     GUIComponentAdapter::addEventHandler(window, event);
 }
 
-void ColorPicker::draw(sf::RenderTarget &window, sf::RenderStates states) const {
+void ColorBoxPicker::draw(sf::RenderTarget &window, sf::RenderStates states) const {
+    if (isEnabled(HIDDEN)) {
+        return;
+    }
+
     states.transform *= getTransform();
-    window.draw(label, states);
+//    window.draw(label, states);
     for (auto & box : colors) {
         window.draw(box, states);
     }
 }
 
-void ColorPicker::update() {
+void ColorBoxPicker::update() {
     GUIComponentAdapter::update();
 }

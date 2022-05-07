@@ -107,6 +107,8 @@ void LogoMaker::run() {
     lastPosition = textYAxis.getPosition();
     lastSize = textYAxis.getSize();
 
+    sliderWidth = static_cast<float>(WIDTH) - 20 - 50;
+
     textRotate.setLabel("Text Rotation");
     textRotate.setPosition({10, lastPosition.y + lastSize.y + 15});
     textRotate.setSize({sliderWidth, sliderHeight});
@@ -187,8 +189,8 @@ void LogoMaker::run() {
     lastPosition = textOpacity.getPosition();
     lastSize = textOpacity.getSize();
 
-    fontDropdown.setSize({static_cast<float>(WIDTH / 2.0) - 15, 40});
-    fontDropdown.setPosition({lastSize.x + 70, lastPosition.y - lastSize.y + 15});
+    fontDropdown.setSize({static_cast<float>(WIDTH / 2.0) - 15, 45});
+    fontDropdown.setPosition({lastSize.x + 70, lastPosition.y - lastSize.y + 17});
 
     for (int i = 0; i < LAST_FONT; i++) {
         fontDropdown.addItem(getFontInfo(i).title);
@@ -204,21 +206,22 @@ void LogoMaker::run() {
     lastPosition = fontDropdown.getPosition();
     lastSize = fontDropdown.getSize();
 
-    backgroundColor.setLabel("Background Color");
-    backgroundColor.setPosition({lastSize.x + 20 + lastSize.x / 2 - backgroundColor.getSize().x / 2, lastPosition.y + lastSize.y + 5});
-    backgroundColor.setCallBack([&](const sf::Color& color) {
-        displayLogo.getBox().setFillColor(color);
-    });
-
-    lastPosition = backgroundColor.getPosition();
-    lastSize = backgroundColor.getSize();
-
-    textColor.setLabel("Text Color");
-    textColor.setPosition({lastPosition.x, lastPosition.y + lastSize.y + 10});
+    textColor.setLabel("Text:");
+    textColor.setPosition({(float)(WIDTH * .5), 6});
     textColor.setCallBack([&](const sf::Color& color) {
         displayLogo.getLogo().setColor(color);
         displayLogo.getShadow().setColor(color);
     });
+
+    backgroundColor.setLabel("Background:");
+    backgroundColor.setPosition({(float)(WIDTH * .7), 6});
+    backgroundColor.setCallBack([&](const sf::Color& color) {
+        displayLogo.getBox().setFillColor(color);
+    });
+
+    components.push_back(&textColor);
+    components.push_back(&backgroundColor);
+
 
     components.push_back(&shadowSkew);
     components.push_back(&shadowYAxis);
@@ -226,14 +229,14 @@ void LogoMaker::run() {
     components.push_back(&shadowRotate);
     components.push_back(&shadowOpacity);
 
-    components.push_back(&textColor);
+//    components.push_back(&textColor);
     components.push_back(&textFontSize);
     components.push_back(&textYAxis);
     components.push_back(&textXAxis);
     components.push_back(&textRotate);
     components.push_back(&textOpacity);
 
-    components.push_back(&backgroundColor);
+//    components.push_back(&backgroundColor);
     components.push_back(&fontDropdown);
     components.push_back(&logoText);
 
