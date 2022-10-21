@@ -1,13 +1,24 @@
-#include <iostream>
 #include <ctime>
+#include <iostream>
+
+void timeDelay(int sec);
 
 int main() {
-    srand(time(nullptr));
+    for (int i = 0; i < 15; i++) {
+        for (int j = 0; j < i; j++) {
+            std::cout << " ";
+        }
 
-    int min = 3;
-    int max = 10;
-
-    std::cout << rand() << std::endl;
-    std::cout << min + (rand() % (max - min + 1) ) << std::endl;
+        std::cout << "QQQQQ";
+        std::cout.flush();
+        timeDelay(1);
+    }
     return 0;
+}
+
+void timeDelay(int sec) {
+    int currentTime = time(nullptr);
+
+    while (time(nullptr) - currentTime <= sec){
+    }
 }
