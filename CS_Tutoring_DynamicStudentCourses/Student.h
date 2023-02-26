@@ -16,9 +16,9 @@ private:
 public:
     Student() = default;
 
-    int getID();
+    int getID() const;
     std::string getName();
-    int getScore();
+    int getScore() const;
 
     void setID(const int& id);
     void setName(const std::string& name);

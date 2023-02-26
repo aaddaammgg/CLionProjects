@@ -4,7 +4,7 @@
 
 #include "Student.h"
 
-int Student::getID() {
+int Student::getID() const {
     return m_id;
 }
 
@@ -12,7 +12,7 @@ std::string Student::getName() {
     return m_name;
 }
 
-int Student::getScore() {
+int Student::getScore() const {
     return m_score;
 }
 
