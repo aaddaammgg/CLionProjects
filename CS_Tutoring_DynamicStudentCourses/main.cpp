@@ -12,38 +12,37 @@ bool getConditionType(const Student& student1, const Student& student2, STUD_TYP
 void sortCourse(Student* list, const int &len, STUD_TYPE type);
 
 int main() {
-    int numberOfCourses = -1;
-    int totalStudents = 0;
+    std::string fileNames[] = {"cpp.txt", "java.txt", "python.txt"};
 
-    std::cout << "Enter the number of courses: " << std::endl;
-    std::cin >> numberOfCourses;
+    int numberOfCourses = 3;
+    int totalStudents = 0;
 
     Course* courses = new Course[numberOfCourses];
 
     for (int i = 0; i < numberOfCourses; ++i) {
-        courses[i] = createCourse();
+        courses[i] = createCourse(fileNames[i]);
         totalStudents += courses[i].studentCount;
     }
 
-    int* studentIDs = new int[totalStudents];
-
-    int start = 0, end = 0;
-    for (int i = 0; i < numberOfCourses; ++i) {
-        //printCourse(courses[i]);
-
-        end += courses[i].studentCount;
-
-        if (i > 0) {
-            start += courses[i - 1].studentCount;
-        }
-
-        std::cout << "Start: " << start << " End: " << end << std::endl;
-
-        for (int j = 0; j < courses[i].studentCount; ++j) {
-            Student* student = &courses[i].students[j];
-            studentIDs[start + j] = student->getID();
-        }
-    }
+//    int* studentIDs = new int[totalStudents];
+//
+//    int start = 0, end = 0;
+//    for (int i = 0; i < numberOfCourses; ++i) {
+//        //printCourse(courses[i]);
+//
+//        end += courses[i].studentCount;
+//
+//        if (i > 0) {
+//            start += courses[i - 1].studentCount;
+//        }
+//
+//        std::cout << "Start: " << start << " End: " << end << std::endl;
+//
+//        for (int j = 0; j < courses[i].studentCount; ++j) {
+//            Student* student = &courses[i].students[j];
+//            studentIDs[start + j] = student->getID();
+//        }
+//    }
 
 //    for (int i = 0; i < totalStudents; ++i) {
 //        std::cout << "ID: " << studentIDs[i] << std::endl;
@@ -70,7 +69,6 @@ int main() {
 
     return 0;
 }
-
 
 bool getConditionType(const Student& student1, const Student& student2, STUD_TYPE type) {
     switch (type) {

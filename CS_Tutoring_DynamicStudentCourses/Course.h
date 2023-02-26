@@ -35,15 +35,12 @@ static void printCourse(const Course& course) {
     printFilled('=', 33);
 }
 
-static Course createCourse() {
+static Course createCourse(const std::string& fileName) {
     std::ifstream file;
-    std::string fileName;
-
-    std::cout << "Enter filename: ";
-    std::cin >> fileName;
-    std::cout << std::endl;
 
     file.open(fileName);
+
+    std::cout << "Opening file... " << fileName << std::endl;
 
     if (file.fail()) {
         std::cout << "Error opening file..." << std::endl;
@@ -68,7 +65,19 @@ static Course createCourse() {
         i++;
     }
 
+    file.close();
+
     return Course{courseName, studentCount, students};
+}
+
+static Course createCourse() {
+    std::string fileName;
+
+    std::cout << "Enter filename: ";
+    std::cin >> fileName;
+    std::cout << std::endl;
+
+    return createCourse(fileName);
 }
 
 #endif //CS_TUTORING_DYNAMICSTUDENTCOURSES_COURSE_H
