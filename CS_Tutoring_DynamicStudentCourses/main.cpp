@@ -8,13 +8,14 @@ typedef enum {
 } STUD_TYPE;
 
 void studentsTakingAllCourses(Course* courses);
+void studentsTakingAllCourses(Course* courses, int numCourses);
 bool getConditionType(const Student& student1, const Student& student2, STUD_TYPE type);
 void sortCourse(Student* list, const int &len, STUD_TYPE type);
 
 int main() {
     std::string fileNames[] = {"cpp.txt", "java.txt", "python.txt"};
 
-    int numberOfCourses = 3;
+    int numberOfCourses = (sizeof fileNames / sizeof fileNames[0]);
     int totalStudents = 0;
 
     Course* courses = new Course[numberOfCourses];
@@ -48,24 +49,24 @@ int main() {
 //        std::cout << "ID: " << studentIDs[i] << std::endl;
 //    }
 
-    studentsTakingAllCourses(courses);
+    studentsTakingAllCourses(courses, numberOfCourses);
 
 
-    int& len1 = courses[0].studentCount;
-    int& len2 = courses[1].studentCount;
-    int& len3 = courses[2].studentCount;
-
-    Student* arr1 = courses[0].students;
-    Student* arr2 = courses[1].students;
-    Student* arr3 = courses[2].students;
-
-    sortCourse(arr1, len1, STUD_TYPE::SCORE);
-    sortCourse(arr2, len2, STUD_TYPE::SCORE);
-    sortCourse(arr3, len3, STUD_TYPE::SCORE);
-
-    for (int i = 0; i < numberOfCourses; ++i) {
-        printCourse(courses[i]);
-    }
+//    int& len1 = courses[0].studentCount;
+//    int& len2 = courses[1].studentCount;
+//    int& len3 = courses[2].studentCount;
+//
+//    Student* arr1 = courses[0].students;
+//    Student* arr2 = courses[1].students;
+//    Student* arr3 = courses[2].students;
+//
+//    sortCourse(arr1, len1, STUD_TYPE::SCORE);
+//    sortCourse(arr2, len2, STUD_TYPE::SCORE);
+//    sortCourse(arr3, len3, STUD_TYPE::SCORE);
+//
+//    for (int i = 0; i < numberOfCourses; ++i) {
+//        printCourse(courses[i]);
+//    }
 
     return 0;
 }
@@ -90,6 +91,139 @@ void sortCourse(Student* list, const int &len, STUD_TYPE type) {
         }
     }
 }
+
+void studentsTakingAllCourses(Course* courses, int numCourses)
+{
+    int maxStudentCount = 0;
+    for (int i = 0; i < numCourses; i++) {
+        maxStudentCount = std::max(maxStudentCount, courses[i].studentCount);
+    }
+
+    Student** arr = new Student*[numCourses];
+    int* len = new int[numCourses];
+
+    for (int i = 0; i < numCourses; i++) {
+        len[i] = courses[i].studentCount;
+        arr[i] = new Student[len[i]];
+        memcpy(arr[i], courses[i].students, len[i] * sizeof(Student));
+        sortCourse(arr[i], len[i], STUD_TYPE::ID);
+    }
+
+    int* indices = new int[numCourses];
+    std::fill_n(indices, numCourses, 0);
+
+    bool done = false;
+    while (!done) {
+        int minID = arr[0][indices[0]].getID();
+        for (int i = 1; i < numCourses; i++) {
+            while (indices[i] < len[i] && arr[i][indices[i]].getID() < minID) {
+                indices[i]++;
+            }
+            if (indices[i] == len[i]) {
+                done = true;
+                break;
+            }
+            if (arr[i][indices[i]].getID() > minID) {
+                minID = arr[i][indices[i]].getID();
+            }
+        }
+        if (!done) {
+            bool found = true;
+            for (int i = 0; i < numCourses; i++) {
+                if (arr[i][indices[i]].getID() != minID) {
+                    found = false;
+                    indices[i]++;
+                    break;
+                }
+            }
+            if (found) {
+                std::cout << ' ' << minID;
+                std::cout << std::setw(10) << arr[0][indices[0]].getName();
+                for (int i = 0; i < numCourses; i++) {
+                    std::cout << "  " << courses[i].courseName << '(';
+                    std::cout << arr[i][indices[i]].getScore() << ") ";
+                }
+                std::cout << std::endl;
+                for (int i = 0; i < numCourses; i++) {
+                    indices[i]++;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < numCourses; i++) {
+        delete[] arr[i];
+    }
+    delete[] arr;
+    delete[] len;
+    delete[] indices;
+}
+
+
+//void studentsTakingAllCourses(Course* courses, int numCourses)
+//{
+//    int maxStudentCount = 0;
+//    for (int i = 0; i < numCourses; i++) {
+//        maxStudentCount = std::max(maxStudentCount, courses[i].studentCount);
+//    }
+//
+//    for (int i = 0; i < numCourses; i++) {
+//        int& len = courses[i].studentCount;
+//        Student* students = courses[0].students;
+//        sortCourse(students, len, STUD_TYPE::ID);
+//    }
+//
+//    int* indices = new int[numCourses];
+//    std::fill_n(indices, numCourses, 0);
+//
+//    bool done = false;
+//    while (!done) {
+//        int minID = arr[0][indices[0]].getID();
+//        for (int i = 1; i < numCourses; i++) {
+//            while (indices[i] < len[i] && arr[i][indices[i]].getID() < minID) {
+//                indices[i]++;
+//            }
+//            if (indices[i] == len[i]) {
+//                done = true;
+//                break;
+//            }
+//            if (arr[i][indices[i]].getID() > minID) {
+//                minID = arr[i][indices[i]].getID();
+//            }
+//        }
+//        if (!done) {
+//            bool found = true;
+//            for (int i = 0; i < numCourses; i++) {
+//                if (arr[i][indices[i]].getID() != minID) {
+//                    found = false;
+//                    indices[i]++;
+//                    break;
+//                }
+//            }
+//            if (found) {
+//                std::cout << ' ' << minID;
+//                std::cout << std::setw(10) << arr[0][indices[0]].getName();
+//                for (int i = 0; i < numCourses; i++) {
+//                    std::cout << "  " << courses[i].courseName << '(';
+//                    std::cout << arr[i][indices[i]].getScore() << ") ";
+//                }
+//                std::cout << std::endl;
+//                for (int i = 0; i < numCourses; i++) {
+//                    indices[i]++;
+//                }
+//            }
+//        }
+//    }
+//
+//    for (int i = 0; i < numCourses; i++) {
+//        delete[] arr[i];
+//    }
+//    delete[] arr;
+//    delete[] len;
+//    delete[] indices;
+//}
+
+
 
 void studentsTakingAllCourses(Course* courses)
 {
