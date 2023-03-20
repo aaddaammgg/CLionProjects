@@ -41,7 +41,7 @@ void MenuItem::setSize(sf::Vector2f size) {
 
 void MenuItem::addItem(const std::string& str) {
     addItem(str, nullptr);
-}
+}st
 
 void MenuItem::addItem(const std::string &str, std::function<void(std::string)> cb) {
     Item *item = new Item();

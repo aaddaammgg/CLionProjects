@@ -22,7 +22,7 @@ sf::Sprite SFMLSuit::getSprite() {
 
 void SFMLSuit::setSuit(SuitsENUM suit) {
     // SPADES = 1, HEARTS, CLUBS, DIAMONDS
-    std::string s[] = {"suits/spades.png", "suits/hearts.png", "suits/clubs.png", "suits/diamonds.png"};
+    std::string s[] = {"resources/suits/spades.png", "resources/suits/hearts.png", "resources/suits/clubs.png", "resources/suits/diamonds.png"};
 //    texture.loadFromFile(s[suit - 1]);
 //    sprite.setTexture(texture);
     sprite.setTexture(ResourceHolder::getTexture(s[suit - 1]));

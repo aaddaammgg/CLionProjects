@@ -18,7 +18,7 @@ SFMLRank::SFMLRank(BaseRank baseRank) {
 
 void SFMLRank::setRank(RanksENUM rank) {
    // faceValueSF.setFont(fontSF);
-    faceValueSF.setFont(ResourceHolder::getFont("card_font.ttf"));
+    faceValueSF.setFont(ResourceHolder::getFont("resources/card_font.ttf"));
     faceValueSF.setString(getRank().toShortString());
     faceValueSF.setCharacterSize(28);
 

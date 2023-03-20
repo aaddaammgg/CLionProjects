@@ -153,8 +153,8 @@ SFMLDrawHandRank::SFMLDrawHandRank(PokerScore::Scores pokerENUM, float odds) : p
     sfmlCardHand.getSFMLCards()[0].setSize({10, 10});
     background.setFillColor(sf::Color::Red);
 
-    handRank.setFont(ResourceHolder::getFont("card_font.ttf"));
-    probability.setFont(ResourceHolder::getFont("card_font.ttf"));
+    handRank.setFont(ResourceHolder::getFont("resources/card_font.ttf"));
+    probability.setFont(ResourceHolder::getFont("resources/card_font.ttf"));
 
     std::string rankingStr = std::to_string((int)pokerENUM + 1) + ") ";
     rankingStr += PokerScore::scoresToString(pokerENUM) + " ";
