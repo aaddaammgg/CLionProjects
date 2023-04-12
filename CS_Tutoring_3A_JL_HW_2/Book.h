@@ -18,6 +18,7 @@ public:
     virtual std::string getTitle();
     virtual int getAvailable();
     virtual int getRented();
+//    virtual std::string getString() = 0;
 
     virtual void setCode(int code);
     virtual void setTitle(const std::string &title);

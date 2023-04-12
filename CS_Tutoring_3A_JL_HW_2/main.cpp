@@ -9,7 +9,7 @@
 
 int countLines(const std::string& fileName);
 void readBooks(const std::string& fileName, Book**& books, int& size);
-void printBooks(const Book**& books, const int& size);
+void printBooks(Book**& books, const int& size);
 
 int main() {
     Book** books = nullptr;
@@ -19,7 +19,7 @@ int main() {
 
     Novel* book = (Novel*)books[0];
 
-    std::cout << book->getPublishDate() << std::endl;
+    printBooks(books, bookSize);
     return 0;
 }
 
@@ -47,10 +47,6 @@ void readBooks(const std::string& fileName, Book**& books, int& size) {
     size = countLines(fileName);
 
     books = new Book*[size];
-
-    for (int i = 0; i < size; ++i) {
-        books[i] = new Book();
-    }
 
     std::ifstream file(fileName);
 
@@ -114,10 +110,12 @@ void readBooks(const std::string& fileName, Book**& books, int& size) {
     }
 }
 
-void printBooks(const Book**& books, const int& size) {
+void printBooks(Book**& books, const int& size) {
     for (int i = 0; i < size; ++i) {
-        const Book* book = books[i];
+        Book* book = books[i];
 
+        bool exists = book->getAvailable() > 0;
 
+        std::cout << book->getTitle() << '(' << book->getCode() << ") " << (exists ? "exists." : "does not exist.") << std::endl;
     }
 }

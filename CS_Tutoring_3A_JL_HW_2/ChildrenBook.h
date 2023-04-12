@@ -10,6 +10,7 @@
 class ChildrenBook : public Book {
 public:
     int getAge() const;
+//    std::string getString() override;
 
     void setAge(int age);
 private:
