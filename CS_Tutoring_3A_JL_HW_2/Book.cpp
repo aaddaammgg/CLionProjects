@@ -35,3 +35,8 @@ void Book::setAvailable(int available) {
 void Book::setRented(int rented) {
     Book::rented = rented;
 }
+
+std::string Book::getCategoryStr() {
+    std::string categories[] = {"Children", "Computer", "Novel"};
+    return categories[static_cast<int>(getCategory())];
+}

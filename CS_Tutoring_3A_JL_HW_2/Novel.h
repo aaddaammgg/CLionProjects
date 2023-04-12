@@ -8,13 +8,14 @@
 #include "Book.h"
 
 class Novel : public Book {
+private:
+    int publish_date;
 public:
     int getPublishDate() const;
 
     void setPublishDate(int publishDate);
 
-private:
-    int publish_date;
+    CATEGORY getCategory() override;
 };
 
 

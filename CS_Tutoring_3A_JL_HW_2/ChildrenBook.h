@@ -8,13 +8,14 @@
 #include "Book.h"
 
 class ChildrenBook : public Book {
+private:
+    int age;
 public:
     int getAge() const;
 //    std::string getString() override;
-
     void setAge(int age);
-private:
-    int age;
+
+    CATEGORY getCategory() override;
 };
 
 

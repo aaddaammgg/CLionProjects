@@ -19,3 +19,7 @@ int ChildrenBook::getAge() const {
 void ChildrenBook::setAge(int age) {
     ChildrenBook::age = age;
 }
+
+CATEGORY ChildrenBook::getCategory() {
+    return CATEGORY::CHILDREN_BOOK;
+}

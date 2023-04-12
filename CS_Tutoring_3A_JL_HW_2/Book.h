@@ -7,6 +7,12 @@
 
 #include <string>
 
+typedef enum {
+    CHILDREN_BOOK = 0,
+    COMPUTER_BOOK,
+    NOVEL
+} CATEGORY;
+
 class Book {
 private:
     int code;
@@ -18,6 +24,8 @@ public:
     virtual std::string getTitle();
     virtual int getAvailable();
     virtual int getRented();
+    virtual CATEGORY getCategory() = 0;
+    std::string getCategoryStr();
 //    virtual std::string getString() = 0;
 
     virtual void setCode(int code);

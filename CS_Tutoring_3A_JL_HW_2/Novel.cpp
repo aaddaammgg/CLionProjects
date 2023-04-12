@@ -11,3 +11,7 @@ int Novel::getPublishDate() const {
 void Novel::setPublishDate(int publishDate) {
     publish_date = publishDate;
 }
+
+CATEGORY Novel::getCategory() {
+    return CATEGORY::NOVEL;
+}

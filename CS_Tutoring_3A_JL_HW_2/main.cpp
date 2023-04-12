@@ -20,6 +20,21 @@ int main() {
     Novel* book = (Novel*)books[0];
 
     printBooks(books, bookSize);
+
+    for (int i = 0; i < bookSize; i++) {
+        Book* b = books[i];
+
+        if (b->getCategory() == CATEGORY::CHILDREN_BOOK) {
+            delete (ChildrenBook*)books[i];
+        } else if (b->getCategory() == CATEGORY::COMPUTER_BOOK) {
+            delete (ComputerBook*)books[i];
+        } else {
+            delete (Novel*)books[i];
+        }
+    }
+
+    delete[] books;
+
     return 0;
 }
 
@@ -114,8 +129,7 @@ void printBooks(Book**& books, const int& size) {
     for (int i = 0; i < size; ++i) {
         Book* book = books[i];
 
-        bool exists = book->getAvailable() > 0;
-
-        std::cout << book->getTitle() << '(' << book->getCode() << ") " << (exists ? "exists." : "does not exist.") << std::endl;
+        std::cout << book->getTitle() << '(' << book->getCode() << ")" << std::endl
+                  << "Category: " << book->getCategoryStr() << std::endl << std::endl;
     }
 }

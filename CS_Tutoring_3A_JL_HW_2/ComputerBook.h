@@ -9,13 +9,14 @@
 #include "Book.h"
 
 class ComputerBook : public Book {
+private:
+    std::string publisher;
 public:
     const std::string &getPublisher() const;
 
     void setPublisher(const std::string &publisher);
 
-private:
-    std::string publisher;
+    CATEGORY getCategory() override;
 };
 
 
