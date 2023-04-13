@@ -123,6 +123,8 @@ void readBooks(const std::string& fileName, Book**& books, int& size) {
 
         count++;
     }
+
+    file.close();
 }
 
 void printBooks(Book**& books, const int& size) {
