@@ -5,7 +5,7 @@
 #include "SFMLGamePlaying_Scene.h"
 
 SFMLGamePlaying_Scene::SFMLGamePlaying_Scene() {
-    this->title.setFont(ResourceHolder::getFont("Roboto-Bold.ttf"));
+    this->title.setFont(ResourceHolder::getFont("resources/fonts/Roboto-Bold.ttf"));
     this->title.setString(SCENE_GAMEPLAYING_TITLE);
     this->title.setFillColor(sf::Color(SCENE_GAMEPLAYING_TITLE_COLOR));
     this->title.setCharacterSize(SCENE_GAMEPLAYING_TITLE_SIZE);

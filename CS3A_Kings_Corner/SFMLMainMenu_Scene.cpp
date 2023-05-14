@@ -35,7 +35,7 @@ sf::Color hsv(int hue, float sat, float val)
 }
 
 SFMLMainMenu_Scene::SFMLMainMenu_Scene() {
-    this->title.setFont(ResourceHolder::getFont("Roboto-Bold.ttf"));
+    this->title.setFont(ResourceHolder::getFont("resources/fonts/Roboto-Bold.ttf"));
     this->title.setString(SCENE_MAINMENU_TITLE);
     this->title.setFillColor(sf::Color(SCENE_MAINMENU_TITLE_COLOR));
     this->title.setCharacterSize(SCENE_MAINMENU_TITLE_SIZE);
@@ -43,7 +43,7 @@ SFMLMainMenu_Scene::SFMLMainMenu_Scene() {
     sf::FloatRect titleBounds = this->title.getGlobalBounds();
     this->title.setPosition(WINDOW_WIDTH / 2 - titleBounds.width / 2, 210);
 
-    this->subTitle.setFont(ResourceHolder::getFont("Roboto-Bold.ttf"));
+    this->subTitle.setFont(ResourceHolder::getFont("resources/fonts/Roboto-Bold.ttf"));
     this->subTitle.setString(SCENE_MAINMENU_SUBTITLE);
     this->subTitle.setFillColor(sf::Color(SCENE_MAINMENU_SUBTITLE_COLOR));
     this->subTitle.setCharacterSize(SCENE_MAINMENU_SUBTITLE_SIZE);
@@ -52,7 +52,7 @@ SFMLMainMenu_Scene::SFMLMainMenu_Scene() {
     sf::FloatRect subTitleBounds = this->subTitle.getGlobalBounds();
     this->subTitle.setPosition(WINDOW_WIDTH / 2 - subTitleBounds.width / 2 + 80, 280);
 
-    this->credits.setFont(ResourceHolder::getFont("Roboto-Bold.ttf"));
+    this->credits.setFont(ResourceHolder::getFont("resources/fonts/Roboto-Bold.ttf"));
     this->credits.setString(SCENE_MAINMENU_CREDITS);
     this->credits.setFillColor(sf::Color(SCENE_MAINMENU_CREDITS_COLOR));
     this->credits.setCharacterSize(SCENE_MAINMENU_CREDITS_SIZE);

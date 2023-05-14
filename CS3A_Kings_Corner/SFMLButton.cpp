@@ -13,7 +13,7 @@ SFMLButton::SFMLButton(std::string text) : SFMLButton(text, sf::Color::White, sf
 }
 
 SFMLButton::SFMLButton(std::string text, sf::Color color, sf::Color textColor, unsigned int charSize) {
-    this->text.setFont(ResourceHolder::getFont("Roboto-Bold.ttf"));
+    this->text.setFont(ResourceHolder::getFont("resources/fonts/Roboto-Bold.ttf"));
     setTextColor(textColor);
     setCharSize(charSize);
     setText(text);
