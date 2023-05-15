@@ -3,7 +3,6 @@
 //
 
 #include "MouseEvents.h"
-#include <bits/stdc++.h>
 
 bool MouseEvents::clicked = false;
 bool MouseEvents::isSelected = true;

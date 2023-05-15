@@ -6,6 +6,7 @@
 #define CS3A_KINGS_CORNER_MOUSEEVENTS_H
 
 #include <iostream>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 #include "RoundedRectangleShape.h"
 

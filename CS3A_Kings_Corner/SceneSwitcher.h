@@ -6,7 +6,6 @@
 #define SFML_KINGS_CORNER_SCENESWITCHER_H
 
 #include "ScenesENUM.h"
-#include <windows.h>
 
 class SceneSwitcher {
 private:

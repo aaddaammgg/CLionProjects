@@ -13,7 +13,6 @@ void SceneSwitcher::setCurrentScene(ScenesENUM scene) {
 }
 
 void SceneSwitcher::changeScene(ScenesENUM scene) {
-//    Sleep(10);
     setCurrentScene(scene);
 }
 
