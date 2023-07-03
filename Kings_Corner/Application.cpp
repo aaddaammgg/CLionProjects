@@ -12,9 +12,19 @@ void Application::run() {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(false);
 
-    sf::CircleShape circle;
-    circle.setFillColor(sf::Color::Green);
-    circle.setRadius(50.f);
+    std::vector<GUIAdapter*> components;
+
+    GUI_Circle circle(sf::Color::Green);
+
+    circle.setDraggable(true);
+    circle.setPosition(0, 0);
+
+    GUI_Circle circle2(sf::Color::Red);
+    circle2.setDraggable(true);
+    circle2.setPosition(125, 0);
+
+    components.push_back(&circle);
+    components.push_back(&circle2);
 
     while (window.isOpen()) {
         sf::Event event{};
@@ -22,9 +32,20 @@ void Application::run() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+
+            for (auto* component : components) {
+                component->addEventHandler(window, event);
+            }
         }
+
+        for (auto* component : components) {
+            component->update(window);
+        }
+
         window.clear(sf::Color(sf::Color::Black));
-        window.draw(circle);
+        for (auto* component : components) {
+            window.draw(*component);
+        }
         window.display();
     }
 }

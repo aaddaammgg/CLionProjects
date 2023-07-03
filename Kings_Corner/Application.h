@@ -6,6 +6,9 @@
 #define KINGS_CORNER_APPLICATION_H
 
 #include <SFML/Graphics.hpp>
+#include "GUIAdapter.h"
+
+#include "GUI_Circle.h"
 
 class Application {
 public:

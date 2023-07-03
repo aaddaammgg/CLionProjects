@@ -19,7 +19,7 @@ public:
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const = 0;
     virtual void addEventHandler(sf::RenderWindow& window, sf::Event event) = 0;
-    virtual void update() = 0;
+    virtual void update(sf::RenderTarget& window) = 0;
 };
 
 

@@ -5,7 +5,7 @@ project(${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.h StatesENUM.h GUIComponent.cpp GUIComponent.h MouseEvents.cpp MouseEvents.h Application.cpp Application.h)
+set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.h StatesENUM.h GUIComponent.cpp GUIComponent.h MouseEvents.cpp MouseEvents.h Application.cpp Application.h GUIAdapter.cpp GUIAdapter.h GUI_Circle.cpp GUI_Circle.h)
 
 if (WIN32)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
