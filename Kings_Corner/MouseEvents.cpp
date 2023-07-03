@@ -33,12 +33,9 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
     }
 
     currentMousePos = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
-    sf::FloatRect test = component->getBounds();
+    sf::FloatRect bounds = component->getBounds();
 
-    test.left = component->getPosition().x;
-    test.top = component->getPosition().y;
-
-    bool containsMouse = test.contains(currentMousePos);
+    bool containsMouse = bounds.contains(currentMousePos);
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !clicked) {
         clicked = true;
@@ -46,7 +43,7 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
     }
 
     if (containsMouse) {
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !checkDragging && isSelected && !distanceGreaterEqual(21)) {
+        if (clicked && !checkDragging && isSelected && !distanceGreaterEqual(21)) {
             _mouseButtonPressed = true;
             checkDragging = true;
 
@@ -74,7 +71,9 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
         if (distanceGreaterEqual(20) && selected == component) {
             _dragging = true;
 
-            component->setPosition(currentMousePos);
+            sf::Vector2f dimensions = {component->getBounds().width / 2, component->getBounds().height / 2};
+
+            component->setPosition(currentMousePos - dimensions);
         }
     }
 
@@ -109,9 +108,10 @@ void MouseEvents::mouseButtonReleased() {
 }
 
 void MouseEvents::changeMouseCursor(sf::RenderWindow& window, sf::Cursor::Type type) {
-    sf::Cursor cursor;
-    if (cursor.loadFromSystem(type))
-        window.setMouseCursor(cursor);
+//    sf::Cursor cursor;
+//    if (cursor.loadFromSystem(type))
+//        window.setMouseCursor(cursor);
+    std::cout << type << std::endl;
 }
 
 double MouseEvents::distancePoints(sf::Vector2f point1, sf::Vector2f point2) {
