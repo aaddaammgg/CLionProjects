@@ -17,16 +17,16 @@ private:
 
     bool _changeCursorOnHover = true;
     bool _isDraggable = false;
+
     static bool _dragging;
     static bool _hovering;
     static bool _mouseButtonPressed;
     static bool _mouseButtonReleased;
     static bool _mouseButtonReleasedDelay;
-    static bool checkDragging;
+    static bool checkIfDragging;
 
-    static bool _isSelected;
     static bool clicked;
-    static bool isSelected;
+    static bool checkIfSelected;
     static sf::Vector2f oldMousePos;
 
     static sf::Vector2f currentMousePos;
@@ -36,13 +36,15 @@ private:
     static double distancePoints(sf::Vector2f point1, sf::Vector2f point2);
     static bool distanceGreaterEqual(double distance);
     static void changeMouseCursor(sf::RenderWindow& window, sf::Cursor::Type type);
+
+    static bool isSelected();
 public:
     void setDraggable(bool isDraggable);
     void setChangeCursorOnHover(bool changeCursorOnHover);
 
-    bool isChangeCursorOnHover();
+    bool isChangeCursorOnHover() const;
     bool isHovering();
-    bool isDraggable();
+    bool isDraggable() const;
     static bool isDragging();
     static bool mouseButtonPressed();
     static bool mouseButtonReleased(bool delay);

@@ -16,17 +16,21 @@ void Application::run() {
 
     std::vector<GUIAdapter*> components;
 
-    GUI_Circle circle(sf::Color::Green);
-
+    GUI_Circle circle(sf::Color::Red);
     circle.setDraggable(true);
-    circle.setPosition(0, 0);
+    circle.setPosition(0, 20);
 
-    GUI_Circle circle2(sf::Color::Red);
+    GUI_Circle circle2(sf::Color::Green);
     circle2.setDraggable(true);
-    circle2.setPosition(125, 0);
+    circle2.setPosition(125, 20);
+
+    GUI_Circle circle3(sf::Color::Blue);
+    circle3.setDraggable(true);
+    circle3.setPosition(250, 20);
 
     components.push_back(&circle);
     components.push_back(&circle2);
+    components.push_back(&circle3);
 
     float fps;
     sf::Clock clock;
