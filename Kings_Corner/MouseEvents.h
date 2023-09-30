@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "GUIComponent.h"
+#include "GUIAdapter.h"
 
 class MouseEvents {
 private:
@@ -38,6 +39,8 @@ private:
     static void changeMouseCursor(sf::RenderWindow& window, sf::Cursor::Type type);
 
     static bool isSelected();
+
+    static void eventHandler(sf::RenderWindow& window, sf::Event& event, GUIComponent* component);
 public:
     void setDraggable(bool isDraggable);
     void setChangeCursorOnHover(bool changeCursorOnHover);
@@ -48,8 +51,7 @@ public:
     static bool isDragging();
     static bool mouseButtonPressed();
     static bool mouseButtonReleased(bool delay);
-protected:
-    static void eventHandler(sf::RenderWindow& window, sf::Event& event, GUIComponent* component);
+    static void eventHandler(sf::RenderWindow& window, sf::Event& event);
 };
 
 

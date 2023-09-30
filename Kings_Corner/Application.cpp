@@ -2,8 +2,6 @@
 // Created by Quantum on 5/14/2023.
 //
 
-#include <chrono>
-#include <cmath>
 #include "Application.h"
 
 void Application::run() {
@@ -11,26 +9,26 @@ void Application::run() {
     settings.antialiasingLevel = 8;
 
     sf::RenderWindow window({500, 500, 32}, "Kings Corner", sf::Style::Close, settings);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(144);
     window.setVerticalSyncEnabled(false);
 
-    std::vector<GUIAdapter*> components;
+//    std::vector<GUIAdapter*> components;
 
     GUI_Circle circle(sf::Color::Red);
-    circle.setDraggable(true);
+//    circle.setDraggable(true);
     circle.setPosition(0, 20);
 
     GUI_Circle circle2(sf::Color::Green);
-    circle2.setDraggable(true);
+//    circle2.setDraggable(true);
     circle2.setPosition(125, 20);
 
     GUI_Circle circle3(sf::Color::Blue);
-    circle3.setDraggable(true);
+//    circle3.setDraggable(true);
     circle3.setPosition(250, 20);
 
-    components.push_back(&circle);
-    components.push_back(&circle2);
-    components.push_back(&circle3);
+//    components.push_back(&circle);
+//    components.push_back(&circle2);
+//    components.push_back(&circle3);
 
     float fps;
     sf::Clock clock;
@@ -47,7 +45,7 @@ void Application::run() {
     fpsText.setPosition(5, 5);
     fpsText.setFillColor(sf::Color::White);
     fpsText.setFont(font);
-    fpsText.setCharacterSize(24);
+    fpsText.setCharacterSize(18);
     fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 
@@ -58,17 +56,19 @@ void Application::run() {
                 window.close();
             }
 
-            for (auto* component : components) {
-                component->addEventHandler(window, event);
-            }
+            MouseEvents::eventHandler(window, event);
+
+//            for (auto* component : GUIAdapter::components) {
+//                component->addEventHandler(window, event);
+//            }
         }
 
-        for (auto* component : components) {
+        for (auto* component : GUIAdapter::components) {
             component->update(window);
         }
 
         window.clear(sf::Color(sf::Color::Black));
-        for (auto* component : components) {
+        for (auto* component : GUIAdapter::components) {
             window.draw(*component);
         }
         window.draw(fpsText);
@@ -77,7 +77,7 @@ void Application::run() {
         currentTime = clock.getElapsedTime();
         if (currentTime.asMilliseconds() - previousTime2.asMilliseconds() >= 50) {
             fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-            fpsText.setString("FPS: " + std::to_string(std::floor(fps)));
+            fpsText.setString("FPS: " + std::to_string((int)fps));
             previousTime2 = currentTime;
         }
         previousTime = currentTime;

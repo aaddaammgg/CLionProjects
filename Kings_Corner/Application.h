@@ -5,8 +5,11 @@
 #ifndef KINGS_CORNER_APPLICATION_H
 #define KINGS_CORNER_APPLICATION_H
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
+
 #include "GUIAdapter.h"
+#include "MouseEvents.h"
 
 #include "GUI_Circle.h"
 

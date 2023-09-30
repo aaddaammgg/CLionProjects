@@ -22,6 +22,12 @@ sf::Vector2f MouseEvents::oldMousePos;
 sf::Vector2f MouseEvents::currentMousePos;
 time_t MouseEvents::_lastClickedTime = 0;
 
+void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event) {
+    for (auto component : GUIAdapter::components) {
+        eventHandler(window, event, component);
+    }
+}
+
 void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUIComponent* component) {
     auto* componentMouseEvents = (MouseEvents*)component;
 
@@ -113,7 +119,7 @@ void MouseEvents::changeMouseCursor(sf::RenderWindow& window, sf::Cursor::Type t
 //    sf::Cursor cursor;
 //    if (cursor.loadFromSystem(type))
 //        window.setMouseCursor(cursor);
-    std::cout << type << std::endl;
+//    std::cout << type << std::endl;
 }
 
 double MouseEvents::distancePoints(sf::Vector2f point1, sf::Vector2f point2) {
