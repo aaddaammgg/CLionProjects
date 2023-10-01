@@ -13,6 +13,8 @@ private:
 public:
     GUI_Circle(sf::Color color);
 
+    sf::Color getColor();
+
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
     virtual void addEventHandler(sf::RenderWindow& window, sf::Event event);
     virtual void update(sf::RenderTarget& window);

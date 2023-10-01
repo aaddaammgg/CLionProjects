@@ -11,6 +11,10 @@ GUI_Circle::GUI_Circle(sf::Color color) {
     setBounds({0,0,100,100});
 }
 
+sf::Color GUI_Circle::getColor() {
+    return circle.getFillColor();
+}
+
 void GUI_Circle::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     states.transform = getTransform();
     window.draw(circle, states);

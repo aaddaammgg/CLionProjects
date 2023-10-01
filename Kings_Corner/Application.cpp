@@ -15,15 +15,16 @@ void Application::run() {
 //    std::vector<GUIAdapter*> components;
 
     GUI_Circle circle(sf::Color::Red);
-//    circle.setDraggable(true);
+    circle.enableState(IS_DRAGGABLE);
     circle.setPosition(0, 20);
 
     GUI_Circle circle2(sf::Color::Green);
-//    circle2.setDraggable(true);
+    circle2.enableState(IS_DRAGGABLE);
     circle2.setPosition(125, 20);
 
     GUI_Circle circle3(sf::Color::Blue);
-//    circle3.setDraggable(true);
+    circle3.enableState(IS_DRAGGABLE);
+    circle3.enableState(DISABLED);
     circle3.setPosition(250, 20);
 
 //    components.push_back(&circle);
@@ -57,6 +58,14 @@ void Application::run() {
             }
 
             MouseEvents::eventHandler(window, event);
+
+            if (MouseEvents::mouseButtonReleased(true)) {
+                auto* selected = (GUI_Circle*)MouseEvents::lastSelected;
+
+                if (selected == &circle) {
+                    std::cout << selected->getColor().toInteger() << std::endl;
+                }
+            }
 
 //            for (auto* component : GUIAdapter::components) {
 //                component->addEventHandler(window, event);

@@ -12,13 +12,10 @@
 #include "GUIComponent.h"
 #include "GUIAdapter.h"
 
+#define DRAG_DISTANCE 7
+
 class MouseEvents {
 private:
-    static GUIComponent* selected;
-
-    bool _changeCursorOnHover = true;
-    bool _isDraggable = false;
-
     static bool _dragging;
     static bool _hovering;
     static bool _mouseButtonPressed;
@@ -42,12 +39,8 @@ private:
 
     static void eventHandler(sf::RenderWindow& window, sf::Event& event, GUIComponent* component);
 public:
-    void setDraggable(bool isDraggable);
-    void setChangeCursorOnHover(bool changeCursorOnHover);
-
-    bool isChangeCursorOnHover() const;
-    bool isHovering();
-    bool isDraggable() const;
+    static GUIComponent* selected;
+    static GUIComponent* lastSelected;
     static bool isDragging();
     static bool mouseButtonPressed();
     static bool mouseButtonReleased(bool delay);

@@ -5,6 +5,7 @@
 #include "MouseEvents.h"
 
 GUIComponent* MouseEvents::selected = nullptr;
+GUIComponent* MouseEvents::lastSelected = nullptr;
 
 //bool MouseEvents::_changeCursorOnHover = true;
 //bool MouseEvents::_isDraggable = false;
@@ -23,13 +24,21 @@ sf::Vector2f MouseEvents::currentMousePos;
 time_t MouseEvents::_lastClickedTime = 0;
 
 void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event) {
-    for (auto component : GUIAdapter::components) {
-        eventHandler(window, event, component);
+    if (selected == nullptr) {
+        for (auto component : GUIAdapter::components) {
+            eventHandler(window, event, component);
+        }
+    } else {
+        eventHandler(window, event, selected);
     }
 }
 
 void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUIComponent* component) {
-    auto* componentMouseEvents = (MouseEvents*)component;
+//    auto* componentMouseEvents = (MouseEvents*)component;
+
+    if (component->isEnabled(DISABLED)) {
+        return;
+    }
 
     if (!isDragging() && !checkIfDragging) {
         _mouseButtonPressed = false;
@@ -49,31 +58,39 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
     }
 
     if (isMouseHoveringComponent) {
-        if (clicked && !checkIfDragging && checkIfSelected && !distanceGreaterEqual(21)) {
+        if (clicked && !checkIfDragging && checkIfSelected && !distanceGreaterEqual(DRAG_DISTANCE + 1)) {
             _mouseButtonPressed = true;
             checkIfDragging = true;
 
             checkIfSelected = false;
 
+            // Move component to end to draw on top of everything else
+            GUIAdapter::components.insert(GUIAdapter::components.end(), component);
+
             selected = component;
+            lastSelected = component;
         }
 
-        if (componentMouseEvents->isChangeCursorOnHover() && !_hovering) {
+        if (component->isEnabled(CHANGE_CURSOR) && !_hovering) {
             changeMouseCursor(window, sf::Cursor::Hand);
         }
 
+        component->enableState(HOVERED);
+
         _hovering = true;
     } else if (!isDragging()) {
-        if (componentMouseEvents->isChangeCursorOnHover() && _hovering) {
+        if (component->isEnabled(CHANGE_CURSOR) && _hovering) {
 
             changeMouseCursor(window, sf::Cursor::Arrow);
         }
 
+        component->disableState(HOVERED);
+
         _hovering = false;
     }
 
-    if (event.type == sf::Event::MouseMoved && _mouseButtonPressed && componentMouseEvents->isDraggable() && isSelected()) {
-        if (distanceGreaterEqual(20) && selected == component) {
+    if (event.type == sf::Event::MouseMoved && _mouseButtonPressed && component->isEnabled(IS_DRAGGABLE) && isSelected()) {
+        if (selected == component && (distanceGreaterEqual(DRAG_DISTANCE) || _dragging)) {
             _dragging = true;
 
             sf::Vector2f dimensions = {component->getBounds().width / 2, component->getBounds().height / 2};
@@ -95,10 +112,9 @@ void MouseEvents::mouseButtonReleased() {
 
     if (!isSelected()) return;
 
-
     checkIfSelected = true;
 
-    if (distanceGreaterEqual(20) && !isDragging()) return;
+    if (distanceGreaterEqual(DRAG_DISTANCE) && !isDragging()) return;
 
     _dragging = false;
 
@@ -107,8 +123,8 @@ void MouseEvents::mouseButtonReleased() {
         _mouseButtonReleasedDelay = true;
     }
 
-    selected = nullptr;
     _mouseButtonReleased = true;
+    selected = nullptr;
 }
 
 bool MouseEvents::isSelected() {
@@ -129,26 +145,6 @@ double MouseEvents::distancePoints(sf::Vector2f point1, sf::Vector2f point2) {
 
 bool MouseEvents::distanceGreaterEqual(double distance) {
     return distancePoints(currentMousePos, oldMousePos) >= distance;
-}
-
-void MouseEvents::setDraggable(bool isDraggable) {
-    _isDraggable = isDraggable;
-}
-
-void MouseEvents::setChangeCursorOnHover(bool changeCursorOnHover) {
-    _changeCursorOnHover = changeCursorOnHover;
-}
-
-bool MouseEvents::isChangeCursorOnHover() const {
-    return _changeCursorOnHover;
-}
-
-bool MouseEvents::isHovering() {
-    return _hovering;
-}
-
-bool MouseEvents::isDraggable() const {
-    return _isDraggable;
 }
 
 bool MouseEvents::isDragging() {
