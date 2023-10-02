@@ -31,7 +31,7 @@ set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.
         SFMLDeck.cpp
         SFMLDeck.h
         SFMLCardOutline.cpp
-        SFMLCardOutline.h)
+        SFMLCardOutline.h _DEFINITIONS.h)
 
 if (WIN32)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")

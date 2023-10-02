@@ -35,6 +35,10 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event) {
 void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUIComponent* component) {
 //    auto* componentMouseEvents = (MouseEvents*)component;
 
+    if (component == nullptr) {
+        return;
+    }
+
     if (component->isEnabled(DISABLED)) {
         return;
     }
@@ -68,7 +72,8 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
             checkIfSelected = false;
 
             // Move component to end to draw on top of everything else
-            GUIAdapter::components.insert(GUIAdapter::components.end(), component);
+//            GUIAdapter::components.insert(GUIAdapter::components.end(), component);
+//            std::swap(component, GUIAdapter::components.back());
 
             selected = component;
             lastSelected = component;

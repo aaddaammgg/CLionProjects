@@ -8,7 +8,8 @@ void Application::run() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    sf::RenderWindow window({500, 500, 32}, "Kings Corner", sf::Style::Close, settings);
+    sf::RenderWindow window({WINDOW_WIDTH, WINDOW_HEIGHT, 32}, WINDOW_TITLE, sf::Style::Close, settings);
+
     window.setFramerateLimit(144);
     window.setVerticalSyncEnabled(false);
 
@@ -72,7 +73,8 @@ void Application::run() {
 
             MouseEvents::eventHandler(window, event);
 
-            if (MouseEvents::mouseButtonReleased(false)) {
+
+            if (MouseEvents::mouseButtonReleased(false) && MouseEvents::lastSelected != nullptr) {
                 auto* selected = (GUI_Circle*)MouseEvents::lastSelected;
 
                 if (selected == &circle) {
@@ -96,7 +98,7 @@ void Application::run() {
             component->update(window);
         }
 
-        window.clear(sf::Color(0x4F72EEFF));
+        window.clear(sf::Color(WINDOW_BACKGROUND_COLOR));
         for (auto* component : GUIAdapter::components) {
             window.draw(*component);
         }
@@ -106,11 +108,10 @@ void Application::run() {
         currentTime = clock.getElapsedTime();
         if (currentTime.asMilliseconds() - previousTime2.asMilliseconds() >= 50) {
             fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-            fpsText.setString("FPS: " + std::to_string((int)fps) + " " + std::to_string((uintptr_t)MouseEvents::selected));
+            fpsText.setString("FPS: " + std::to_string((int)fps) + " " + std::to_string(MouseEvents::selected != nullptr ? (uintptr_t)MouseEvents::selected : 0));
             previousTime2 = currentTime;
         }
         previousTime = currentTime;
-
 
     }
 }

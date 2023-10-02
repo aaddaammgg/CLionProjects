@@ -8,6 +8,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
+#include "_DEFINITIONS.h"
 #include "GUIAdapter.h"
 #include "MouseEvents.h"
 

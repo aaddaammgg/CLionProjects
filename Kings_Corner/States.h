@@ -9,6 +9,8 @@
 #include <functional>
 #include "StatesENUM.h"
 
+#include <iostream>
+
 class States {
 private:
     std::map<StatesENUM, bool> states;
