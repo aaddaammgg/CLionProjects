@@ -41,6 +41,7 @@ private:
 public:
     static GUIComponent* selected;
     static GUIComponent* lastSelected;
+    static GUIComponent* hovered;
     static bool isDragging();
     static bool mouseButtonPressed();
     static bool mouseButtonReleased(bool delay);

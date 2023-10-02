@@ -12,6 +12,10 @@
 #include "MouseEvents.h"
 
 #include "GUI_Circle.h"
+#include "Deck.h"
+#include "CardHand.h"
+#include "SFMLCard.h"
+#include "SFMLDeck.h"
 
 class Application {
 public:

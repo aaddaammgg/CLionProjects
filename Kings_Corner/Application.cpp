@@ -24,12 +24,8 @@ void Application::run() {
 
     GUI_Circle circle3(sf::Color::Blue);
     circle3.enableState(IS_DRAGGABLE);
-    circle3.enableState(DISABLED);
+//    circle3.enableState(DISABLED);
     circle3.setPosition(250, 20);
-
-//    components.push_back(&circle);
-//    components.push_back(&circle2);
-//    components.push_back(&circle3);
 
     float fps;
     sf::Clock clock;
@@ -49,6 +45,23 @@ void Application::run() {
     fpsText.setCharacterSize(18);
     fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
+    Deck deck;
+
+    CardHand ch;
+
+    SFMLCard card(&deck.dealCard());
+    card.enableState(IS_DRAGGABLE);
+
+    card.setPosition(100, 100);
+
+    SFMLDeck sfmlDeck(&deck);
+    sfmlDeck.setPosition(250, 250);
+
+    GUIAdapter::components.push_back(&circle);
+    GUIAdapter::components.push_back(&circle2);
+    GUIAdapter::components.push_back(&circle3);
+    GUIAdapter::components.push_back(&card);
+    GUIAdapter::components.push_back(&sfmlDeck);
 
     while (window.isOpen()) {
         sf::Event event{};
@@ -59,11 +72,18 @@ void Application::run() {
 
             MouseEvents::eventHandler(window, event);
 
-            if (MouseEvents::mouseButtonReleased(true)) {
+            if (MouseEvents::mouseButtonReleased(false)) {
                 auto* selected = (GUI_Circle*)MouseEvents::lastSelected;
 
                 if (selected == &circle) {
-                    std::cout << selected->getColor().toInteger() << std::endl;
+                    BaseCard& bCard = deck.dealCard();
+                    std::cout << bCard << std::endl;
+                    card.setCard(&bCard);
+                } else if (selected == &circle2) {
+                    card.enableState(IS_HIDDEN);
+                } else if (selected == &circle3) {
+                    deck.shuffle();
+                    card.disableState(IS_HIDDEN);
                 }
             }
 
@@ -76,7 +96,7 @@ void Application::run() {
             component->update(window);
         }
 
-        window.clear(sf::Color(sf::Color::Black));
+        window.clear(sf::Color(0x4F72EEFF));
         for (auto* component : GUIAdapter::components) {
             window.draw(*component);
         }
@@ -86,7 +106,7 @@ void Application::run() {
         currentTime = clock.getElapsedTime();
         if (currentTime.asMilliseconds() - previousTime2.asMilliseconds() >= 50) {
             fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-            fpsText.setString("FPS: " + std::to_string((int)fps));
+            fpsText.setString("FPS: " + std::to_string((int)fps) + " " + std::to_string((int)MouseEvents::selected));
             previousTime2 = currentTime;
         }
         previousTime = currentTime;

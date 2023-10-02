@@ -1,0 +1,12 @@
+//
+// Created by Adam G. on 10/1/2023.
+//
+
+#ifndef KINGS_CORNER_RANKSENUM_H
+#define KINGS_CORNER_RANKSENUM_H
+
+enum RanksENUM {
+    ACE = 1, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING
+};
+
+#endif //KINGS_CORNER_RANKSENUM_H

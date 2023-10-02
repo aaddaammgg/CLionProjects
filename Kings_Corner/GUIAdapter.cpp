@@ -7,7 +7,7 @@
 std::vector<GUIComponent*> GUIAdapter::components;
 
 GUIAdapter::GUIAdapter() {
-    components.push_back((GUIComponent*)this);
+//    components.push_back((GUIComponent*)this);
 }
 
 void GUIAdapter::draw(sf::RenderTarget& window, sf::RenderStates states) const {

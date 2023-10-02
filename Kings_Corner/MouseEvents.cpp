@@ -6,9 +6,8 @@
 
 GUIComponent* MouseEvents::selected = nullptr;
 GUIComponent* MouseEvents::lastSelected = nullptr;
+GUIComponent* MouseEvents::hovered = nullptr;
 
-//bool MouseEvents::_changeCursorOnHover = true;
-//bool MouseEvents::_isDraggable = false;
 bool MouseEvents::_dragging = false;
 bool MouseEvents::_hovering = false;
 bool MouseEvents::_mouseButtonPressed = false;
@@ -51,6 +50,10 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
 
     bool isMouseHoveringComponent = bounds.contains(currentMousePos);
 
+    if (isMouseHoveringComponent) {
+        hovered = component;
+    }
+
     // This is for checking the distance between the oldMousePos and currentMousePos
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !clicked) {
         clicked = true;
@@ -71,9 +74,9 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
             lastSelected = component;
         }
 
-        if (component->isEnabled(CHANGE_CURSOR) && !_hovering) {
-            changeMouseCursor(window, sf::Cursor::Hand);
-        }
+//        if (component->isEnabled(CHANGE_CURSOR) && !_hovering) {
+//            changeMouseCursor(window, sf::Cursor::Hand);
+//        }
 
         component->enableState(HOVERED);
 

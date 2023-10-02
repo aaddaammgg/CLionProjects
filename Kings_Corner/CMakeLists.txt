@@ -5,7 +5,33 @@ project(${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.h StatesENUM.h GUIComponent.cpp GUIComponent.h MouseEvents.cpp MouseEvents.h Application.cpp Application.h GUIAdapter.cpp GUIAdapter.h GUI_Circle.cpp GUI_Circle.h EventHandlerCallbacks.h EventHandlerCallbacks.cpp)
+set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.h StatesENUM.h GUIComponent.cpp GUIComponent.h MouseEvents.cpp MouseEvents.h Application.cpp Application.h GUIAdapter.cpp GUIAdapter.h GUI_Circle.cpp GUI_Circle.h EventHandlerCallbacks.h EventHandlerCallbacks.cpp
+        SuitsENUM.h
+        SuitsColorENUM.h
+        SFMLCard.cpp
+        SFMLCard.h
+        SFMLCardCorner.cpp
+        SFMLCardCorner.h
+        BaseCard.cpp
+        BaseCard.h
+        BaseRank.cpp
+        BaseRank.h
+        RanksENUM.h
+        BaseSuit.cpp
+        BaseSuit.h
+        Deck.cpp
+        Deck.h
+        CardHand.cpp
+        CardHand.h
+        CardPile.cpp
+        CardPile.h
+        CompassENUM.h
+        RoundedRectangleShape.cpp
+        RoundedRectangleShape.h
+        SFMLDeck.cpp
+        SFMLDeck.h
+        SFMLCardOutline.cpp
+        SFMLCardOutline.h)
 
 if (WIN32)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")

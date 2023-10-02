@@ -6,15 +6,20 @@
 #define STATES_H
 
 #include <map>
+#include <functional>
 #include "StatesENUM.h"
 
 class States {
 private:
     std::map<StatesENUM, bool> states;
 public:
+
     bool isEnabled(StatesENUM state) const;
     void enableState(StatesENUM state);
     void disableState(StatesENUM state);
+protected:
+    std::function<void(StatesENUM)> onChangeState;
+    void setOnChangeState(std::function<void(StatesENUM)> func);
 };
 
 
