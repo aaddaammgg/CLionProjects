@@ -106,7 +106,7 @@ void Application::run() {
         currentTime = clock.getElapsedTime();
         if (currentTime.asMilliseconds() - previousTime2.asMilliseconds() >= 50) {
             fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-            fpsText.setString("FPS: " + std::to_string((int)fps) + " " + std::to_string((int)MouseEvents::selected));
+            fpsText.setString("FPS: " + std::to_string((int)fps) + " " + std::to_string((uintptr_t)MouseEvents::selected));
             previousTime2 = currentTime;
         }
         previousTime = currentTime;
