@@ -5,7 +5,8 @@
 #include "SFMLCardPile.h"
 
 SFMLCardPile::SFMLCardPile() {
-    setBounds({0, 0, 60, 95});
+    setBounds({0, 0, CARD_WIDTH, CARD_HEIGHT});
+    setOrigin({getLocalBounds().width / 2, getLocalBounds().height / 2});
     _cards[1].setPosition(0, 60);
 }
 

@@ -18,7 +18,7 @@ Deck::Deck() {
         }
     }
 
-    std::cout << "new deck" << std::endl;
+    std::cout << "new sfmlDeck" << std::endl;
 }
 
 bool Deck::empty() const {
@@ -29,7 +29,7 @@ void Deck::shuffle() {
     std::shuffle(std::begin(_deck), std::end(_deck), std::mt19937(std::random_device()()));
     _cardIndex = 0;
 
-    std::cout << "deck shuffle" << std::endl;
+    std::cout << "sfmlDeck shuffle" << std::endl;
 }
 
 BaseCard &Deck::dealCard() {

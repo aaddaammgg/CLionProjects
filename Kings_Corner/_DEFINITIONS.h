@@ -12,6 +12,9 @@
 #define WINDOW_TITLE "C++ King's Corner"
 #define WINDOW_BACKGROUND_COLOR 0x4F72EEFF // Medium Blue Color
 //////////////////////////////////////////////////////////////////
+#define CARD_WIDTH 60
+#define CARD_HEIGHT 95
+
 #define BUTTON_BACKGROUND_COLOR 0x405AB5FF // Slightly darker than WINDOW_BACKGROUND_COLOR
 #define BUTTON_TEXT_COLOR 0xFFFFFFFF // White
 #define BUTTON_TEXT_SIZE 48

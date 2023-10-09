@@ -11,7 +11,7 @@ bool EventHandlerCallbacks::_mouseButtonPressed = false;
 
 void EventHandlerCallbacks::addEventHandler(sf::RenderWindow &window, sf::Event event, GUIComponent* component) {
     auto* componentMouseEvents = (EventHandlerCallbacks*)component;
-    sf::FloatRect bounds = component->getBounds();
+    sf::FloatRect bounds = component->getLocalBounds();
 
     bool isMouseHoveringComponent = bounds.contains(getMousePos(window));
 
@@ -32,7 +32,7 @@ void EventHandlerCallbacks::addEventHandler(sf::RenderWindow &window, sf::Event 
             if (_mouseButtonPressed && componentMouseEvents->isDraggable() && focusedComponent == component) {
                 _dragging = true;
 
-                sf::Vector2f dimensions = {component->getBounds().width / 2, component->getBounds().height / 2};
+                sf::Vector2f dimensions = {component->getLocalBounds().width / 2, component->getLocalBounds().height / 2};
 
                 component->setPosition(getMousePos(window) - dimensions);
             }

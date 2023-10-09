@@ -18,6 +18,7 @@
 #include "SFMLCard.h"
 #include "SFMLDeck.h"
 #include "SFMLCardPile.h"
+#include "SFMLCompass.h"
 
 class Application {
 public:

@@ -46,32 +46,38 @@ void Application::run() {
     fpsText.setCharacterSize(18);
     fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-    Deck deck;
-
-    SFMLCardPile cp;
-
-    cp.setPosition(15, 250);
-
-    cp.addCard(&deck.dealCard());
+//    Deck deck;
+//
+//    SFMLCardPile cp;
+//
+//    cp.setPosition(15, 250);
+//
 //    cp.addCard(&deck.dealCard());
-//    cp.addCard(&deck.dealCard());
+//    cp.addCard(&sfmlDeck.dealCard());
+//    cp.addCard(&sfmlDeck.dealCard());
 
-    cp.enableState(IS_DRAGGABLE);
+//    cp.enableState(IS_DRAGGABLE);
 
-    SFMLCard card(&deck.dealCard());
-    card.enableState(IS_DRAGGABLE);
+//    SFMLCard card(&deck.dealCard());
+//    card.enableState(IS_DRAGGABLE);
+//
+//    card.setPosition(100, 100);
+//
+//    SFMLDeck sfmlDeck(&deck);
+//    sfmlDeck.setPosition(250, 250);
 
-    card.setPosition(100, 100);
+    SFMLCompass compass;
+    compass.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
-    SFMLDeck sfmlDeck(&deck);
-    sfmlDeck.setPosition(250, 250);
+    GUIAdapter::components.push_back(&compass);
 
-    GUIAdapter::components.push_back(&circle);
-    GUIAdapter::components.push_back(&circle2);
-    GUIAdapter::components.push_back(&circle3);
-    GUIAdapter::components.push_back(&card);
-    GUIAdapter::components.push_back(&sfmlDeck);
-    GUIAdapter::components.push_back(&cp);
+
+//    GUIAdapter::components.push_back(&circle);
+//    GUIAdapter::components.push_back(&circle2);
+//    GUIAdapter::components.push_back(&circle3);
+//    GUIAdapter::components.push_back(&card);
+//    GUIAdapter::components.push_back(&sfmlDeck);
+//    GUIAdapter::components.push_back(&cp);
 
     while (window.isOpen()) {
         sf::Event event{};
@@ -83,40 +89,45 @@ void Application::run() {
             MouseEvents::eventHandler(window, event);
 
 
-            if (MouseEvents::mouseButtonReleased(false) && MouseEvents::lastSelected != nullptr) {
-                auto* selected = (GUI_Circle*)MouseEvents::lastSelected;
-
-                if (selected == &circle) {
-                    BaseCard& bCard = deck.dealCard();
-                    std::cout << bCard << std::endl;
-                    card.setCard(&bCard);
-                } else if (selected == &circle2) {
-                    card.enableState(IS_HIDDEN);
-                } else if (selected == &circle3) {
-                    deck.shuffle();
-                    card.disableState(IS_HIDDEN);
-
-//                    cp.getCards().clear();
-                }
-            }
+//            if (MouseEvents::mouseButtonReleased(false) && MouseEvents::lastSelected != nullptr) {
+//                auto* selected = (GUI_Circle*)MouseEvents::lastSelected;
+//
+//                if (selected == &circle) {
+//                    BaseCard& bCard = deck.dealCard();
+//                    std::cout << bCard << std::endl;
+//                    card.setCard(&bCard);
+//                } else if (selected == &circle2) {
+//                    card.enableState(IS_HIDDEN);
+//                } else if (selected == &circle3) {
+//                    deck.shuffle();
+//                    card.disableState(IS_HIDDEN);
+//
+////                    cp.getCards().clear();
+//                }
+//            }
 
             for (auto component : GUIAdapter::components) {
                 if (component != nullptr) {
                     component->addEventHandler(window, event);
                 }
             }
+
+            compass.addEventHandler(window, event);
         }
 
-        for (auto component : GUIAdapter::components) {
-            component->update(window);
-        }
+//        for (auto component : GUIAdapter::components) {
+//            component->update(window);
+//        }
+        compass.update(window);
 
         window.clear(sf::Color(WINDOW_BACKGROUND_COLOR));
-        for (auto component : GUIAdapter::components) {
-            if (component != nullptr) {
-                window.draw(*component);
-            }
-        }
+
+        window.draw(compass);
+//        for (auto component : GUIAdapter::components) {
+//            if (component != nullptr) {
+//                window.draw(*component);
+//            }
+//        }
         window.draw(fpsText);
         window.display();
 

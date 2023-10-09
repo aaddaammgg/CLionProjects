@@ -6,6 +6,7 @@
 #define KINGS_CORNER_GUIADAPTER_H
 
 #include "GUIComponent.h"
+#include "_DEFINITIONS.h"
 //#include "MouseEvents.h"
 
 //static std::vector<GUIComponent*> components;
@@ -19,6 +20,7 @@ public:
     virtual void update(sf::RenderTarget& window) = 0;
 
     static std::vector<GUIComponent *> components;
+    static void AddComponent(GUIComponent* component);
 };
 
 

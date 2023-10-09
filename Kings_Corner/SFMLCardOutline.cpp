@@ -5,9 +5,9 @@
 #include "SFMLCardOutline.h"
 
 SFMLCardOutline::SFMLCardOutline() {
-    setBounds({0, 0, 60, 95});
+    setBounds({0, 0, CARD_WIDTH, CARD_HEIGHT});
 
-    _outlinedCard.setSize({getBounds().width, getBounds().height});
+    _outlinedCard.setSize({getLocalBounds().width, getLocalBounds().height});
 
     _outlinedCard.setFillColor(sf::Color(0,0,0,150));
     _outlinedCard.setCornersRadius(7);

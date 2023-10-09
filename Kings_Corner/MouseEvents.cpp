@@ -55,7 +55,7 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
     }
 
     currentMousePos = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
-    sf::FloatRect bounds = component->getBounds();
+    sf::FloatRect bounds = component->getGlobalBounds();
 
     bool isMouseHoveringComponent = bounds.contains(currentMousePos);
 
@@ -117,7 +117,7 @@ void MouseEvents::eventHandler(sf::RenderWindow &window, sf::Event &event, GUICo
             _dragging = true;
 
             if (component->isEnabled(IS_DRAGGABLE)) {
-                sf::Vector2f dimensions = {component->getBounds().width / 2, component->getBounds().height / 2};
+                sf::Vector2f dimensions = {component->getLocalBounds().width / 2, component->getLocalBounds().height / 2};
                 component->setPosition(currentMousePos - dimensions);
             }
         }

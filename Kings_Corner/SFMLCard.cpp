@@ -16,8 +16,9 @@ SFMLCard::SFMLCard(BaseCard *card) {
         setCard(card);
     }
 
-    setBounds({0, 0, 60, 95});
-    _background.setSize({getBounds().width, getBounds().height});
+    setBounds({0, 0, CARD_WIDTH, CARD_HEIGHT});
+    setOrigin({getLocalBounds().width / 2, getLocalBounds().height / 2});
+    _background.setSize({getLocalBounds().width, getLocalBounds().height});
     _background.setFillColor(sf::Color(200,200,200));
     _background.setCornersRadius(7);
     _background.setCornerPointCount(9);
@@ -29,8 +30,8 @@ SFMLCard::SFMLCard(BaseCard *card) {
     for (auto& back : _backOfCard) {
         back = _background;
 
-        back.setOrigin(getBounds().width / 2, getBounds().height / 2);
-        back.setPosition(getBounds().width / 2, getBounds().height / 2);
+        back.setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
+        back.setPosition(getLocalBounds().width / 2, getLocalBounds().height / 2);
         back.setFillColor(i % 2 == 0 ? sf::Color::Black : sf::Color::Red);
         back.setScale(scale, scale);
         scale /= 1.25;
@@ -38,7 +39,7 @@ SFMLCard::SFMLCard(BaseCard *card) {
     }
 
     _cornerTopLeft.setPosition({3, 3});
-    _cornerBotRight.setPosition({getBounds().width - 3, getBounds().height - 3});
+    _cornerBotRight.setPosition({getLocalBounds().width - 3, getLocalBounds().height - 3});
     _cornerBotRight.rotate(180);
 
 //    setOnChangeState([this](StatesENUM state) {
@@ -65,9 +66,9 @@ void SFMLCard::setCard(BaseCard *card) {
 void SFMLCard::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     states.transform *= getTransform();
 
-    if (getCard() == nullptr) {
-        return;
-    }
+//    if (getCard() == nullptr) {
+//        return;
+//    }
 
     window.draw(_background, states);
 

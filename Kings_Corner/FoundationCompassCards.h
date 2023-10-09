@@ -15,7 +15,8 @@
 
 class FoundationCompassCards : public GUIAdapter {
 private:
-    SFMLDeck deck;
+    Deck deck;
+    SFMLDeck sfmlDeck;
 
     std::map<CompassENUM, SFMLCardPile> piles;
 public:
@@ -23,10 +24,14 @@ public:
 
     Deck* getDeck();
     SFMLDeck* getSFMLDeck();
+    const SFMLDeck* getSFMLDeck() const;
 
     CardPile* getPile(const CompassENUM& direction);
 
     void newGame();
+
+    const SFMLCardPile& at(const CompassENUM& direction) const;
+    SFMLCardPile& operator[](CompassENUM dir);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
     virtual void addEventHandler(sf::RenderWindow& window, sf::Event event);

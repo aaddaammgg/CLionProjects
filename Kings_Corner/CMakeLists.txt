@@ -35,7 +35,9 @@ set(SOURCE_FILES main.cpp ResourceHolder.cpp ResourceHolder.h States.cpp States.
         FoundationCompassCards.cpp
         FoundationCompassCards.h
         SFMLCardPile.cpp
-        SFMLCardPile.h)
+        SFMLCardPile.h
+        SFMLCompass.cpp
+        SFMLCompass.h)
 
 if (WIN32)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")

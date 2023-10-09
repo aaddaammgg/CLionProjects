@@ -4,11 +4,12 @@
 
 #include "GUIComponent.h"
 
-sf::FloatRect GUIComponent::getBounds() {
-    _bounds.left = getPosition().x;
-    _bounds.top = getPosition().y;
+sf::FloatRect GUIComponent::getLocalBounds() const {
+    return {getPosition().x, getPosition().y, _bounds.width, _bounds.height};
+}
 
-    return _bounds;
+sf::FloatRect GUIComponent::getGlobalBounds() const {
+    return getTransform().transformRect(getLocalBounds());
 }
 
 void GUIComponent::setBounds(sf::FloatRect bounds) {

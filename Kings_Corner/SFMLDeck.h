@@ -23,6 +23,7 @@ public:
     SFMLDeck(Deck* deck);
 
     Deck* getDeck();
+    void setDeck(Deck* deck);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;
     virtual void addEventHandler(sf::RenderWindow& window, sf::Event event);
