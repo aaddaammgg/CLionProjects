@@ -11,32 +11,38 @@ SFMLCardCorner::SFMLCardCorner() : SFMLCardCorner(nullptr) {
 }
 
 SFMLCardCorner::SFMLCardCorner(BaseCard *card) {
-    if (card != nullptr) {
-        setCard(card);
-    }
+    setCard(card);
+
+    _rank.setFont(ResourceHolder::getFont("resources/fonts/cardc.ttf"));
+    _rank.setCharacterSize(28);
+    _rank.setLetterSpacing(0);
+
+    _suit.setFont(ResourceHolder::getFont("resources/fonts/cardc.ttf"));
+    _suit.setCharacterSize(28);
+    _suit.setLetterSpacing(0);
 }
 
 BaseCard *SFMLCardCorner::getCard() {
     return _card;
 }
 
+BaseCard *SFMLCardCorner::getCard() const {
+    return _card;
+}
+
 void SFMLCardCorner::setCard(BaseCard *card) {
     _card = card;
 
+    if (_card == nullptr) {
+        return;
+    }
+
     sf::Color col = ((_card->getSuit().getColor() == RED) ? sf::Color(0xa33334FF) : sf::Color::Black);
 
-    _suit.setFont(ResourceHolder::getFont("resources/fonts/cardc.ttf"));
     _suit.setString(_suits[_card->getSuit().getSuit() - 1]);
-    _suit.setCharacterSize(28);
-    _suit.setLetterSpacing(0);
     _suit.setFillColor(col);
 
-
-    _rank.setFont(ResourceHolder::getFont("resources/fonts/cardc.ttf"));
     _rank.setString(_card->getRank().toShortString());
-    _rank.setCharacterSize(28);
-    _rank.setLetterSpacing(0);
-
     _rank.setFillColor(col);
 
     sf::FloatRect rankBounds = _rank.getLocalBounds();
@@ -54,8 +60,10 @@ void SFMLCardCorner::setCard(BaseCard *card) {
 void SFMLCardCorner::draw(sf::RenderTarget &window, sf::RenderStates states) const {
     states.transform *= getTransform();
 
-    window.draw(_rank, states);
-    window.draw(_suit, states);
+    if (_card != nullptr) {
+        window.draw(_rank, states);
+        window.draw(_suit, states);
+    }
 }
 
 void SFMLCardCorner::addEventHandler(sf::RenderWindow &window, sf::Event event) {

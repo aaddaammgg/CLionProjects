@@ -22,12 +22,13 @@ private:
     static bool _mouseButtonReleased;
     static bool _mouseButtonReleasedDelay;
     static bool checkIfDragging;
+    static bool _dropped;
+    static bool _startedDragging;
 
     static bool clicked;
     static bool checkIfSelected;
     static sf::Vector2f oldMousePos;
 
-    static sf::Vector2f currentMousePos;
     static time_t _lastClickedTime;
 
     static void mouseButtonReleased();
@@ -39,12 +40,15 @@ private:
 
     static void eventHandler(sf::RenderWindow& window, sf::Event& event, GUIComponent* component);
 public:
+    static sf::Vector2f currentMousePos;
     static GUIComponent* selected;
     static GUIComponent* lastSelected;
     static GUIComponent* hovered;
+    static GUIComponent* startedDragging();
     static bool isDragging();
     static bool mouseButtonPressed();
     static bool mouseButtonReleased(bool delay);
+    static GUIComponent* dragAndDrop();
     static void eventHandler(sf::RenderWindow& window, sf::Event& event);
 };
 

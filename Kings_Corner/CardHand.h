@@ -12,15 +12,15 @@
 
 class CardHand {
 private:
-    std::vector<BaseCard> _cards;
+    std::vector<BaseCard*> _cards;
 public:
     CardHand();
 
-    void addCard(BaseCard card);
+    void addCard(BaseCard* card);
     void sort();
     void emptyCards();
 
-    std::vector<BaseCard>& getCards();
+    std::vector<BaseCard*>& getCards();
 
     friend std::ostream& operator<<(std::ostream& os, const CardHand& hand);
 };

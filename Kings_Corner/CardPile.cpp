@@ -4,15 +4,15 @@
 
 #include "CardPile.h"
 
-BaseCard &CardPile::firstCard() {
+BaseCard *CardPile::firstCard() {
     return getCards().front();
 }
 
-BaseCard &CardPile::lastCard() {
+BaseCard *CardPile::lastCard() {
     return getCards().back();
 }
 
-int CardPile::getSize() {
+int CardPile::getPileSize() {
     return (int)getCards().size();
 }
 

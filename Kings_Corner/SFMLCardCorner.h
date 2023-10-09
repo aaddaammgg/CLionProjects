@@ -21,6 +21,7 @@ public:
     SFMLCardCorner(BaseCard* card);
 
     BaseCard* getCard();
+    BaseCard* getCard() const;
     void setCard(BaseCard* card);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;

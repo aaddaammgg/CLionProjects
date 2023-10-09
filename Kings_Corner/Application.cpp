@@ -48,7 +48,15 @@ void Application::run() {
 
     Deck deck;
 
-    CardHand ch;
+    SFMLCardPile cp;
+
+    cp.setPosition(15, 250);
+
+    cp.addCard(&deck.dealCard());
+//    cp.addCard(&deck.dealCard());
+//    cp.addCard(&deck.dealCard());
+
+    cp.enableState(IS_DRAGGABLE);
 
     SFMLCard card(&deck.dealCard());
     card.enableState(IS_DRAGGABLE);
@@ -63,6 +71,7 @@ void Application::run() {
     GUIAdapter::components.push_back(&circle3);
     GUIAdapter::components.push_back(&card);
     GUIAdapter::components.push_back(&sfmlDeck);
+    GUIAdapter::components.push_back(&cp);
 
     while (window.isOpen()) {
         sf::Event event{};
@@ -86,32 +95,38 @@ void Application::run() {
                 } else if (selected == &circle3) {
                     deck.shuffle();
                     card.disableState(IS_HIDDEN);
+
+//                    cp.getCards().clear();
                 }
             }
 
-//            for (auto* component : GUIAdapter::components) {
-//                component->addEventHandler(window, event);
-//            }
+            for (auto component : GUIAdapter::components) {
+                if (component != nullptr) {
+                    component->addEventHandler(window, event);
+                }
+            }
         }
 
-        for (auto* component : GUIAdapter::components) {
+        for (auto component : GUIAdapter::components) {
             component->update(window);
         }
 
         window.clear(sf::Color(WINDOW_BACKGROUND_COLOR));
-        for (auto* component : GUIAdapter::components) {
-            window.draw(*component);
+        for (auto component : GUIAdapter::components) {
+            if (component != nullptr) {
+                window.draw(*component);
+            }
         }
         window.draw(fpsText);
         window.display();
 
-        currentTime = clock.getElapsedTime();
-        if (currentTime.asMilliseconds() - previousTime2.asMilliseconds() >= 50) {
-            fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-            fpsText.setString("FPS: " + std::to_string((int)fps) + " " + std::to_string(MouseEvents::selected != nullptr ? (uintptr_t)MouseEvents::selected : 0));
-            previousTime2 = currentTime;
-        }
-        previousTime = currentTime;
+//        currentTime = clock.getElapsedTime();
+//        if (currentTime.asMilliseconds() - previousTime2.asMilliseconds() >= 50) {
+//            fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
+//            fpsText.setString("FPS: " + std::to_string((int)fps) + " " + std::to_string(MouseEvents::selected != nullptr ? (uintptr_t)MouseEvents::selected : 0));
+//            previousTime2 = currentTime;
+//        }
+//        previousTime = currentTime;
 
     }
 }

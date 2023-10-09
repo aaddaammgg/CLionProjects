@@ -13,6 +13,7 @@
 class SFMLCard : public GUIAdapter {
 private:
     sf::RoundedRectangleShape _background;
+    sf::RoundedRectangleShape _backOfCard[9];
     SFMLCardCorner _cornerTopLeft;
     SFMLCardCorner _cornerBotRight;
 public:
@@ -20,6 +21,7 @@ public:
     SFMLCard(BaseCard* card);
 
     BaseCard* getCard();
+    BaseCard* getCard() const;
     void setCard(BaseCard* card);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;

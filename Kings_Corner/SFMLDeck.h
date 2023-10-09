@@ -5,6 +5,7 @@
 #ifndef KINGS_CORNER_SFMLDECK_H
 #define KINGS_CORNER_SFMLDECK_H
 
+#include "MouseEvents.h"
 #include "GUIAdapter.h"
 #include "Deck.h"
 #include "SFMLCard.h"
@@ -15,6 +16,7 @@ private:
     Deck* _deck;
     SFMLCard* _dealtCard = nullptr;
 
+    SFMLCard _topCard;
     SFMLCardOutline _cardOutline;
 public:
     SFMLDeck();

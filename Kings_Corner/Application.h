@@ -17,6 +17,7 @@
 #include "CardHand.h"
 #include "SFMLCard.h"
 #include "SFMLDeck.h"
+#include "SFMLCardPile.h"
 
 class Application {
 public:

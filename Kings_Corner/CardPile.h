@@ -9,10 +9,10 @@
 
 class CardPile : public CardHand {
 public:
-    BaseCard& firstCard();
-    BaseCard& lastCard();
+    BaseCard* firstCard();
+    BaseCard* lastCard();
 
-    int getSize();
+    int getPileSize();
 
     void combinePile(CardPile& pile);
 
