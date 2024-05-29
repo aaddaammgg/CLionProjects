@@ -12,8 +12,20 @@ bool States::isEnabled(StatesENUM state) const {
 
 void States::enableState(StatesENUM state) {
     states[state] = true;
+
+    if (onChangeState != nullptr) {
+        onChangeState(state);
+    }
 }
 
 void States::disableState(StatesENUM state) {
     states[state] = false;
+
+    if (onChangeState != nullptr) {
+        onChangeState(state);
+    }
+}
+
+void States::setOnChangeState(std::function<void(StatesENUM)> func) {
+    onChangeState = std::move(func);
 }

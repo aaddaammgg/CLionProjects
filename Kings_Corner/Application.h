@@ -8,10 +8,17 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
+#include "_DEFINITIONS.h"
 #include "GUIAdapter.h"
 #include "MouseEvents.h"
 
 #include "GUI_Circle.h"
+#include "Deck.h"
+#include "CardHand.h"
+#include "SFMLCard.h"
+#include "SFMLDeck.h"
+#include "SFMLCardPile.h"
+#include "SFMLCompass.h"
 
 class Application {
 public:

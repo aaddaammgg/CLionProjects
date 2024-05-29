@@ -14,7 +14,8 @@ private:
 public:
     GUIComponent() = default;
 
-    sf::FloatRect getBounds();
+    sf::FloatRect getLocalBounds() const;
+    sf::FloatRect getGlobalBounds() const;
     void setBounds(sf::FloatRect bounds);
 
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const = 0;

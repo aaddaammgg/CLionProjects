@@ -8,7 +8,8 @@ void Application::run() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    sf::RenderWindow window({500, 500, 32}, "Kings Corner", sf::Style::Close, settings);
+    sf::RenderWindow window({WINDOW_WIDTH, WINDOW_HEIGHT, 32}, WINDOW_TITLE, sf::Style::Close, settings);
+
     window.setFramerateLimit(144);
     window.setVerticalSyncEnabled(false);
 
@@ -24,12 +25,8 @@ void Application::run() {
 
     GUI_Circle circle3(sf::Color::Blue);
     circle3.enableState(IS_DRAGGABLE);
-    circle3.enableState(DISABLED);
+//    circle3.enableState(DISABLED);
     circle3.setPosition(250, 20);
-
-//    components.push_back(&circle);
-//    components.push_back(&circle2);
-//    components.push_back(&circle3);
 
     float fps;
     sf::Clock clock;
@@ -49,6 +46,38 @@ void Application::run() {
     fpsText.setCharacterSize(18);
     fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
+//    Deck deck;
+//
+//    SFMLCardPile cp;
+//
+//    cp.setPosition(15, 250);
+//
+//    cp.addCard(&deck.dealCard());
+//    cp.addCard(&sfmlDeck.dealCard());
+//    cp.addCard(&sfmlDeck.dealCard());
+
+//    cp.enableState(IS_DRAGGABLE);
+
+//    SFMLCard card(&deck.dealCard());
+//    card.enableState(IS_DRAGGABLE);
+//
+//    card.setPosition(100, 100);
+//
+//    SFMLDeck sfmlDeck(&deck);
+//    sfmlDeck.setPosition(250, 250);
+
+    SFMLCompass compass;
+    compass.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+
+    GUIAdapter::components.push_back(&compass);
+
+
+//    GUIAdapter::components.push_back(&circle);
+//    GUIAdapter::components.push_back(&circle2);
+//    GUIAdapter::components.push_back(&circle3);
+//    GUIAdapter::components.push_back(&card);
+//    GUIAdapter::components.push_back(&sfmlDeck);
+//    GUIAdapter::components.push_back(&cp);
 
     while (window.isOpen()) {
         sf::Event event{};
@@ -59,38 +88,56 @@ void Application::run() {
 
             MouseEvents::eventHandler(window, event);
 
-            if (MouseEvents::mouseButtonReleased(true)) {
-                auto* selected = (GUI_Circle*)MouseEvents::lastSelected;
 
-                if (selected == &circle) {
-                    std::cout << selected->getColor().toInteger() << std::endl;
+//            if (MouseEvents::mouseButtonReleased(false) && MouseEvents::lastSelected != nullptr) {
+//                auto* selected = (GUI_Circle*)MouseEvents::lastSelected;
+//
+//                if (selected == &circle) {
+//                    BaseCard& bCard = deck.dealCard();
+//                    std::cout << bCard << std::endl;
+//                    card.setCard(&bCard);
+//                } else if (selected == &circle2) {
+//                    card.enableState(IS_HIDDEN);
+//                } else if (selected == &circle3) {
+//                    deck.shuffle();
+//                    card.disableState(IS_HIDDEN);
+//
+////                    cp.getCards().clear();
+//                }
+//            }
+
+            for (auto component : GUIAdapter::components) {
+                if (component != nullptr) {
+                    component->addEventHandler(window, event);
                 }
             }
 
-//            for (auto* component : GUIAdapter::components) {
-//                component->addEventHandler(window, event);
+            compass.addEventHandler(window, event);
+        }
+
+//        for (auto component : GUIAdapter::components) {
+//            component->update(window);
+//        }
+        compass.update(window);
+
+        window.clear(sf::Color(WINDOW_BACKGROUND_COLOR));
+
+        window.draw(compass);
+//        for (auto component : GUIAdapter::components) {
+//            if (component != nullptr) {
+//                window.draw(*component);
 //            }
-        }
-
-        for (auto* component : GUIAdapter::components) {
-            component->update(window);
-        }
-
-        window.clear(sf::Color(sf::Color::Black));
-        for (auto* component : GUIAdapter::components) {
-            window.draw(*component);
-        }
+//        }
         window.draw(fpsText);
         window.display();
 
-        currentTime = clock.getElapsedTime();
-        if (currentTime.asMilliseconds() - previousTime2.asMilliseconds() >= 50) {
-            fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-            fpsText.setString("FPS: " + std::to_string((int)fps));
-            previousTime2 = currentTime;
-        }
-        previousTime = currentTime;
-
+//        currentTime = clock.getElapsedTime();
+//        if (currentTime.asMilliseconds() - previousTime2.asMilliseconds() >= 50) {
+//            fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
+//            fpsText.setString("FPS: " + std::to_string((int)fps) + " " + std::to_string(MouseEvents::selected != nullptr ? (uintptr_t)MouseEvents::selected : 0));
+//            previousTime2 = currentTime;
+//        }
+//        previousTime = currentTime;
 
     }
 }
