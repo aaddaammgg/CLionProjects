@@ -14,20 +14,20 @@ sf::RectangleShape** createArray(int rows, int cols) {
     return temp;
 }
 
-sf::RectangleShape newRectangleShape(float x, float y) {
+sf::RectangleShape newRectangleShape(float x, float y, sf::Color color) {
     sf::RectangleShape rectangle;
     sf::Vector2f size(5,5);
     rectangle.setSize(size);
-    rectangle.setFillColor(sf::Color::Red);
+    rectangle.setFillColor(color);
     rectangle.setPosition(15 + x, 15 + y);
 
     return rectangle;
 }
 
-void fillArray(sf::RectangleShape** arr, int row, int col) {
+void fillArray(sf::RectangleShape** arr, int row, int col, sf::Color color) {
     for (int i = 0; i < row; ++i) {
         for (int j = 0; j < col; ++j) {
-            *( *(arr + i) + j ) = newRectangleShape(20 * i, 20 * j);
+            *( *(arr + i) + j ) = newRectangleShape(20 * i, 20 * j, color);
         }
     }
 }

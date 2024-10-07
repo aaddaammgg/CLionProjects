@@ -10,14 +10,18 @@ int main() {
 
     int rows = 1, cols = 1;
     sf::RectangleShape** arr = createArray(rows, cols);
-    fillArray(arr, rows, cols);
 
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y, 32), "2D Arrays");
     window.setFramerateLimit(60);
 
+    sf::Color color = sf::Color::Red;
+    fillArray(arr, rows, cols, color);
+
     while (window.isOpen()) {
         sf::Event event{};
         while (window.pollEvent(event)) {
+
+
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
@@ -31,11 +35,14 @@ int main() {
                     rows--;
                 } else if (event.key.code == sf::Keyboard::Right) {
                     rows++;
+                } else if (event.key.code == sf::Keyboard::C) {
+                    color = {(unsigned char)(rand() % 255), (unsigned char)(rand() % 255), (unsigned char)(rand() % 255)};
                 }
             }
             arr = createArray(rows, cols);
-            fillArray(arr, rows, cols);
+            fillArray(arr, rows, cols, color);
         }
+
 
         window.clear(sf::Color::Black);
 
