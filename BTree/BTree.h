@@ -12,9 +12,10 @@ public:
     ~BTree();
 
     void insertElement(int key);
-    void remove(int key);
+    void removeElement(int key);
     BTreeNode* search(int key);
     BTreeNode* splitChild(BTreeNode* old);
+    void remove(BTreeNode* tree, int key);
     void insert(BTreeNode* tree, int key);
     void insertRepair(BTreeNode* tree);
     void insertNonFull(BTreeNode* tree, int key);

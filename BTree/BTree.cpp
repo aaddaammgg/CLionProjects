@@ -87,32 +87,39 @@ void BTree::insertNonFull(BTreeNode *tree, int key) {
     }
 }
 
-void BTree::remove(int key) {
-    if (root == nullptr) {
-        cout << "The tree is empty.\n";
+void BTree::removeElement(int key) {
+    remove(root, key);
+
+    if (root->getCount() == 0) {
+        root = root->getChild()[0];
+        delete root->getParent();
+        root->getParent() = nullptr;
+    }
+}
+
+void BTree::remove(BTreeNode* tree, int key) {
+    if (tree == nullptr) {
         return;
     }
 
-    root->remove(key);
+    int i = 0;
 
-    if (root->getCount() == 0) {
-        // If the root is empty, its first child will become the new root if it exists
-        BTreeNode* tmp = root;
-        if (root->getIsLeaf()) {
-            root = nullptr;
-        } else {
-            root = root->getChild()[0];
-        }
-        delete tmp;
+    for (; i < tree->getCount() && tree->getKey()[i] < key; i++) {
+
     }
+
+    if (i == tree->getCount()) {
+
+    }
+
 }
 
 BTreeNode* BTree::search(int key) {
     if (root == nullptr) {
         return nullptr;
-    } else {
-        return root->search(key);
     }
+
+    return root->search(key);
 }
 
 BTreeNode* BTree::splitChild(BTreeNode* tree) {

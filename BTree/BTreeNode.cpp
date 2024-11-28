@@ -10,8 +10,12 @@ BTreeNode::BTreeNode() : BTreeNode(true) {
 BTreeNode::BTreeNode(bool leaf) {
     m_isLeaf = leaf;
     m_count = 0;
-    for (int i = 0; i < MAX + 1; i++) {
-        m_child[i] = nullptr;
+    m_parent = nullptr;
+    for (auto & i : m_key) {
+        i = 0;
+    }
+    for (auto & i : m_child) {
+        i = nullptr;
     }
 }
 
