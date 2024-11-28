@@ -14,8 +14,8 @@ const int MIN = ceil(MAX / 2.0);
 
 class BTreeNode {
 private:
-    int m_key[MAX + 1];             // Array of keys
-    BTreeNode* m_child[MAX + 2]; // Array of child pointers
+    int m_key[MAX];             // Array of keys
+    BTreeNode* m_child[MAX + 1]; // Array of child pointers
     BTreeNode* m_parent;
     bool m_isLeaf;
     int m_count;                // Current number of keys

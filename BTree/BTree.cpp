@@ -2,12 +2,17 @@
 #include <iostream>
 using namespace std;
 
-BTree::BTree() {
+BTree::BTree(bool preemptiveSplit) {
+    isPreemptiveSplit = preemptiveSplit;
     root = nullptr;
 }
 
 BTree::~BTree() {
     // You can implement a destructor to clean up dynamic nodes if needed.
+}
+
+bool BTree::getIsPreemptiveSplit() {
+    return isPreemptiveSplit;
 }
 
 void BTree::insertElement(int key) {
@@ -17,7 +22,15 @@ void BTree::insertElement(int key) {
         root->getKey()[0] = key;
         root->setCount(1);
     } else {
-        insert(root, key);
+        if (getIsPreemptiveSplit()) {
+            if (root->getCount() == MAX) {
+                splitChild(root);
+            }
+
+            insertNonFull(root, key);
+        } else {
+            insert(root, key);
+        }
     }
 }
 
@@ -88,12 +101,117 @@ void BTree::insertNonFull(BTreeNode *tree, int key) {
 }
 
 void BTree::removeElement(int key) {
-    remove(root, key);
+    if (getIsPreemptiveSplit() && false) {
+        removeNotEmpty(root, key);
+    } else {
+        remove(root, key);
+    }
 
     if (root->getCount() == 0) {
         root = root->getChild()[0];
         delete root->getParent();
         root->getParent() = nullptr;
+    }
+}
+
+void BTree::removeNotEmpty(BTreeNode* tree, int key) {
+    if (tree == nullptr) {
+        return;
+    }
+
+    int i = 0;
+
+    for (; i < tree->getCount() && tree->getKey()[i] < key; i++) {
+
+    }
+
+    BTreeNode* nextNode;
+
+    if (i == tree->getCount()) {
+        if (!tree->getIsLeaf()) {
+            if (tree->getChild()[tree->getCount()]->getCount() == MIN) {
+
+                if (tree->getChild()[tree->getCount() - 1]->getCount() > MIN) {
+                    nextNode = borrowFromLeft(tree->getChild()[tree->getCount()], tree->getCount());
+                    removeNotEmpty(nextNode, key);
+                } else {
+                    nextNode = merge(tree->getChild()[tree->getCount() - 1]);
+                    removeNotEmpty(nextNode, key);
+                }
+            } else {
+                removeNotEmpty(tree->getChild()[tree->getCount()], key);
+            }
+        }
+    } else if (tree->getKey()[i] > key) {
+        if (!tree->getIsLeaf()) {
+            if (tree->getChild()[i]->getCount() > MIN) {
+                removeNotEmpty(tree->getChild()[i], key);
+            } else {
+                if (tree->getChild()[i + 1]->getCount() > MIN) {
+                    nextNode = borrowFromRight(tree->getChild()[i], i);
+                    removeNotEmpty(nextNode, key);
+                } else {
+                    nextNode = merge(tree->getChild()[i]);
+                    removeNotEmpty(nextNode, key);
+                }
+            }
+        }
+    } else {
+        if (tree->getIsLeaf()) {
+            for (int j = i; j < tree->getCount() - 1; j++) {
+                tree->getKey()[j] = tree->getKey()[j + 1];
+            }
+
+            tree->getCount()--;
+        } else {
+            BTreeNode* maxNode = tree->getChild()[i];
+
+            if (tree->getChild()[i]->getCount() == MIN) {
+                if (tree->getChild()[i + 1]->getCount() == MIN) {
+                    nextNode = merge(tree->getChild()[i]);
+                    removeNotEmpty(nextNode, key);
+
+                    return;
+                } else {
+                    BTreeNode* minNode = tree->getChild()[i + 1];
+
+                    while (!minNode->getIsLeaf()) {
+                        if (minNode->getChild()[0]->getCount() == MIN) {
+                            if (minNode->getChild()[1]->getCount() == MIN) {
+                                minNode = merge(minNode->getChild()[0]);
+                            } else {
+                                minNode = borrowFromRight(minNode->getChild()[0], 0);
+                            }
+                        } else {
+                            minNode = minNode->getChild()[0];
+                        }
+                    }
+
+                    tree->getKey()[i] = minNode->getKey()[0];
+
+                    for (i = 1; i < minNode->getCount(); i++) {
+                        minNode->getKey()[i - 1] = minNode->getKey()[i];
+                    }
+
+                    minNode->getCount()--;
+                }
+            } else {
+                while (!maxNode->getIsLeaf()) {
+                    if (maxNode->getChild()[maxNode->getCount()]->getCount() == MIN) {
+                        if (maxNode->getChild()[maxNode->getCount() - 1]->getCount() > MIN) {
+                            maxNode = borrowFromLeft(maxNode->getChild()[maxNode->getCount()], maxNode->getCount());
+                        } else {
+                            maxNode = merge(maxNode->getChild()[maxNode->getCount() - 1]);
+                        }
+                    } else {
+                        maxNode = maxNode->getChild()[maxNode->getCount()];
+                    }
+                }
+
+                tree->getKey()[i] = maxNode->getKey()[maxNode->getCount() - 1];
+                maxNode->getCount()--;
+            }
+        }
     }
 }
 
@@ -175,7 +293,7 @@ void BTree::removeRepair(BTreeNode* tree) {
     }
 }
 
-void BTree::borrowFromLeft(BTreeNode* tree, int parentIndex) {
+BTreeNode* BTree::borrowFromLeft(BTreeNode* tree, int parentIndex) {
     BTreeNode* parentNode = tree->getParent();
     tree->getCount()++;
 
@@ -200,9 +318,11 @@ void BTree::borrowFromLeft(BTreeNode* tree, int parentIndex) {
     tree->getKey()[0] = parentNode->getKey()[parentIndex - 1];
     parentNode->getKey()[parentIndex - 1] = leftSiblingNode->getKey()[leftSiblingNode->getCount() - 1];
     leftSiblingNode->getCount()--;
+
+    return tree;
 }
 
-void BTree::borrowFromRight(BTreeNode* tree, int parentIndex) {
+BTreeNode* BTree::borrowFromRight(BTreeNode* tree, int parentIndex) {
     BTreeNode* parentNode = tree->getParent();
     tree->getCount()++;
 
@@ -225,6 +345,8 @@ void BTree::borrowFromRight(BTreeNode* tree, int parentIndex) {
     }
 
     rightSiblingNode->getCount()--;
+
+    return tree;
 }
 
 BTreeNode* BTree::merge(BTreeNode* tree) {

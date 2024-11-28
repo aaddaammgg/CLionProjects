@@ -6,19 +6,23 @@
 class BTree {
 private:
     BTreeNode* root;
+    bool isPreemptiveSplit;
 
 public:
-    BTree();
+    BTree(bool preemptiveSplit = true);
     ~BTree();
+
+    bool getIsPreemptiveSplit();
 
     void insertElement(int key);
     void removeElement(int key);
     BTreeNode* search(int key);
     BTreeNode* splitChild(BTreeNode* old);
+    void removeNotEmpty(BTreeNode* tree, int key);
     void remove(BTreeNode* tree, int key);
     void removeRepair(BTreeNode* tree);
-    void borrowFromLeft(BTreeNode* tree, int parentIndex);
-    void borrowFromRight(BTreeNode* tree, int parentIndex);
+    BTreeNode* borrowFromLeft(BTreeNode* tree, int parentIndex);
+    BTreeNode* borrowFromRight(BTreeNode* tree, int parentIndex);
     BTreeNode* merge(BTreeNode* tree);
     void insert(BTreeNode* tree, int key);
     void insertRepair(BTreeNode* tree);
