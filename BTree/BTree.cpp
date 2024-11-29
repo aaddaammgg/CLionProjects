@@ -8,7 +8,20 @@ BTree::BTree(bool preemptiveSplit) {
 }
 
 BTree::~BTree() {
-    // You can implement a destructor to clean up dynamic nodes if needed.
+    deleteSubtree(root);
+}
+
+void BTree::deleteSubtree(BTreeNode* tree) {
+    if (tree == nullptr) return;
+
+    if (!tree->getIsLeaf()) {
+        int numChildren = tree->getCount() + 1;
+        for (int i = 0; i < numChildren; i++) {
+            deleteSubtree(tree->getChild()[i]);
+        }
+    }
+
+    delete tree;
 }
 
 bool BTree::getIsPreemptiveSplit() {
@@ -101,7 +114,7 @@ void BTree::insertNonFull(BTreeNode *tree, int key) {
 }
 
 void BTree::removeElement(int key) {
-    if (getIsPreemptiveSplit() && false) {
+    if (getIsPreemptiveSplit() && (MAX + 1) % 2 == 0) {
         removeNotEmpty(root, key);
     } else {
         remove(root, key);

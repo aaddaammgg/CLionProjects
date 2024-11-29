@@ -12,6 +12,8 @@ public:
     BTree(bool preemptiveSplit = true);
     ~BTree();
 
+    void deleteSubtree(BTreeNode* tree);
+
     bool getIsPreemptiveSplit();
 
     void insertElement(int key);
