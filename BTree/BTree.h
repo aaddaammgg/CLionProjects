@@ -17,18 +17,21 @@ public:
     bool getIsPreemptiveSplit();
 
     void insertElement(int key);
+    void insert(BTreeNode* tree, int key);
+    void insertNonFull(BTreeNode* tree, int key);
+    void insertRepair(BTreeNode* tree);
+
     void removeElement(int key);
-    BTreeNode* search(int key);
-    BTreeNode* splitChild(BTreeNode* old);
-    void removeNotEmpty(BTreeNode* tree, int key);
     void remove(BTreeNode* tree, int key);
+    void removeNotEmpty(BTreeNode* tree, int key);
     void removeRepair(BTreeNode* tree);
+
+    BTreeNode* search(int key);
+    BTreeNode* splitChild(BTreeNode* tree);
+    BTreeNode* merge(BTreeNode* tree);
     BTreeNode* borrowFromLeft(BTreeNode* tree, int parentIndex);
     BTreeNode* borrowFromRight(BTreeNode* tree, int parentIndex);
-    BTreeNode* merge(BTreeNode* tree);
-    void insert(BTreeNode* tree, int key);
-    void insertRepair(BTreeNode* tree);
-    void insertNonFull(BTreeNode* tree, int key);
+
     void print();
 
 };

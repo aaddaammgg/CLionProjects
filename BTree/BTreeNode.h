@@ -23,28 +23,12 @@ private:
 public:
     BTreeNode();
     BTreeNode(bool leaf);
-    ~BTreeNode();
 
     int* getKey();
     BTreeNode** getChild();
-    bool& getIsLeaf();
     BTreeNode*& getParent();
+    bool& getIsLeaf();
     int& getCount();
-
-    void setCount(int count);
-
-    void splitChild(int index, BTreeNode* old);
-    void insertNonFull(int key);
-
-    void remove(int k);
-    void removeFromLeaf(int idx);
-    void removeFromNonLeaf(int idx);
-    int getPredecessor(int idx);
-    int getSuccessor(int idx);
-    void fill(int idx);
-    void borrowFromPrev(int idx);
-    void borrowFromNext(int idx);
-    void merge(int idx);
 
     BTreeNode* search(int key);
     void print();
