@@ -3,4 +3,4 @@ project(CS066_Project_0)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(CS066_Project_0 main.cpp)
+add_executable(CS066_Project_0 rubric.cpp)
