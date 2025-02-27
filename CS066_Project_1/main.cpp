@@ -1,7 +1,7 @@
 /*
  * Adam Gonzalez
  * Project 1 - Simulating Gates
- * Program works
+ * Program works and extra credit
  */
 
 #include <iostream>
@@ -9,21 +9,27 @@
 
 const int MAX = 8;
 
+void output(char arr[], int size);
 void add(const char memory[MAX], const char accum[MAX], char result[MAX + 1]);
-void complement(char result[], const int size);
+void complement(char result[], int size);
+
+void output(char arr[], const int size) {
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i];
+    }
+
+    std::cout << std::endl;
+}
 
 void add(const char memory[MAX], const char accum[MAX], char result[MAX + 1]) {
     char carry = 'D';
 
     for (int i = MAX - 1; i >= 0; i--) {
-        if (accum[i] == 'L' && memory[i] == 'L') {
+        if (accum[i] == memory[i]) {
             result[i + 1] = carry;
-            carry = 'L';
-        } else if (accum[i] != memory[i]) {
-            result[i + 1] = carry == 'D' ? 'L' : 'D';
+            carry = accum[i];
         } else {
-            result[i + 1] = carry;
-            carry = 'D';
+            result[i + 1] = carry == 'D' ? 'L' : 'D';
         }
     }
 
@@ -71,11 +77,9 @@ int main() {
 
     add(memory, accum, result);
 
-    for (int i = 0; i < MAX + 1; i++) {
-        std::cout << result[i];
-    }
+    output(result, MAX + 1);
 
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl;
 
     // EXTRA CREDIT:
 
@@ -92,9 +96,7 @@ int main() {
 
     add(memory, accum, result);
 
-    for (int i = 0; i < MAX + 1; i++) {
-        std::cout << result[i];
-    }
+    output(result, MAX + 1);
 
     return 0;
 }
