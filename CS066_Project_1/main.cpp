@@ -7,6 +7,35 @@
 #include <iostream>
 #include <fstream>
 
+const int MAX = 8;
+
+void add(const char memory[MAX], const char accum[MAX], char result[MAX + 1]);
+void complement(char result[], const int size);
+
+void add(const char memory[MAX], const char accum[MAX], char result[MAX + 1]) {
+    char carry = 'D';
+
+    for (int i = MAX - 1; i >= 0; i--) {
+        if (accum[i] == 'L' && memory[i] == 'L') {
+            result[i + 1] = carry;
+            carry = 'L';
+        } else if (accum[i] != memory[i]) {
+            result[i + 1] = carry == 'D' ? 'L' : 'D';
+        } else {
+            result[i + 1] = carry;
+            carry = 'D';
+        }
+    }
+
+    result[0] = carry;
+}
+
+void complement(char result[], const int size) {
+    for (int i = 0; i < size; i++) {
+        result[i] = result[i] == 'D' ? 'L' : 'D';
+    }
+}
+
 int main() {
     std::cout << "Adam Gonzalez (10275803)" << std::endl << std::endl;
 
@@ -16,8 +45,6 @@ int main() {
         std::cout << "Error opening file" << std::endl;
         return 1;
     }
-
-    const int MAX = 8;
 
     char accum[MAX];
     char memory[MAX];
@@ -40,26 +67,30 @@ int main() {
 
     file.close();
 
-    char carry = 'D';
     char result[MAX + 1];
 
-    for (int i = MAX - 1; i >= 0; i--) {
-        if (accum[i] == 'L' && memory[i] == 'L') {
-            result[i + 1] = carry;
-            carry = 'L';
-        } else if (accum[i] != memory[i]) {
-            if (carry == 'D') {
-                result[i + 1] = 'L';
-            } else {
-                result[i + 1] = 'D';
-            }
-        } else {
-            result[i + 1] = carry;
-            carry = 'D';
-        }
+    add(memory, accum, result);
+
+    for (int i = 0; i < MAX + 1; i++) {
+        std::cout << result[i];
     }
 
-    result[0] = carry;
+    std::cout << std::endl << std::endl;
+
+    // EXTRA CREDIT:
+
+    char increment[MAX] = {'D','D','D','D','D','D','D','L'};
+
+    complement(accum, MAX);
+
+    add(increment, accum, result);
+
+    // Discard first bit in result
+    for (int i = 0; i < MAX; i++) {
+        accum[i] = result[i + 1];
+    }
+
+    add(memory, accum, result);
 
     for (int i = 0; i < MAX + 1; i++) {
         std::cout << result[i];
