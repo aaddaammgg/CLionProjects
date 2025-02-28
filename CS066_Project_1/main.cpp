@@ -9,11 +9,11 @@
 
 const int MAX = 8;
 
-void output(char arr[], int size);
+void output(const char arr[], int size);
 void add(const char memory[MAX], const char accum[MAX], char result[MAX + 1]);
 void complement(char result[], int size);
 
-void output(char arr[], const int size) {
+void output(const char arr[], const int size) {
     for (int i = 0; i < size; i++) {
         std::cout << arr[i];
     }
