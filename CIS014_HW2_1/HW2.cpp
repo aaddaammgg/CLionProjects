@@ -6,10 +6,11 @@
  * RETURN VALUE: true if the first player can force a win, false otherwise
  */
 bool canAlwaysWin(int n) {
-    return n % 8 != 0;
+    return n % (7 + 1) != 0;
 }
 int main() {
     //Your target function will be tested as such, with a random integer argument:
-    std::cout << canAlwaysWin(9);
+    std::cout << canAlwaysWin(23034);
+
     return 0;
 }
