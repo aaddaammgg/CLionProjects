@@ -7,12 +7,21 @@ struct variable {
     int value;
 };
 
+struct instruction {
+    char command;
+    int address; // IF COMMAND IS JUMP THEN ADDRESS IS INSTRUCTION LOCATION, OTHERWISE IT IS DATA LOCATION
+};
+
 int main() {
     std::cout << "Adam Gonzalez (10275803)" << std::endl << std::endl;
 
-    std::ifstream file("mysource.txt");
-    std::ofstream dataFile("data.txt");
-    std::ofstream codeFile("code.txt");
+    std::string sourceFileName = "mysource.txt";
+    std::string dataFileName = "data.txt";
+    std::string codeFileName = "code.txt";
+
+    std::ifstream file(sourceFileName);
+    std::ofstream dataFile(dataFileName);
+    std::ofstream codeFile(codeFileName);
 
     if (file.fail()) {
         std::cout << "Error opening file" << std::endl;
@@ -32,8 +41,33 @@ int main() {
     bool running = true;
     char command, var;
 
+    std::map <char, int> labelLocation;
     std::map <char, variable> memory;
     int accum, memorySize = 0;
+
+    std::string line;
+    int codeCount = 0;
+
+    while (getline(file, line)) {
+        if (line[0] == 'd' || line.empty()) {
+            continue;
+        }
+
+        codeCount++;
+    }
+
+    instruction* inst = new instruction[codeCount];
+
+    file.close();
+
+    file.open(sourceFileName);
+
+    if (file.fail()) {
+        std::cout << "Error opening file" << std::endl;
+        return 1;
+    }
+
+    int actualCodeCount = 0;
 
     while (!file.eof() && running) {
         file >> command;
@@ -42,65 +76,105 @@ int main() {
             break;
         }
 
-        file >> var;
+        if (command == ':') {
+            char label;
+            file >> label;
+
+            labelLocation[label] = actualCodeCount;
+            continue;
+        }
 
         switch (command) {
             case 'd': {
+                file >> var;
+
                 int data;
                 file >> data;
 
                 dataFile << data << std::endl;
                 memory[var] = {memorySize++, data};
 
-                break;
-            }
-            case 'G': {
-                codeFile << ASMA.at(command) << ' ';
-
-                if (!memory.contains(var)) {
-                    break;
-                }
-
-                accum = memory[var].value;
-                codeFile << memory[var].address << std::endl;
+                actualCodeCount--;
 
                 break;
             }
-            case 'P': {
-                codeFile << ASMA.at(command) << ' ' << memory[var].address << std::endl;
-                memory[var].value = accum;
+            case 'G':
+            case 'P':
+            case 'A':
+            case 'C':
+            case 'J': {
+                file >> var;
 
-                break;
-            }
-            case 'A': {
-                codeFile << ASMA.at(command) << ' ' << memory[var].address << std::endl;
-                accum += memory[var].value;
-
+                inst[actualCodeCount] = {command, var};
                 break;
             }
             case 'N': {
-                // TODO
-                break;
-            }
-            case 'C': {
-                // TODO
-                break;
-            }
-            case 'J': {
-                // TODO
+                inst[actualCodeCount] = {command, 0};
                 break;
             }
             default: {
                 running = false;
+                inst[actualCodeCount] = {'S', 0};
+            }
+        }
+
+        actualCodeCount++;
+    }
+
+    file.close();
+
+    bool compare;
+
+    for (int i = 0; i < codeCount - 1; i++) {
+        codeFile << ASMA.at(inst[i].command) << ' ';
+
+        if (inst[i].command == 'N') {
+            codeFile << 0;
+        } else {
+            codeFile << memory[inst[i].address].address;
+        }
+
+        codeFile << std::endl;
+
+        switch (inst[i].command) {
+            case 'G': {
+                accum = memory[(char)inst[i].address].value;
+                break;
+            }
+            case 'P': {
+                memory[(char)inst[i].address].value = accum;
+                break;
+            }
+            case 'A': {
+                accum += memory[(char)inst[i].address].value;
+                break;
+            }
+            case 'N': {
+                accum = ~accum;
+                break;
+            }
+            case 'C': {
+                compare = accum <= memory[(char)inst[i].address].value;
+                break;
+            }
+            case 'J': {
+                if (compare) {
+                    i = labelLocation[(char)inst[i].address] - 1;
+                }
+                break;
+            }
+            default: {
+                i = codeCount;
             }
         }
     }
 
     codeFile << "0 0" << std::endl;
 
-    file.close();
     dataFile.close();
     codeFile.close();
+
+    delete[] inst;
 
     return 0;
 }
