@@ -5,3 +5,4 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/assem66" "${PROJECT_SOURCE_DIR}/assem66/cmake-build-debug")
 add_subdirectory("${PROJECT_SOURCE_DIR}/sim66" "${PROJECT_SOURCE_DIR}/sim66/cmake-build-debug")
+add_subdirectory("${PROJECT_SOURCE_DIR}/IDE66" "${PROJECT_SOURCE_DIR}/IDE66/cmake-build-debug")
