@@ -41,15 +41,7 @@ int main() {
     while (!codeFile.eof()) {
         codeFile >> command;
 
-        std::cout << "Register: ";
-
-        if (isFirstTime) {
-            std::cout << '?';
-        } else {
-            std::cout << accum;
-        }
-
-        std::cout << " Memory: ";
+        std::cout << "Register " << (isFirstTime ? "?" : std::to_string(accum)) << " Memory ";
 
         for (int i = 0; i < dataSize; i++) {
             std::cout << memory[i] << ' ';
