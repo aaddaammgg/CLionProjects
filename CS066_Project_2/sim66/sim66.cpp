@@ -36,10 +36,16 @@ int main() {
     dataFile.close();
 
     int command, address, accum;
-    bool isFirstTime = true;
+    bool isFirstTime = true, running = true;
 
-    while (!codeFile.eof()) {
+    while (!codeFile.eof() && running) {
         codeFile >> command;
+
+        if (codeFile.peek() == '\n') {
+            break;
+        }
+
+        codeFile >> address;
 
         std::cout << "Register " << (isFirstTime ? "?" : std::to_string(accum)) << " Memory ";
 
@@ -55,20 +61,17 @@ int main() {
 
         switch (command) {
             case 1: { // GET
-                codeFile >> address;
                 accum = memory[address];
                 isFirstTime = false;
 
                 break;
             }
             case 2: { // PUT
-                codeFile >> address;
                 memory[address] = accum;
 
                 break;
             }
             case 3: { // ADD
-                codeFile >> address;
                 accum += memory[address];
                 isFirstTime = false;
 
@@ -87,15 +90,12 @@ int main() {
                 break;
             }
             default: { // STOP
-                dataFile.close();
-                codeFile.close();
-
-                delete memory;
-
-                return 0;
+                running = false;
             }
         }
     }
+
+    codeFile.close();
 
     delete memory;
 

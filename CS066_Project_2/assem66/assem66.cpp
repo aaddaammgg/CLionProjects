@@ -29,31 +29,32 @@ int main() {
         {'S', 0}, // STOP PROGRAM
     };
 
+    bool running = true;
     char command, var;
-    int accum;
 
     std::map <char, variable> memory;
-    int memorySize = 0;
+    int accum, memorySize = 0;
 
-    while (!file.eof()) {
+    while (!file.eof() && running) {
         file >> command;
+
+        if (file.peek() == '\n') {
+            break;
+        }
+
+        file >> var;
 
         switch (command) {
             case 'd': {
-                file >> var;
-
                 int data;
                 file >> data;
 
                 dataFile << data << std::endl;
-
                 memory[var] = {memorySize++, data};
 
                 break;
             }
             case 'G': {
-                file >> var;
-
                 codeFile << ASMA.at(command) << ' ';
 
                 if (!memory.contains(var)) {
@@ -66,19 +67,13 @@ int main() {
                 break;
             }
             case 'P': {
-                file >> var;
-
                 codeFile << ASMA.at(command) << ' ' << memory[var].address << std::endl;
-
                 memory[var].value = accum;
 
                 break;
             }
             case 'A': {
-                file >> var;
-
                 codeFile << ASMA.at(command) << ' ' << memory[var].address << std::endl;
-
                 accum += memory[var].value;
 
                 break;
@@ -96,17 +91,16 @@ int main() {
                 break;
             }
             default: {
-                codeFile << "0 0" << std::endl;
-
-                file.close();
-                dataFile.close();
-                codeFile.close();
-
-                return 0;
+                running = false;
             }
         }
     }
 
+    codeFile << "0 0" << std::endl;
+
+    file.close();
+    dataFile.close();
+    codeFile.close();
 
     return 0;
 }
