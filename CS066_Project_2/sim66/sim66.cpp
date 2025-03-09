@@ -56,22 +56,21 @@ int main() {
 
         std::cout << std::endl;
 
+        codeReadFile >> address;
+
         switch (command) {
             case 1: { // GET
-                codeReadFile >> address;
                 accum = memory[address];
                 isFirstTime = false;
 
                 break;
             }
             case 2: { // PUT
-                codeReadFile >> address;
                 memory[address] = accum;
 
                 break;
             }
             case 3: { // ADD
-                codeReadFile >> address;
                 accum += memory[address];
                 isFirstTime = false;
 

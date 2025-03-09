@@ -72,7 +72,7 @@ int main() {
     while (!file.eof() && running) {
         file >> command;
 
-        if (file.peek() == '\n') {
+        if (command != 'N' && file.peek() == '\n') {
             break;
         }
 
@@ -230,22 +230,21 @@ int main() {
 
         std::cout << std::endl;
 
+        codeReadFile >> address;
+
         switch (rawCommand) {
             case 1: { // GET
-                codeReadFile >> address;
                 accum = memory[address];
                 isFirstTime = false;
 
                 break;
             }
             case 2: { // PUT
-                codeReadFile >> address;
                 memory[address] = accum;
 
                 break;
             }
             case 3: { // ADD
-                codeReadFile >> address;
                 accum += memory[address];
                 isFirstTime = false;
 

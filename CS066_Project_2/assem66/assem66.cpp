@@ -72,7 +72,7 @@ int main() {
     while (!file.eof() && running) {
         file >> command;
 
-        if (file.peek() == '\n') {
+        if (command != 'N' && file.peek() == '\n') {
             break;
         }
 
