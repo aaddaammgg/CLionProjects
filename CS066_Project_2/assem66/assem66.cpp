@@ -126,15 +126,18 @@ int main() {
     bool compare;
 
     for (int i = 0; i < codeCount - 1; i++) {
-        codeFile << ASMA.at(inst[i].command) << ' ';
 
-        if (inst[i].command == 'N') {
-            codeFile << 0;
-        } else {
-            codeFile << memory[inst[i].address].address;
+        if (inst[i].command != 'C' && inst[i].command != 'J') {
+            codeFile << ASMA.at(inst[i].command) << ' ';
+
+            if (inst[i].command == 'N') {
+                codeFile << 0;
+            } else {
+                codeFile << memory[inst[i].address].address;
+            }
+
+            codeFile << std::endl;
         }
-
-        codeFile << std::endl;
 
         switch (inst[i].command) {
             case 'G': {

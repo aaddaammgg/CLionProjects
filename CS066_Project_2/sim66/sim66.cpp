@@ -28,14 +28,13 @@ int main() {
 
     dataFile.open(dataFileName);
 
-    int i = 0;
-    while (dataFile >> num) {
-        memory[i++] = num;
+    for (int i = 0; i < dataSize; i++) {
+        dataFile >> memory[i];
     }
 
     dataFile.close();
 
-    int command, address, accum;
+    int command = 0, address = 0, accum = 0;
     bool isFirstTime = true, running = true;
 
     while (!codeFile.eof() && running) {
@@ -44,8 +43,6 @@ int main() {
         if (codeFile.peek() == '\n') {
             break;
         }
-
-        codeFile >> address;
 
         std::cout << "Register " << (isFirstTime ? "?" : std::to_string(accum)) << " Memory ";
 
@@ -61,32 +58,28 @@ int main() {
 
         switch (command) {
             case 1: { // GET
+                codeFile >> address;
                 accum = memory[address];
                 isFirstTime = false;
 
                 break;
             }
             case 2: { // PUT
+                codeFile >> address;
                 memory[address] = accum;
 
                 break;
             }
             case 3: { // ADD
+                codeFile >> address;
                 accum += memory[address];
                 isFirstTime = false;
 
                 break;
             }
             case 4: { // COMPLIMENT
-                // TODO
-                break;
-            }
-            case 5: { // COMPARE
-                // TODO
-                break;
-            }
-            case 6: { // JUMP
-                // TODO
+                accum = ~accum;
+
                 break;
             }
             default: { // STOP
@@ -97,7 +90,7 @@ int main() {
 
     codeFile.close();
 
-    delete memory;
+    delete[] memory;
 
     return 0;
 }
