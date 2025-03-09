@@ -7,10 +7,10 @@ int main() {
     std::string dataFileName = "data.txt";
     std::string codeFileName = "code.txt";
 
-    std::ifstream dataFile(dataFileName);
-    std::ifstream codeFile(codeFileName);
+    std::ifstream dataReadFile(dataFileName);
+    std::ifstream codeReadFile(codeFileName);
 
-    if (dataFile.fail() || codeFile.fail()) {
+    if (dataReadFile.fail() || codeReadFile.fail()) {
         std::cout << "Error opening file" << std::endl;
         return 1;
     }
@@ -18,29 +18,29 @@ int main() {
     int num;
     int dataSize = 0;
 
-    while (dataFile >> num) {
+    while (dataReadFile >> num) {
         dataSize++;
     }
 
-    dataFile.close();
+    dataReadFile.close();
 
     int* memory = new int[dataSize];
 
-    dataFile.open(dataFileName);
+    dataReadFile.open(dataFileName);
 
     for (int i = 0; i < dataSize; i++) {
-        dataFile >> memory[i];
+        dataReadFile >> memory[i];
     }
 
-    dataFile.close();
+    dataReadFile.close();
 
     int command = 0, address = 0, accum = 0;
     bool isFirstTime = true, running = true;
 
-    while (!codeFile.eof() && running) {
-        codeFile >> command;
+    while (!codeReadFile.eof() && running) {
+        codeReadFile >> command;
 
-        if (codeFile.peek() == '\n') {
+        if (codeReadFile.peek() == '\n') {
             break;
         }
 
@@ -58,20 +58,20 @@ int main() {
 
         switch (command) {
             case 1: { // GET
-                codeFile >> address;
+                codeReadFile >> address;
                 accum = memory[address];
                 isFirstTime = false;
 
                 break;
             }
             case 2: { // PUT
-                codeFile >> address;
+                codeReadFile >> address;
                 memory[address] = accum;
 
                 break;
             }
             case 3: { // ADD
-                codeFile >> address;
+                codeReadFile >> address;
                 accum += memory[address];
                 isFirstTime = false;
 
@@ -88,7 +88,7 @@ int main() {
         }
     }
 
-    codeFile.close();
+    codeReadFile.close();
 
     delete[] memory;
 

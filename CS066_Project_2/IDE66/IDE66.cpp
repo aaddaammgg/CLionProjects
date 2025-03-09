@@ -7,6 +7,11 @@ struct variable {
     int value;
 };
 
+struct instruction {
+    char command;
+    int address; // IF COMMAND IS JUMP THEN ADDRESS IS INSTRUCTION LOCATION, OTHERWISE IT IS DATA LOCATION
+};
+
 int main() {
     std::cout << "Adam Gonzalez (10275803)" << std::endl << std::endl;
 
@@ -33,14 +38,51 @@ int main() {
         {'S', 0}, // STOP PROGRAM
     };
 
+    bool running = true;
     char command, var;
-    int accum;
 
+    std::map <char, int> labelLocation;
     std::map <char, variable> symbolTable;
-    int symbolSize = 0;
+    int accum, symbolSize = 0;
 
-    while (!file.eof()) {
+    std::string line;
+    int codeCount = 0;
+
+    while (getline(file, line)) {
+        if (line[0] == 'd' || line.empty()) {
+            continue;
+        }
+
+        codeCount++;
+    }
+
+    instruction* inst = new instruction[codeCount];
+
+    file.close();
+
+    file.open(sourceFileName);
+
+    if (file.fail()) {
+        std::cout << "Error opening file" << std::endl;
+        return 1;
+    }
+
+    int actualCodeCount = 0;
+
+    while (!file.eof() && running) {
         file >> command;
+
+        if (file.peek() == '\n') {
+            break;
+        }
+
+        if (command == ':') {
+            char label;
+            file >> label;
+
+            labelLocation[label] = actualCodeCount;
+            continue;
+        }
 
         switch (command) {
             case 'd': {
@@ -50,64 +92,92 @@ int main() {
                 file >> data;
 
                 dataWriteFile << data << std::endl;
-
                 symbolTable[var] = {symbolSize++, data};
 
-                break;
-            }
-            case 'G': {
-                file >> var;
-
-                codeWriteFile << ASMA.at(command) << ' ';
-
-                if (!symbolTable.contains(var)) {
-                    break;
-                }
-
-                accum = symbolTable[var].value;
-                codeWriteFile << symbolTable[var].address << std::endl;
+                actualCodeCount--;
 
                 break;
             }
-            case 'P': {
+            case 'G':
+            case 'P':
+            case 'A':
+            case 'C':
+            case 'J': {
                 file >> var;
 
-                codeWriteFile << ASMA.at(command) << ' ' << symbolTable[var].address << std::endl;
-
-                symbolTable[var].value = accum;
-
-                break;
-            }
-            case 'A': {
-                file >> var;
-
-                codeWriteFile << ASMA.at(command) << ' ' << symbolTable[var].address << std::endl;
-
-                accum += symbolTable[var].value;
-
+                inst[actualCodeCount] = {command, var};
                 break;
             }
             case 'N': {
-                // TODO
-                break;
-            }
-            case 'C': {
-                // TODO
-                break;
-            }
-            case 'J': {
-                // TODO
+                inst[actualCodeCount] = {command, 0};
                 break;
             }
             default: {
-                codeWriteFile << "0 0" << std::endl;
+                running = false;
+                inst[actualCodeCount] = {'S', 0};
+            }
+        }
 
-                file.close();
-                dataWriteFile.close();
-                codeWriteFile.close();
+        actualCodeCount++;
+    }
+
+    file.close();
+
+    bool compare;
+
+    for (int i = 0; i < codeCount - 1; i++) {
+
+        if (inst[i].command != 'C' && inst[i].command != 'J') {
+            codeWriteFile << ASMA.at(inst[i].command) << ' ';
+
+            if (inst[i].command == 'N') {
+                codeWriteFile << 0;
+            } else {
+                codeWriteFile << symbolTable[inst[i].address].address;
+            }
+
+            codeWriteFile << std::endl;
+        }
+
+        switch (inst[i].command) {
+            case 'G': {
+                accum = symbolTable[(char)inst[i].address].value;
+                break;
+            }
+            case 'P': {
+                symbolTable[(char)inst[i].address].value = accum;
+                break;
+            }
+            case 'A': {
+                accum += symbolTable[(char)inst[i].address].value;
+                break;
+            }
+            case 'N': {
+                accum = ~accum;
+                break;
+            }
+            case 'C': {
+                compare = accum <= symbolTable[(char)inst[i].address].value;
+                break;
+            }
+            case 'J': {
+                if (compare) {
+                    i = labelLocation[(char)inst[i].address] - 1;
+                }
+                break;
+            }
+            default: {
+                i = codeCount;
             }
         }
     }
+
+    codeWriteFile << "0 0" << std::endl;
+
+    dataWriteFile.close();
+    codeWriteFile.close();
+
+    delete[] inst;
 
     std::ifstream dataReadFile(dataFileName);
     std::ifstream codeReadFile(codeFileName);
@@ -130,20 +200,23 @@ int main() {
 
     dataReadFile.open(dataFileName);
 
-    int i = 0;
-    while (dataReadFile >> num) {
-        memory[i++] = num;
+    for (int i = 0; i < dataSize; i++) {
+        dataReadFile >> memory[i];
     }
 
     dataReadFile.close();
 
-    int instruction, address;
+    int rawCommand = 0, address = 0;
     accum = 0;
-
     bool isFirstTime = true;
+    running = true;
 
-    while (!codeReadFile.eof()) {
-        codeReadFile >> instruction;
+    while (!codeReadFile.eof() && running) {
+        codeReadFile >> rawCommand;
+
+        if (codeReadFile.peek() == '\n') {
+            break;
+        }
 
         std::cout << "Register " << (isFirstTime ? "?" : std::to_string(accum)) << " Memory ";
 
@@ -157,7 +230,7 @@ int main() {
 
         std::cout << std::endl;
 
-        switch (instruction) {
+        switch (rawCommand) {
             case 1: { // GET
                 codeReadFile >> address;
                 accum = memory[address];
@@ -179,29 +252,19 @@ int main() {
                 break;
             }
             case 4: { // COMPLIMENT
-                // TODO
-                break;
-            }
-            case 5: { // COMPARE
-                // TODO
-                break;
-            }
-            case 6: { // JUMP
-                // TODO
+                accum = ~accum;
+
                 break;
             }
             default: { // STOP
-                dataReadFile.close();
-                codeReadFile.close();
-
-                delete memory;
-
-                return 0;
+                running = false;
             }
         }
     }
 
-    delete memory;
+    codeReadFile.close();
+
+    delete[] memory;
 
     return 0;
 }

@@ -20,8 +20,8 @@ int main() {
     std::string codeFileName = "code.txt";
 
     std::ifstream file(sourceFileName);
-    std::ofstream dataFile(dataFileName);
-    std::ofstream codeFile(codeFileName);
+    std::ofstream dataWriteFile(dataFileName);
+    std::ofstream codeWriteFile(codeFileName);
 
     if (file.fail()) {
         std::cout << "Error opening file" << std::endl;
@@ -91,7 +91,7 @@ int main() {
                 int data;
                 file >> data;
 
-                dataFile << data << std::endl;
+                dataWriteFile << data << std::endl;
                 memory[var] = {memorySize++, data};
 
                 actualCodeCount--;
@@ -128,15 +128,15 @@ int main() {
     for (int i = 0; i < codeCount - 1; i++) {
 
         if (inst[i].command != 'C' && inst[i].command != 'J') {
-            codeFile << ASMA.at(inst[i].command) << ' ';
+            codeWriteFile << ASMA.at(inst[i].command) << ' ';
 
             if (inst[i].command == 'N') {
-                codeFile << 0;
+                codeWriteFile << 0;
             } else {
-                codeFile << memory[inst[i].address].address;
+                codeWriteFile << memory[inst[i].address].address;
             }
 
-            codeFile << std::endl;
+            codeWriteFile << std::endl;
         }
 
         switch (inst[i].command) {
@@ -172,10 +172,10 @@ int main() {
         }
     }
 
-    codeFile << "0 0" << std::endl;
+    codeWriteFile << "0 0" << std::endl;
 
-    dataFile.close();
-    codeFile.close();
+    dataWriteFile.close();
+    codeWriteFile.close();
 
     delete[] inst;
 
