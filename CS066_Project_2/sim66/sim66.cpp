@@ -1,3 +1,9 @@
+/*
+ * Adam Gonzalez
+ * Project 2 - sim66
+ * Program works
+ */
+
 #include <iostream>
 #include <fstream>
 

@@ -1,3 +1,9 @@
+/*
+ * Adam Gonzalez
+ * Project 2 - IDE66
+ * Program works
+ */
+
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -94,9 +100,7 @@ int main() {
                 dataWriteFile << data << std::endl;
                 symbolTable[var] = {symbolSize++, data};
 
-                actualCodeCount--;
-
-                break;
+                continue;
             }
             case 'G':
             case 'P':
@@ -126,17 +130,9 @@ int main() {
     bool compare;
 
     for (int i = 0; i < codeCount - 1; i++) {
-
         if (inst[i].command != 'C' && inst[i].command != 'J') {
-            codeWriteFile << ASMA.at(inst[i].command) << ' ';
-
-            if (inst[i].command == 'N') {
-                codeWriteFile << 0;
-            } else {
-                codeWriteFile << symbolTable[inst[i].address].address;
-            }
-
-            codeWriteFile << std::endl;
+            codeWriteFile << ASMA.at(inst[i].command) << ' '
+                          << symbolTable[inst[i].address].address << std::endl;
         }
 
         switch (inst[i].command) {
