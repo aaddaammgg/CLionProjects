@@ -1,19 +1,7 @@
-d R 5
-d S 2
-d T 3
-d V 12
-d W 10
-d A 1
-d B 1
-d C 0
-G C
-P R
-:L G R
-A V
-P R
-G A
-A B
-P A
-C W
-J L
+d X 5
+d Y 6
+d Z 0
+G X
+A Y
+P Z
 S
