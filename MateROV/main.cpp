@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "Visual.h"
+#include "Controller.h"
 
 static const char *DUALSENSE_MAPPING =
         "050000004c0500000ce6000001000000,"
@@ -28,28 +29,17 @@ int main() {
     }
 
     SDL_GameControllerAddMapping(DUALSENSE_MAPPING);
+
     SDL_Window *win = SDL_CreateWindow("SDL DualSense", 100, 100, 735, 500, 0);
     SDL_Renderer *rd = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
-    SDL_GameController *gc = nullptr;
-    for (int i = 0; i < SDL_NumJoysticks(); i++) {
-        if (SDL_IsGameController(i)) {
-            gc = SDL_GameControllerOpen(i);
-            break;
-        }
-    }
+    Controller ctrl;
 
-    if (!gc) {
+    if (!ctrl.Init()) {
         std::cerr << "No controller\n";
+
         return 1;
     }
-
-    // Enable gyro/accel
-    SDL_GameControllerSetSensorEnabled(gc, SDL_SENSOR_GYRO, SDL_TRUE);
-    SDL_GameControllerSetSensorEnabled(gc, SDL_SENSOR_ACCEL, SDL_TRUE);
-
-    float gyro[3] = {};
-    float accel[3] = {};
 
     auto last = std::chrono::high_resolution_clock::now();
     float fps = 0.0f;
@@ -64,19 +54,18 @@ int main() {
             }
         }
 
+        ctrl.Update();
+
         // draw frame
         SDL_SetRenderDrawColor(rd, 15, 15, 15, 255);
         SDL_RenderClear(rd);
 
-        SDL_GameControllerGetSensorData(gc, SDL_SENSOR_GYRO, gyro, 3);
-        SDL_GameControllerGetSensorData(gc, SDL_SENSOR_ACCEL, accel, 3);
-
         std::ostringstream os;
         os << "Gyro (pitch,yaw,roll): "
                 << std::showpos << std::fixed << std::setprecision(2)
-                << gyro[0] << " " << gyro[1] << " " << gyro[2] << "\n";
+                << ctrl.GyroPitch() << " " << ctrl.GyroYaw() << " " << ctrl.GyroRoll() << "\n";
         os << "Accel (x,y,z): "
-                << accel[0] << " " << accel[1] << " " << accel[2];
+                << ctrl.AccelX() << " " << ctrl.AccelY() << " " << ctrl.AccelZ();
 
         Visual::DrawText(rd, 10, 450, os.str(), {255, 255, 255, 255}, font);
 
@@ -90,12 +79,18 @@ int main() {
 
         Visual::DrawText(rd, 20, 20, std::to_string(fps), {255, 255, 255, 255}, font);
 
+        if (ctrl.L2() > 0.1 || ctrl.R2() > 0.1) {
+            ctrl.Rumble(ctrl.L2() * 0xFFFF,
+                        ctrl.R2() * 0xFFFF,
+                        100);
+        }
+
         // D-pad
         const std::array<int, 4> dpad = {
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_DOWN),
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_RIGHT),
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_UP),
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+            ctrl.DpadDown(),
+            ctrl.DpadRight(),
+            ctrl.DpadUp(),
+            ctrl.DpadLeft()
         };
 
         Visual::DrawCompassButtons(rd, 50, 160, 35, 35,
@@ -105,10 +100,10 @@ int main() {
 
         // Face buttons (South, East, North, West)
         const std::array<int, 4> face = {
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_A), // Cross
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_B), // Circle
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_Y), // Triangle
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_X) // Square
+            ctrl.Cross(),
+            ctrl.Circle(),
+            ctrl.Triangle(),
+            ctrl.Square()
         };
 
         Visual::DrawCompassButtons(rd, 650, 160, 35, 35,
@@ -121,77 +116,63 @@ int main() {
         Visual::DrawJoystick(rd, 225, 320, 40,
                              {120, 180, 220, 255},
                              {40, 200, 40, 255},
-                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTX),
-                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTY),
-                             SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_LEFTSTICK));
+                             ctrl.LeftX(),
+                             ctrl.LeftY(),
+                             ctrl.L3());
 
         Visual::DrawJoystick(rd, 525, 320, 40,
                              {120, 180, 220, 255},
                              {40, 200, 40, 255},
-                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTX),
-                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTY),
-                             SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_RIGHTSTICK));
+                             ctrl.RightX(),
+                             ctrl.RightY(),
+                             ctrl.R3());
 
         // Triggers
 
         Visual::DrawTrigger(rd, 210 - 20 - 5, 70, 30, 75,
                             {120, 180, 220, 255},
                             {255, 0, 0, 255},
-                            SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERLEFT));
+                            ctrl.L2());
 
         Visual::DrawTrigger(rd, 530 + 5, 70, 30, 75,
                             {120, 180, 220, 255},
                             {255, 0, 0, 255},
-                            SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
-
-        auto clamp = [&](double v, double min, double max) {
-            return std::min(max, std::max(min, v));
-        };
-
-        if (SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 1 || SDL_GameControllerGetAxis(
-                gc, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 1) {
-            SDL_GameControllerRumble(gc,
-                                     clamp(SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * 2, 0,
-                                           0xFFFF),
-                                     clamp(SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * 2, 0,
-                                           0xFFFF),
-                                     100);
-        }
+                            ctrl.R2());
 
         // Regular buttons
 
         Visual::DrawButton(rd, 220 - 20 - 5, 10, 20, 20,
-                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_BACK),
+                           ctrl.Share(),
                            {100, 100, 100, 255},
                            {255, 0, 0, 255});
 
         Visual::DrawButton(rd, 530 + 5, 10, 20, 20,
-                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_START),
+                           ctrl.Options(),
                            {100, 100, 100, 255},
                            {255, 0, 0, 255});
 
         Visual::DrawButton(rd, 210 - 20 - 5, 40, 30, 20,
-                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_LEFTSHOULDER),
+                           ctrl.L1(),
                            {100, 100, 100, 255},
                            {255, 0, 0, 255});
 
         Visual::DrawButton(rd, 530 + 5, 40, 30, 20,
-                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER),
+                           ctrl.R1(),
                            {100, 100, 100, 255},
                            {255, 0, 0, 255});
 
         Visual::DrawButton(rd, 735 / 2 - 15 / 2, 210, 30, 15,
-                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_GUIDE),
+                           ctrl.PSButton(),
                            {100, 100, 100, 255},
                            {255, 0, 0, 255});
 
         Visual::DrawButton(rd, 735 / 2 - 15 / 2, 230, 30, 15,
-                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_MISC1),
+                           ctrl.MicrophoneButton(),
                            {100, 100, 100, 255},
                            {255, 0, 0, 255});
 
         // Touchpad
-        Visual::DrawTouchpad(rd, gc, 220, 10, 310, 195,
+        Visual::DrawTouchpad(rd, ctrl.Raw(), 220, 10, 310, 195,
                              {100, 100, 100, 255},
                              {255, 0, 0, 255},
                              {250, 50, 250, 255});
@@ -203,7 +184,6 @@ int main() {
     TTF_CloseFont(font);
     TTF_Quit();
 
-    SDL_GameControllerClose(gc);
     SDL_DestroyRenderer(rd);
     SDL_DestroyWindow(win);
     SDL_Quit();

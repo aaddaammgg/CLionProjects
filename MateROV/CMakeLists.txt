@@ -17,6 +17,8 @@ find_package(SDL2_ttf CONFIG REQUIRED)
 add_executable(MateROV main.cpp
         Visual.cpp
         Visual.h
+        Controller.cpp
+        Controller.h
 )
 
 # Disable SDL’s “replace main” macro so we don’t need SDL2main

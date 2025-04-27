@@ -50,26 +50,29 @@ namespace Visual {
         }
     }
 
-    void DrawJoystick(SDL_Renderer *rd, int x, int y, int radius, SDL_Color baseColor, SDL_Color pressColor, Sint16 ax,
-                      Sint16 ay, int pressed) {
+    void DrawJoystick(SDL_Renderer *rd, int x, int y, int radius, SDL_Color baseColor, SDL_Color pressColor, float ax,
+                      float ay, int pressed) {
         SDL_Rect border{x - radius, y - radius, radius * 2, radius * 2};
         SDL_SetRenderDrawColor(rd, 200, 200, 200, 80);
         SDL_RenderDrawRect(rd, &border);
 
-        const int sx = x + ax / 800;
-        const int sy = y + ay / 800;
+        int halfRadius = radius / 2;
 
-        DrawButton(rd, sx - radius / 4, sy - radius / 4, radius / 2, radius / 2, pressed, baseColor, pressColor);
+        int sx = radius * ax;
+        int sy = radius * ay;
+
+        DrawButton(rd, x + sx - halfRadius / 2, y + sy - halfRadius / 2, halfRadius, halfRadius, pressed, baseColor,
+                   pressColor);
     }
 
     void DrawTrigger(SDL_Renderer *rd, int x, int y, int w, int h, SDL_Color baseColor, SDL_Color pressColor,
-                     Sint16 a) {
+                     float a) {
         SDL_Rect border{x, y, w, h};
         SDL_SetRenderDrawColor(rd, 200, 200, 200, 80);
         SDL_RenderDrawRect(rd, &border);
 
-        bool pressed = a >= (INT_FAST16_MAX - 100);
-        const int sy = y + h - w - (float(a) / INT_FAST16_MAX) * float(h - w);
+        bool pressed = a >= .98;
+        const int sy = y + h - w - float(a) * float(h - w);
 
         DrawButton(rd, x, sy, w, w, pressed, baseColor, pressColor);
     }

@@ -43,8 +43,8 @@ namespace Visual {
                       int radius,
                       SDL_Color baseColor,
                       SDL_Color pressColor,
-                      Sint16 ax,
-                      Sint16 ay,
+                      float ax,
+                      float ay,
                       int pressed);
 
     void DrawTrigger(SDL_Renderer *rd,
@@ -54,7 +54,7 @@ namespace Visual {
                      int h,
                      SDL_Color baseColor,
                      SDL_Color pressColor,
-                     Sint16 a);
+                     float a);
 
     void DrawTouchpad(SDL_Renderer *rd,
                       SDL_GameController *gc,
