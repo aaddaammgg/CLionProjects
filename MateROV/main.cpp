@@ -60,6 +60,7 @@ int main() {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 quit = true;
+                std::cerr << "Quitting\n";
             }
         }
 
@@ -72,7 +73,7 @@ int main() {
 
         std::ostringstream os;
         os << "Gyro (pitch,yaw,roll): "
-                << std::fixed << std::setprecision(2)
+                << std::showpos << std::fixed << std::setprecision(2)
                 << gyro[0] << " " << gyro[1] << " " << gyro[2] << "\n";
         os << "Accel (x,y,z): "
                 << accel[0] << " " << accel[1] << " " << accel[2];
@@ -91,16 +92,16 @@ int main() {
 
         // D-pad
         const std::array<int, 4> dpad = {
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_UP),
-            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_RIGHT),
             SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_DOWN),
+            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_RIGHT),
+            SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_UP),
             SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
         };
 
-        Visual::DrawCompass(rd, 50, 160, 35, 35,
-                            {100, 100, 100, 255},
-                            {200, 200, 40, 255},
-                            dpad);
+        Visual::DrawCompassButtons(rd, 50, 160, 35, 35,
+                                   {100, 100, 100, 255},
+                                   {200, 200, 40, 255},
+                                   dpad);
 
         // Face buttons (South, East, North, West)
         const std::array<int, 4> face = {
@@ -110,26 +111,26 @@ int main() {
             SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_X) // Square
         };
 
-        Visual::DrawCompass(rd, 650, 160, 35, 35,
-                            {100, 100, 100, 255},
-                            {40, 200, 40, 255},
-                            face);
+        Visual::DrawCompassButtons(rd, 650, 160, 35, 35,
+                                   {100, 100, 100, 255},
+                                   {40, 200, 40, 255},
+                                   face);
 
         // Sticks
 
-        Visual::DrawStick(rd, 225, 320, 40,
-                          {120, 180, 220, 255},
-                          {40, 200, 40, 255},
-                          SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTX),
-                          SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTY),
-                          SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_LEFTSTICK));
+        Visual::DrawJoystick(rd, 225, 320, 40,
+                             {120, 180, 220, 255},
+                             {40, 200, 40, 255},
+                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTX),
+                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTY),
+                             SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_LEFTSTICK));
 
-        Visual::DrawStick(rd, 525, 320, 40,
-                          {120, 180, 220, 255},
-                          {255, 0, 0, 255},
-                          SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTX),
-                          SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTY),
-                          SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_RIGHTSTICK));
+        Visual::DrawJoystick(rd, 525, 320, 40,
+                             {120, 180, 220, 255},
+                             {40, 200, 40, 255},
+                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTX),
+                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTY),
+                             SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_RIGHTSTICK));
 
         // Triggers
 
@@ -139,44 +140,61 @@ int main() {
                             SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERLEFT));
 
         Visual::DrawTrigger(rd, 530 + 5, 70, 30, 75,
-                    {120, 180, 220, 255},
-                    {255, 0, 0, 255},
-                    SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
+                            {120, 180, 220, 255},
+                            {255, 0, 0, 255},
+                            SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
 
-        // Shoulders (this function should just be buttons)
-        auto drawButton = [&](int cx, int cy, int cw, int ch, int pressed) {
-            SDL_Rect knob{cx, cy, cw, ch};
-            SDL_SetRenderDrawColor(rd, pressed ? 255 : 100, pressed ? 0 : 100, pressed ? 0 : 100, 255);
-            SDL_RenderFillRect(rd, &knob);
+        auto clamp = [&](double v, double min, double max) {
+            return std::min(max, std::max(min, v));
         };
 
-        drawButton(220 - 20 - 5, 10, 20, 20, SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_BACK));
-        drawButton(530 + 5, 10, 20, 20, SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_START));
+        if (SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 1 || SDL_GameControllerGetAxis(
+                gc, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 1) {
+            SDL_GameControllerRumble(gc,
+                                     clamp(SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * 2, 0,
+                                           0xFFFF),
+                                     clamp(SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * 2, 0,
+                                           0xFFFF),
+                                     100);
+        }
 
-        drawButton(210 - 20 - 5, 40, 30, 20, SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_LEFTSHOULDER));
-        drawButton(530 + 5, 40, 30, 20, SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER));
+        // Regular buttons
 
-        drawButton(735 / 2 - 15 / 2, 210, 30, 15, SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_GUIDE));
-        drawButton(735 / 2 - 15 / 2, 230, 30, 15, SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_MISC1));
+        Visual::DrawButton(rd, 220 - 20 - 5, 10, 20, 20,
+                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_BACK),
+                           {100, 100, 100, 255},
+                           {255, 0, 0, 255});
+
+        Visual::DrawButton(rd, 530 + 5, 10, 20, 20,
+                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_START),
+                           {100, 100, 100, 255},
+                           {255, 0, 0, 255});
+
+        Visual::DrawButton(rd, 210 - 20 - 5, 40, 30, 20,
+                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_LEFTSHOULDER),
+                           {100, 100, 100, 255},
+                           {255, 0, 0, 255});
+
+        Visual::DrawButton(rd, 530 + 5, 40, 30, 20,
+                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER),
+                           {100, 100, 100, 255},
+                           {255, 0, 0, 255});
+
+        Visual::DrawButton(rd, 735 / 2 - 15 / 2, 210, 30, 15,
+                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_GUIDE),
+                           {100, 100, 100, 255},
+                           {255, 0, 0, 255});
+
+        Visual::DrawButton(rd, 735 / 2 - 15 / 2, 230, 30, 15,
+                           SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_MISC1),
+                           {100, 100, 100, 255},
+                           {255, 0, 0, 255});
 
         // Touchpad
-        Uint8 down;
-        float tx, ty, pressure;
-        int pressed = SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_TOUCHPAD);
-
-        int x = 220, y = 10;
-
-        // int(400 + (tx - 0.5f) * 300) - 5, int(100 + (ty - 0.5f) * 180) - 5
-
-        SDL_Rect border{x, y, 310, 195};
-        SDL_SetRenderDrawColor(rd, pressed ? 255 : 200, pressed ? 0 : 200, pressed ? 0 : 200, 80);
-        SDL_RenderDrawRect(rd, &border);
-
-        if (SDL_GameControllerGetTouchpadFinger(gc, 0, 0, &down, &tx, &ty, &pressure) == 0 && down) {
-            SDL_Rect dot{int(375 + (tx - 0.5f) * 300) - 5, int(100 + (ty - 0.5f) * 180), 10, 10};
-            SDL_SetRenderDrawColor(rd, 250, 50, 250, 255);
-            SDL_RenderFillRect(rd, &dot);
-        }
+        Visual::DrawTouchpad(rd, gc, 220, 10, 310, 195,
+                             {100, 100, 100, 255},
+                             {255, 0, 0, 255},
+                             {250, 50, 250, 255});
 
         SDL_RenderPresent(rd);
         SDL_Delay(15);

@@ -5,12 +5,7 @@
 #include "Visual.h"
 
 namespace Visual {
-    void DrawText(SDL_Renderer *rd,
-                  int x,
-                  int y,
-                  const std::string &text,
-                  const SDL_Color &color,
-                  TTF_Font *font,
+    void DrawText(SDL_Renderer *rd, int x, int y, const std::string &text, const SDL_Color &color, TTF_Font *font,
                   int wrapLength) {
         SDL_Surface *surf = TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, wrapLength);
 
@@ -41,8 +36,8 @@ namespace Visual {
         SDL_RenderFillRect(rd, &base);
     }
 
-    void DrawCompass(SDL_Renderer *rd, int x, int y, int w, int h, SDL_Color baseColor, SDL_Color pressColor,
-                     std::array<int, 4> face) {
+    void DrawCompassButtons(SDL_Renderer *rd, int x, int y, int w, int h, SDL_Color baseColor, SDL_Color pressColor,
+                            std::array<int, 4> face) {
         for (int i = 0; i < 4; ++i) {
             SDL_Rect r = {x, y, w, h};
 
@@ -55,8 +50,8 @@ namespace Visual {
         }
     }
 
-    void DrawStick(SDL_Renderer *rd, int x, int y, int radius, SDL_Color baseColor, SDL_Color pressColor, Sint16 ax,
-                   Sint16 ay, int pressed) {
+    void DrawJoystick(SDL_Renderer *rd, int x, int y, int radius, SDL_Color baseColor, SDL_Color pressColor, Sint16 ax,
+                      Sint16 ay, int pressed) {
         SDL_Rect border{x - radius, y - radius, radius * 2, radius * 2};
         SDL_SetRenderDrawColor(rd, 200, 200, 200, 80);
         SDL_RenderDrawRect(rd, &border);
@@ -77,5 +72,27 @@ namespace Visual {
         const int sy = y + h - w - (float(a) / INT_FAST16_MAX) * float(h - w);
 
         DrawButton(rd, x, sy, w, w, pressed, baseColor, pressColor);
+    }
+
+    void DrawTouchpad(SDL_Renderer *rd, SDL_GameController *gc, int x, int y, int w, int h, SDL_Color baseColor,
+                      SDL_Color pressColor, SDL_Color mouseColor) {
+        Uint8 down;
+        float tx, ty, pressure;
+        int pressed = SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_TOUCHPAD);
+        SDL_Color color = pressed ? pressColor : baseColor;
+
+        SDL_Rect border{x, y, w, h};
+        SDL_SetRenderDrawColor(rd, color.r, color.g, color.b, color.a);
+        SDL_RenderDrawRect(rd, &border);
+
+        int fingers = SDL_GameControllerGetNumTouchpadFingers(gc, 0);
+
+        for (int i = 0; i < fingers; i++) {
+            if (SDL_GameControllerGetTouchpadFinger(gc, 0, i, &down, &tx, &ty, &pressure) == 0 && down) {
+                SDL_Rect dot{x + int(tx * (w - 10)), y + int(ty * (h - 10)), 10, 10};
+                SDL_SetRenderDrawColor(rd, mouseColor.r, mouseColor.g, mouseColor.b, mouseColor.a);
+                SDL_RenderFillRect(rd, &dot);
+            }
+        }
     }
 }

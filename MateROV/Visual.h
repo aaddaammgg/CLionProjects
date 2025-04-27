@@ -28,34 +28,44 @@ namespace Visual {
                     SDL_Color baseColor,
                     SDL_Color pressColor);
 
-    void DrawCompass(SDL_Renderer *rd,
+    void DrawCompassButtons(SDL_Renderer *rd,
+                            int x,
+                            int y,
+                            int w,
+                            int h,
+                            SDL_Color baseColor,
+                            SDL_Color pressColor,
+                            std::array<int, 4> face);
+
+    void DrawJoystick(SDL_Renderer *rd,
+                      int x,
+                      int y,
+                      int radius,
+                      SDL_Color baseColor,
+                      SDL_Color pressColor,
+                      Sint16 ax,
+                      Sint16 ay,
+                      int pressed);
+
+    void DrawTrigger(SDL_Renderer *rd,
                      int x,
                      int y,
                      int w,
                      int h,
                      SDL_Color baseColor,
                      SDL_Color pressColor,
-                     std::array<int, 4> face
+                     Sint16 a);
+
+    void DrawTouchpad(SDL_Renderer *rd,
+                      SDL_GameController *gc,
+                      int x,
+                      int y,
+                      int w,
+                      int h,
+                      SDL_Color baseColor,
+                      SDL_Color pressColor,
+                      SDL_Color mouseColor
     );
-
-    void DrawStick(SDL_Renderer *rd,
-                   int x,
-                   int y,
-                   int radius,
-                   SDL_Color baseColor,
-                   SDL_Color pressColor,
-                   Sint16 ax,
-                   Sint16 ay,
-                   int pressed);
-
-    void DrawTrigger(SDL_Renderer *rd,
-               int x,
-               int y,
-               int w,
-               int h,
-               SDL_Color baseColor,
-               SDL_Color pressColor,
-               Sint16 a);
 }
 
 
