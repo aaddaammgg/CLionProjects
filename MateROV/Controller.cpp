@@ -7,9 +7,11 @@
 Controller::Controller() = default;
 
 Controller::~Controller() {
-    if (gc) {
-        SDL_GameControllerClose(gc);
+    if (!gc) {
+        return;
     }
+
+    SDL_GameControllerClose(gc);
 }
 
 bool Controller::Init() {
@@ -19,6 +21,7 @@ bool Controller::Init() {
             break;
         }
     }
+
     if (!gc) {
         return false; // No Controller found
     }
@@ -31,7 +34,10 @@ bool Controller::Init() {
 }
 
 void Controller::Update() {
-    if (!gc) return;
+    if (!gc) {
+        return;
+    }
+
     SDL_GameControllerGetSensorData(gc, SDL_SENSOR_GYRO, gyro.data(), 3);
     SDL_GameControllerGetSensorData(gc, SDL_SENSOR_ACCEL, accel.data(), 3);
 }
@@ -73,11 +79,21 @@ float Controller::AccelX() const { return accel[0]; }
 float Controller::AccelY() const { return accel[1]; }
 float Controller::AccelZ() const { return accel[2]; }
 
+void Controller::SetLED(Uint8 r, Uint8 g, Uint8 b) {
+    if (!gc) {
+        return;
+    }
+
+    SDL_GameControllerSetLED(gc, r, g, b);
+}
+
 // --------- Rumble ---------
 void Controller::Rumble(Uint16 lowFreq, Uint16 highFreq, Uint32 durationMs) {
-    if (gc) {
-        SDL_GameControllerRumble(gc, lowFreq, highFreq, durationMs);
+    if (!gc) {
+        return;
     }
+
+    SDL_GameControllerRumble(gc, lowFreq, highFreq, durationMs);
 }
 
 // --------- Raw ---------

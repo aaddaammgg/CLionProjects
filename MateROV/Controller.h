@@ -56,6 +56,8 @@ public:
     float AccelY() const;
     float AccelZ() const;
 
+    void SetLED(Uint8 r, Uint8 g, Uint8 b);
+
     // Rumble
     void Rumble(Uint16 lowFreq, Uint16 highFreq, Uint32 durationMs);
 
