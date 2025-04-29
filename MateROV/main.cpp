@@ -38,7 +38,7 @@ int main() {
     if (!ctrl.Init()) {
         std::cerr << "No controller\n";
 
-        return 1;
+        //return 1;
     }
 
     auto last = std::chrono::high_resolution_clock::now();
