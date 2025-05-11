@@ -33,6 +33,14 @@ bool Controller::Init() {
     return true;
 }
 
+bool Controller::hasController() const {
+    return gc != nullptr;
+}
+
+void Controller::setKMFallback(bool state) {
+    KMFallback = state;
+}
+
 void Controller::Update() {
     if (!gc) {
         return;
@@ -40,6 +48,16 @@ void Controller::Update() {
 
     SDL_GameControllerGetSensorData(gc, SDL_SENSOR_GYRO, gyro.data(), 3);
     SDL_GameControllerGetSensorData(gc, SDL_SENSOR_ACCEL, accel.data(), 3);
+}
+
+void Controller::PollEvent(SDL_Event *e) {
+    if (KMFallback && !gc) {
+        this->e = e;
+
+        if (e->type == SDL_MOUSEMOTION) {
+            mme = e->motion;
+        }
+    }
 }
 
 // --------- Buttons ---------
@@ -61,10 +79,30 @@ bool Controller::DpadLeft() const { return SDL_GameControllerGetButton(gc, SDL_C
 bool Controller::DpadRight() const { return SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_DPAD_RIGHT); }
 
 // --------- Sticks ---------
-float Controller::LeftX() const { return SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTX) / 32767.0f; }
-float Controller::LeftY() const { return SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTY) / 32767.0f; }
-float Controller::RightX() const { return SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTX) / 32767.0f; }
-float Controller::RightY() const { return SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTY) / 32767.0f; }
+float Controller::LeftX() const {
+    if (KMFallback && !hasController() && mme.state) {
+        return ApplyDeadzone(2 * (mme.x / 735.f) - 1);
+    }
+
+    return ApplyDeadzone(SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTX) / 32767.0f);
+}
+
+float Controller::LeftY() const {
+    if (KMFallback && !hasController() && mme.state) {
+        return ApplyDeadzone(2 * (mme.y / 500.f) - 1);
+    }
+
+    return ApplyDeadzone(SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_LEFTY) / 32767.0f);
+}
+
+float Controller::RightX() const {
+    return ApplyDeadzone(SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTX) / 32767.0f);
+}
+
+float Controller::RightY() const {
+    return ApplyDeadzone(SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_RIGHTY) / 32767.0f);
+}
+
 
 // --------- Triggers ---------
 float Controller::L2() const { return SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERLEFT) / 32767.0f; }

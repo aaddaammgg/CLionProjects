@@ -18,6 +18,11 @@ public:
 
     bool Init();             // must call once after SDL_Init
     void Update();           // call every frame
+    void PollEvent(SDL_Event * e);
+
+    bool hasController() const;
+
+    void setKMFallback(bool state);
 
     // Buttons
     bool Cross() const;
@@ -66,8 +71,16 @@ public:
 
 private:
     SDL_GameController* gc = nullptr;
+    SDL_Event* e;
+    SDL_MouseMotionEvent mme;
     std::array<float, 3> gyro{};
     std::array<float, 3> accel{};
+
+    bool KMFallback = false;
+
+    static float ApplyDeadzone(float value, float deadzone = 0.05f) {
+        return (std::abs(value) < deadzone) ? 0.0f : value;
+    }
 };
 
 #endif //CONTROLLER_H
