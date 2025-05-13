@@ -8,8 +8,6 @@
 #include <SDL.h>
 #include <array>
 #include <string>
-#include <iostream>
-
 
 class Controller {
 public:
@@ -68,6 +66,7 @@ public:
 
     // Raw access
     SDL_GameController* Raw();
+    SDL_GameController* Raw() const;
 
 private:
     SDL_GameController* gc = nullptr;

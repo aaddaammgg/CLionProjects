@@ -1,16 +1,13 @@
 #include <boost/asio.hpp>
-
 #include <SDL.h>
+#include <imgui.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_sdlrenderer2.h>
 #include <iostream>
-#include <array>
-#include <iomanip>
-#include <SDL_ttf.h>
-#include <sstream>
 #include <chrono>
-
-
 #include "Visual.h"
 #include "Controller.h"
+// #include "CameraManager.h"
 
 using namespace boost;
 
@@ -23,208 +20,321 @@ struct ROVPacket {
     float tup_right = 0;
     float claw = 0;
     float rotate = 0;
-    // float checksum = 0;
     uint8_t end = 0x55;
 };
 #pragma pack(pop)
-
 
 asio::serial_port *serial = nullptr;
 
 // ls /dev/tty.*
 
-// std::string serialPortPath = "/dev/ttys006";
-std::string serialPortPath = "/dev/tty.usbmodem11501";
-int baudRate = 115200;
+std::string serialPortPath = "/dev/ttys007";
+// std::string serialPortPath = "/dev/tty.usbmodem11301";
+const int baudRate = 115200;
 
 bool tryConnect(asio::io_context &io) {
     try {
-        if (serial) {
-            delete serial;
-            serial = nullptr;
-        }
+        delete serial;
 
         serial = new asio::serial_port(io, serialPortPath);
         serial->set_option(asio::serial_port_base::baud_rate(baudRate));
         std::cerr << "[Serial] Connected to " << serialPortPath << "\n";
+
         return true;
     } catch (...) {
         std::cerr << "[Serial] Connection failed\n";
-        if (serial) {
-            delete serial;
-            serial = nullptr;
-        }
+
+        delete serial;
+        serial = nullptr;
+
         return false;
     }
 }
 
+unsigned int packetsSent = 0;
 
-// uint8_t computeChecksum(const ROVPacket &p) {
-//     const uint8_t *data = reinterpret_cast<const uint8_t *>(&p);
-//     uint8_t sum = 0;
-//
-//     for (size_t i = 1; i < sizeof(ROVPacket) - 2; ++i) {
-//         sum ^= data[i];
-//     }
-//     return sum;
-// }
+void RenderDockSpace(float fps) {
+    ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
-static const char *DUALSENSE_MAPPING =
-        "050000004c0500000ce6000001000000,"
-        "DualSense Wireless Controller,"
-        "a:b2,b:b1,x:b0,y:b3,"
-        "back:b8,start:b9,guide:b12,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,"
-        "leftshoulder:b4,rightshoulder:b5,leftstick:b10,rightstick:b11,"
-        "lefttrigger:a2,righttrigger:a5,leftx:a0,lefty:a1,rightx:a3,righty:a4,"
-        "touchpad:b13,misc1:b14,"
-        "platform:Mac OS X";
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
+    ImGui::SetNextWindowViewport(viewport->ID);
 
-bool readLineWithTimeout(asio::io_context &io, asio::serial_port &port, std::string &line, int timeout_ms = 50) {
-    asio::streambuf buf;
-    boost::system::error_code ec;
-    bool done = false;
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-    asio::steady_timer timer(io);
-    timer.expires_after(std::chrono::milliseconds(timeout_ms));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-    timer.async_wait([&](const boost::system::error_code &) {
-        if (!done) {
-            port.cancel();  // force read to end
-        }
-    });
 
-    asio::async_read_until(port, buf, '\n', [&](const boost::system::error_code &error, std::size_t) {
-        ec = error;
-        done = true;
-        timer.cancel();
-    });
 
-    io.run();
-    io.restart();
+    ImGui::Begin("DockSpace", nullptr, windowFlags);
+    ImGui::PopStyleVar(3);
 
-    if (!ec && done) {
-        std::istream is(&buf);
-        std::getline(is, line);
-        return true;
+    ImGuiID dockspaceID = ImGui::GetID("MainDockSpace");
+    ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
+
+    if (ImGui::BeginMenuBar()) {
+        ImGui::Text("FPS: %.1f", fps);
+        ImGui::Separator();
+        ImGui::Text("Packets Sent: %d", packetsSent);
+
+        // if (ImGui::BeginMenu("Cameras")) {
+        //     const std::vector<std::string>& cams = camera1.listAvailableCameras();
+        //
+        //     for (int i = 0; i < static_cast<int>(cams.size()); ++i) {
+        //         std::string label = "Open " + cams[i] + " in slot 0";
+        //         if (ImGui::MenuItem(label.c_str())) {
+        //             camera1.requestCamera(0, i);
+        //         }
+        //
+        //         label = "Open " + cams[i] + " in slot 1";
+        //         if (ImGui::MenuItem(label.c_str())) {
+        //             camera1.requestCamera(1, i);
+        //         }
+        //     }
+        //
+        //     ImGui::EndMenu();
+        // }
+
+        ImGui::EndMenuBar();
     }
 
-    return false;
+    ImGui::End();
 }
 
+struct PacketCalib {
+    float min = -1.0f;
+    float max = 1.0f;
+
+    float apply(float value) const {
+        return std::clamp(value, min, max);
+    }
+};
+
+struct CalibConfig {
+    PacketCalib tleft, tright, tup_left, tup_right, claw, rotate;
+} calib;
+
+
 int main() {
-    static ROVPacket lastSentPacket{};
-
-    asio::io_context io;
-    // asio::serial_port *serial = nullptr;
-
-    // try {
-    //     serial = new asio::serial_port(io, "/dev/ttys003"); // ← adjust for your device
-    //     serial->set_option(asio::serial_port_base::baud_rate(115200));
-    //     std::cerr << "[Serial] Connected to Arduino.\n";
-    // } catch (...) {
-    //     std::cerr << "[Serial] No device found. Entering test mode.\n";
-    // }
-
-    auto lastReconnectAttempt = std::chrono::steady_clock::now() - std::chrono::seconds(5);
-
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
     SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
-    TTF_Init();
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2"); // 0=nearest, 1=linear, 2=best (if supported)
 
-    TTF_Font *font = TTF_OpenFont("/System/Library/Fonts/Menlo.ttc", 20); // MacOS Specific Font
-    if (!font) {
-        std::cerr << "Font load failed\n";
-        return 1;
-    }
 
-    TTF_Font *promptFont = TTF_OpenFont("Resources/Fonts/promptfont.ttf", 28); // https://shinmera.github.io/promptfont/
-    if (!promptFont) {
-        std::cerr << "Prompt Font load failed\n";
-        // return 1;
-    }
+    SDL_Window* window = SDL_CreateWindow("MateROV", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1200, 800, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    SDL_GameControllerAddMapping(DUALSENSE_MAPPING);
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    ImFontConfig font_cfg;
+    font_cfg.OversampleH = 4;
+    font_cfg.OversampleV = 4;
+    font_cfg.PixelSnapH = false;
+
+    io.Fonts->AddFontFromFileTTF("/System/Library/Fonts/Menlo.ttc", 18.0f, &font_cfg);
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
+    ImGui_ImplSDLRenderer2_Init(renderer);
+
+    ImGui::GetStyle().AntiAliasedLines = true;
+    ImGui::GetStyle().AntiAliasedFill  = true;
 
     Controller ctrl;
-
     ctrl.setKMFallback(true);
+    ctrl.Init();
 
-    if (!ctrl.Init()) {
-        std::cerr << "No controller\n";
-    }
-
-    std::string title = "SFD ";
-
-    if (ctrl.hasController()) {
-        title += "DualSense Mode";
-    } else {
-        title += "Keyboard/Mouse Mode";
-    }
-
-    SDL_Window *win = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 735, 500, 0);
-    SDL_Renderer *rd = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-
-    auto last = std::chrono::high_resolution_clock::now();
-    float fps = 0.0f;
+    asio::io_context io_context;
+    tryConnect(io_context);
 
     bool quit = false;
     SDL_Event e;
 
     ROVPacket pkt;
+    ROVPacket lastSentPacket{};
+    auto lastReconnectAttempt = std::chrono::steady_clock::now() - std::chrono::seconds(5);
 
-    // Persistent state for rotation of claw
     int rotateHeldFrames = 0;
     bool rotateLastFrameUp = false;
     bool rotateLastFrameDown = false;
 
+    // CameraManager camera1(renderer);
+    // camera1.populateCameraList();
+    // camera1.requestCamera(0, 0); // auto-connect first camera to slot 0
+    // camera1.requestCamera(1, 1); // auto-connect second camera to slot 1
+    //
+    //
+    // int selectedCamIndex = -1;
+    // bool cameraOpened = false;
+
 
     while (!quit) {
         while (SDL_PollEvent(&e)) {
+            ImGui_ImplSDL2_ProcessEvent(&e);
             ctrl.PollEvent(&e);
 
             if (e.type == SDL_QUIT) {
                 quit = true;
-                std::cerr << "Quitting\n";
             }
+        }
+
+        ImGui_ImplSDLRenderer2_NewFrame();
+        ImGui_ImplSDL2_NewFrame();
+        ImGui::NewFrame();
+
+        // {
+        //     ImGui::Begin("Dual Camera Viewer");
+        //
+        //     const std::vector<std::string>& cams = camera1.listAvailableCameras();
+        //     static int selectedCamIndex[2] = {-1, -1};
+        //
+        //     if (!cams.empty()) {
+        //         std::vector<const char*> items;
+        //         for (const auto& s : cams) {
+        //             items.push_back(s.c_str());
+        //         }
+        //
+        //         for (int i = 0; i < 2; ++i) {
+        //             ImGui::PushID(i);
+        //             if (selectedCamIndex[i] == -1) selectedCamIndex[i] = i;
+        //             if (ImGui::Combo("Camera Slot", &selectedCamIndex[i], items.data(), static_cast<int>(items.size()))) {
+        //                 camera1.requestCamera(i, selectedCamIndex[i]);
+        //             }
+        //             ImGui::PopID();
+        //         }
+        //
+        //         // Render both textures side by side
+        //         ImGui::Separator();
+        //         ImVec2 avail = ImGui::GetContentRegionAvail();
+        //         float width = (avail.x - 10.0f) / 2.0f;
+        //
+        //         for (int i = 0; i < 2; ++i) {
+        //             camera1.updateFrame(i);
+        //             SDL_Texture* tex = camera1.getTexture(i);
+        //             if (tex) {
+        //                 int texW = 0, texH = 0;
+        //                 SDL_QueryTexture(tex, nullptr, nullptr, &texW, &texH);
+        //                 float aspect = (float)texH / texW;
+        //                 ImGui::Image((ImTextureID)(intptr_t)tex, ImVec2(width, width * aspect));
+        //             } else {
+        //                 ImGui::TextColored(ImVec4(1, 0, 0, 1), "Camera %d not available.", i);
+        //             }
+        //
+        //             if (i == 0) {
+        //                 ImGui::SameLine();
+        //             }
+        //         }
+        //     }
+        //
+        //     ImGui::End();
+        // }
+
+
+
+        {
+            float fps = ImGui::GetIO().Framerate;
+            RenderDockSpace(fps);
+        }
+
+        {
+            ImGui::Begin("ROV Packet Stats");
+            ImGui::Text("Left Thruster: %+.2f", pkt.tleft);
+            ImGui::Text("Right Thruster: %+.2f", pkt.tright);
+            ImGui::Text("Up Thruster Left: %+.2f", pkt.tup_left);
+            ImGui::Text("Up Thruster Right: %+.2f", pkt.tup_right);
+            ImGui::Text("Claw: %+.2f", pkt.claw);
+            ImGui::Text("Rotate: %+.2f", pkt.rotate);
+            ImGui::End();
+        }
+
+        {
+            ImGui::Begin("Sensor Stats");
+            ImGui::Text("Gyro (pitch, yaw, roll): %+.2f, %+.2f, %+.2f", ctrl.GyroPitch(), ctrl.GyroYaw(), ctrl.GyroRoll());
+            ImGui::Text("Accel (x, y, z): %+.2f, %+.2f, %+.2f", ctrl.AccelX(), ctrl.AccelY(), ctrl.AccelZ());
+            ImGui::End();
         }
 
         auto now = std::chrono::steady_clock::now();
         if (!serial || !serial->is_open()) {
             if (now - lastReconnectAttempt >= std::chrono::seconds(2)) {
                 lastReconnectAttempt = now;
-                tryConnect(io);
+                tryConnect(io_context);
             }
         }
 
-
         ctrl.Update();
 
-        // draw frame
-        SDL_SetRenderDrawColor(rd, 15, 15, 15, 255);
-        SDL_RenderClear(rd);
+        float x = ctrl.LeftX();
+        float y = ctrl.LeftY();
+        float raw_left = y + x;
+        float raw_right = y - x;
 
-        std::ostringstream os;
-        os << "Gyro (pitch,yaw,roll): "
-                << std::showpos << std::fixed << std::setprecision(2)
-                << ctrl.GyroPitch() << " " << ctrl.GyroYaw() << " " << ctrl.GyroRoll() << "\n";
-        os << "Accel (x,y,z): "
-                << ctrl.AccelX() << " " << ctrl.AccelY() << " " << ctrl.AccelZ();
+        pkt.tleft = std::clamp(raw_left, -1.0f, 1.0f);
+        pkt.tright = std::clamp(raw_right, -1.0f, 1.0f);
 
-        Visual::DrawText(rd, 10, 400, os.str(), {255, 255, 255, 255}, font);
+        float z = std::clamp(ctrl.RightY(), -1.0f, 1.0f);
+        pkt.tup_left = pkt.tup_right = z;
 
-        std::string c = "↠";
+        float openRate = std::pow(ctrl.L2(), 1.5f);
+        float closeRate = std::pow(ctrl.R2(), 1.5f);
+        pkt.claw += (openRate - closeRate) * 0.01f;
+        pkt.claw = std::clamp(pkt.claw, 0.0f, 1.0f);
 
-        Visual::DrawText(rd, 0, 0, c, {255, 255, 255, 255}, promptFont);
+        bool up = ctrl.DpadUp();
+        bool down = ctrl.DpadDown();
+        bool freshUp = up && !rotateLastFrameUp;
+        bool freshDown = down && !rotateLastFrameDown;
 
-        // frame timing
-        auto now_fps = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> diff = now_fps - last;
-        last = now_fps;
+        if (up || down) {
+            rotateHeldFrames = (rotateLastFrameUp == up && rotateLastFrameDown == down) ? rotateHeldFrames + 1 : 1;
+        } else {
+            rotateHeldFrames = 0;
+        }
+        rotateLastFrameUp = up;
+        rotateLastFrameDown = down;
 
-        // Use exponential moving average to smooth FPS (0.05 is a smoothing factor)
-        fps = fps * 0.95f + (1.0f / diff.count()) * 0.05f;
+        float delta = 0.0f;
 
-        Visual::DrawText(rd, 20, 20, std::to_string(fps), {255, 255, 255, 255}, font);
+        if (freshUp) {
+            delta = 0.01f;
+        } else if (freshDown) {
+            delta = -0.01f;
+        } else if (rotateHeldFrames > 10) {
+            float heldSpeed = std::min(0.01f, float(rotateHeldFrames - 10) * 0.0001f);
+            delta = (up ? +heldSpeed : 0.0f) - (down ? +heldSpeed : 0.0f);
+        }
+        // pkt.rotate = std::clamp(pkt.rotate + delta, 0.0f, 1.0f);
+
+        // should change this later on
+        pkt.tleft       = calib.tleft.apply(raw_left);
+        pkt.tright      = calib.tright.apply(raw_right);
+        pkt.tup_left    = calib.tup_left.apply(z);
+        pkt.tup_right   = calib.tup_right.apply(z);
+        pkt.claw        = calib.claw.apply(pkt.claw);
+        pkt.rotate      = calib.rotate.apply(std::clamp(pkt.rotate + delta, 0.0f, 1.0f));
+
+
+        if (std::memcmp(&pkt, &lastSentPacket, sizeof(ROVPacket)) != 0) {
+            try {
+                if (serial && serial->is_open()) {
+                    asio::write(*serial, asio::buffer(&pkt, sizeof(pkt)));
+                    packetsSent++;
+                }
+                lastSentPacket = pkt;
+            } catch (...) {
+                delete serial;
+                serial = nullptr;
+            }
+        }
 
         if (ctrl.L2() > 0.1 || ctrl.R2() > 0.1) {
             ctrl.Rumble(ctrl.L2() * 0xFFFF,
@@ -232,227 +342,44 @@ int main() {
                         100);
         }
 
-        // D-pad
-        const std::array<int, 4> dpad = {
-            ctrl.DpadDown(),
-            ctrl.DpadRight(),
-            ctrl.DpadUp(),
-            ctrl.DpadLeft()
-        };
+        {
+            ImGui::Begin("Calibration");
 
-        Visual::DrawCompassButtons(rd, 50, 160, 35, 35,
-                                   {100, 100, 100, 255},
-                                   {200, 200, 40, 255},
-                                   dpad);
+            auto sliderGroup = [](const char* label, PacketCalib& calib, float minLim, float maxLim) {
+                ImGui::Text("%s", label);
+                ImGui::SliderFloat((std::string(label) + " Min").c_str(), &calib.min, minLim, maxLim);
+                ImGui::SliderFloat((std::string(label) + " Max").c_str(), &calib.max, minLim, maxLim);
+            };
 
-        // Face buttons (South, East, North, West)
-        const std::array<int, 4> face = {
-            ctrl.Cross(),
-            ctrl.Circle(),
-            ctrl.Triangle(),
-            ctrl.Square()
-        };
+            sliderGroup("TLeft", calib.tleft, -1.0f, 1.0f);
+            sliderGroup("TRight", calib.tright, -1.0f, 1.0f);
+            sliderGroup("TUp Left", calib.tup_left, -1.0f, 1.0f);
+            sliderGroup("TUp Right", calib.tup_right, -1.0f, 1.0f);
+            sliderGroup("Claw", calib.claw, 0.0f, 1.0f);
+            sliderGroup("Rotate", calib.rotate, 0.0f, 1.0f);
 
-        Visual::DrawCompassButtons(rd, 650, 160, 35, 35,
-                                   {100, 100, 100, 255},
-                                   {40, 200, 40, 255},
-                                   face);
+            ImGui::End();
 
-        // Sticks
-
-        Visual::DrawJoystick(rd, 225, 320, 40,
-                             {120, 180, 220, 255},
-                             {40, 200, 40, 255},
-                             ctrl.LeftX(),
-                             ctrl.LeftY(),
-                             ctrl.L3());
-
-        Visual::DrawJoystick(rd, 525, 320, 40,
-                             {120, 180, 220, 255},
-                             {40, 200, 40, 255},
-                             ctrl.RightX(),
-                             ctrl.RightY(),
-                             ctrl.R3());
-
-        // Triggers
-
-        Visual::DrawTrigger(rd, 210 - 20 - 5, 70, 30, 75,
-                            {120, 180, 220, 255},
-                            {255, 0, 0, 255},
-                            ctrl.L2());
-
-        Visual::DrawTrigger(rd, 530 + 5, 70, 30, 75,
-                            {120, 180, 220, 255},
-                            {255, 0, 0, 255},
-                            ctrl.R2());
-
-        // Regular buttons
-
-        Visual::DrawButton(rd, 220 - 20 - 5, 10, 20, 20,
-                           ctrl.Share(),
-                           {100, 100, 100, 255},
-                           {255, 0, 0, 255});
-
-        Visual::DrawButton(rd, 530 + 5, 10, 20, 20,
-                           ctrl.Options(),
-                           {100, 100, 100, 255},
-                           {255, 0, 0, 255});
-
-        Visual::DrawButton(rd, 210 - 20 - 5, 40, 30, 20,
-                           ctrl.L1(),
-                           {100, 100, 100, 255},
-                           {255, 0, 0, 255});
-
-        Visual::DrawButton(rd, 530 + 5, 40, 30, 20,
-                           ctrl.R1(),
-                           {100, 100, 100, 255},
-                           {255, 0, 0, 255});
-
-        Visual::DrawButton(rd, 735 / 2 - 15 / 2, 210, 30, 15,
-                           ctrl.PSButton(),
-                           {100, 100, 100, 255},
-                           {255, 0, 0, 255});
-
-        Visual::DrawButton(rd, 735 / 2 - 15 / 2, 230, 30, 15,
-                           ctrl.MicrophoneButton(),
-                           {100, 100, 100, 255},
-                           {255, 0, 0, 255});
-
-        // Touchpad
-        Visual::DrawTouchpad(rd, ctrl.Raw(), 220, 10, 310, 195,
-                             {100, 100, 100, 255},
-                             {255, 0, 0, 255},
-                             {250, 50, 250, 255});
-
-
-        // Normalize joystick: up = +1, down = -1
-        float x = ctrl.LeftX();        // left = -1, right = 1
-        float y = ctrl.LeftY();       // forward = +1, backward = -1
-
-        // Tank-drive mapping
-        float raw_left  = y + x;
-        float raw_right = y - x;
-
-        // Clamp to [-1, 1]
-        pkt.tleft  = std::max(-1.0f, std::min(1.0f, raw_left));
-        pkt.tright = std::max(-1.0f, std::min(1.0f, raw_right));
-
-        // Right joystick for up/down
-        float z = ctrl.RightY();  // up = -1, down = 1
-        z = std::max(-1.0f, std::min(1.0f, z));
-
-        pkt.tup_left  = z;
-        pkt.tup_right = z;
-
-        float openRate = std::pow(ctrl.L2(), 1.5f);
-        float closeRate = std::pow(ctrl.R2(), 1.5f);
-
-        float clawSensitivity = 0.01f;   // how fast it changes per frame
-
-        pkt.claw += (openRate - closeRate) * clawSensitivity;
-
-        // Clamp to [0, 1]
-        pkt.claw = std::max(0.0f, std::min(1.0f, pkt.claw));
-
-        bool up = ctrl.DpadUp();
-        bool down = ctrl.DpadDown();
-
-        bool freshUp   = up   && !rotateLastFrameUp;
-        bool freshDown = down && !rotateLastFrameDown;
-
-        if (up || down) {
-            if ((up && rotateLastFrameUp) || (down && rotateLastFrameDown)) {
-                rotateHeldFrames++;
-            } else {
-                rotateHeldFrames = 1;
-            }
-        } else {
-            rotateHeldFrames = 0;
         }
 
-        rotateLastFrameUp = up;
-        rotateLastFrameDown = down;
+        Visual::DrawImGuiController(ctrl);
 
-        // Default to no change
-        float delta = 0.0f;
-
-        if (freshUp) {
-            delta = +0.01f;
-        } else if (freshDown) {
-            delta = -0.01f;
-        } else if (rotateHeldFrames > 10) {
-            float heldSpeed = std::min(0.01f, float(rotateHeldFrames - 10) * 0.0001f);
-            delta = (up ? +heldSpeed : 0.0f) - (down ? +heldSpeed : 0.0f);
-        }
-
-        pkt.rotate += delta;
-        pkt.rotate = std::clamp(pkt.rotate, 0.0f, 1.0f);
-
-        // pkt.checksum = computeChecksum(pkt);
-
-        bool changed = std::memcmp(&pkt, &lastSentPacket, sizeof(ROVPacket)) != 0;
-
-        if (changed) {
-            try {
-                if (serial && serial->is_open()) {
-                    asio::write(*serial, asio::buffer(&pkt, sizeof(pkt)));
-
-                    // std::string line;
-                    // if (readLineWithTimeout(io, *serial, line)) {
-                    //     std::cout << "[ARDUINO] " << line << "\n";
-                    // }
-                } else {
-                    // std::cout << "[TEST-MODE] "
-                    //           << "tleft=" << pkt.tleft << " "
-                    //           << "tright=" << pkt.tright << " "
-                    //           << "tup_left=" << static_cast<int>(pkt.tup_left) << " "
-                    //           << "tup_right=" << static_cast<int>(pkt.tup_right) << " "
-                    //           << "claw=" << static_cast<int>(pkt.claw) << " "
-                    //           << "rotate=" << static_cast<int>(pkt.rotate)
-                    //           << "\n";
-                }
-
-                lastSentPacket = pkt;
-            } catch (const system::system_error &e) {
-                std::cerr << "[Serial ERROR] " << e.what() << "\n";
-                serial->close();
-                delete serial;
-                serial = nullptr;
-            }
-        }
-
-        std::ostringstream output;
-        output << "[OUTPUT] "
-                << std::setprecision(3) << std::fixed << std::showpos
-                << "tleft=" << pkt.tleft << " "
-                << "tright=" << pkt.tright << " "
-                << "tup_left=" << pkt.tup_left << "\n"
-                << "tup_right=" << pkt.tup_right << " "
-                << "claw=" << pkt.claw << " "
-                << "rotate=" << pkt.rotate << " ";
-                // << "checksum=" << static_cast<int>(pkt.checksum);
-
-
-        Visual::DrawText(rd, 10, 450, output.str(), {255, 255, 255, 255}, font);
-
-        SDL_RenderPresent(rd);
+        ImGui::Render();
+        SDL_SetRenderDrawColor(renderer, 15, 15, 15, 255);
+        SDL_RenderClear(renderer);
+        ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
+        SDL_RenderPresent(renderer);
         SDL_Delay(15);
     }
 
-    if (serial) {
-        if (serial->is_open()) {
-            serial->close();
-        }
-        delete serial;
-    }
-
-
-    TTF_CloseFont(font);
-    TTF_Quit();
-
-    SDL_DestroyRenderer(rd);
-    SDL_DestroyWindow(win);
+    ImGui_ImplSDLRenderer2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     SDL_Quit();
 
+    if (serial && serial->is_open()) serial->close();
+    delete serial;
     return 0;
 }

@@ -112,7 +112,6 @@ float Controller::R2() const { return SDL_GameControllerGetAxis(gc, SDL_CONTROLL
 float Controller::GyroPitch() const { return gyro[0]; }
 float Controller::GyroYaw() const { return gyro[1]; }
 float Controller::GyroRoll() const { return gyro[2]; }
-
 float Controller::AccelX() const { return accel[0]; }
 float Controller::AccelY() const { return accel[1]; }
 float Controller::AccelZ() const { return accel[2]; }
@@ -136,5 +135,9 @@ void Controller::Rumble(Uint16 lowFreq, Uint16 highFreq, Uint32 durationMs) {
 
 // --------- Raw ---------
 SDL_GameController *Controller::Raw() {
+    return gc;
+}
+
+SDL_GameController * Controller::Raw() const {
     return gc;
 }

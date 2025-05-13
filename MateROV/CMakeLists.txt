@@ -23,9 +23,32 @@ add_executable(MateROV main.cpp
         Controller.h
 )
 
+# ImGUI
+target_sources(MateROV PRIVATE
+        external/imgui/imgui.cpp
+        external/imgui/imgui_draw.cpp
+        external/imgui/imgui_tables.cpp
+        external/imgui/imgui_widgets.cpp
+        external/imgui/backends/imgui_impl_sdl2.cpp
+        external/imgui/backends/imgui_impl_sdlrenderer2.cpp
+)
+
+target_include_directories(MateROV PRIVATE
+        external/imgui
+        external/imgui/backends
+)
+
+# OpenCV
+#find_package(OpenCV REQUIRED core imgproc videoio)
+#target_include_directories(MateROV PRIVATE ${OpenCV_INCLUDE_DIRS})
+
 target_compile_definitions(MateROV PRIVATE SDL_MAIN_HANDLED)
 
 target_link_libraries(MateROV PRIVATE
         Boost::system
         SDL2::SDL2
-        SDL2_ttf::SDL2_ttf)
+        SDL2_ttf::SDL2_ttf
+#        opencv_core
+#        opencv_imgproc
+#        opencv_videoio
+)

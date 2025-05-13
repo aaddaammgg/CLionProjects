@@ -5,68 +5,12 @@
 #ifndef VISUAL_H
 #define VISUAL_H
 
-#include <string>
-#include <array>
-#include <SDL.h>
-#include <SDL_ttf.h>
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include <imgui.h>
+#include "Controller.h"
 
 namespace Visual {
-    void DrawText(SDL_Renderer *rd,
-                  int x,
-                  int y,
-                  const std::string &text,
-                  const SDL_Color &color,
-                  TTF_Font *font,
-                  int wrapLength = 0);
-
-    void DrawButton(SDL_Renderer *rd,
-                    int x,
-                    int y,
-                    int w,
-                    int h,
-                    bool pressed,
-                    SDL_Color baseColor,
-                    SDL_Color pressColor);
-
-    void DrawCompassButtons(SDL_Renderer *rd,
-                            int x,
-                            int y,
-                            int w,
-                            int h,
-                            SDL_Color baseColor,
-                            SDL_Color pressColor,
-                            std::array<int, 4> face);
-
-    void DrawJoystick(SDL_Renderer *rd,
-                      int x,
-                      int y,
-                      int radius,
-                      SDL_Color baseColor,
-                      SDL_Color pressColor,
-                      float ax,
-                      float ay,
-                      int pressed);
-
-    void DrawTrigger(SDL_Renderer *rd,
-                     int x,
-                     int y,
-                     int w,
-                     int h,
-                     SDL_Color baseColor,
-                     SDL_Color pressColor,
-                     float a);
-
-    void DrawTouchpad(SDL_Renderer *rd,
-                      SDL_GameController *gc,
-                      int x,
-                      int y,
-                      int w,
-                      int h,
-                      SDL_Color baseColor,
-                      SDL_Color pressColor,
-                      SDL_Color mouseColor
-    );
+    void DrawImGuiController(const Controller& ctrl);
 }
 
-
-#endif //VISUAL_H
+#endif // VISUAL_H
